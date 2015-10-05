@@ -4,12 +4,16 @@
 
 ### Initial Build & Pre Reqs
 
+#### Dependencies
+
+- nodejs (tested on 0.12.0 on windows)
+- Apache Ant (make sure you don't install it in C:\Program Files Directory or anything with spaces)
+
 Pull down the code and switch to the branch:
 
 `git clone https://mbowen000@bitbucket.org/mbowen000/smbblocks-angularvf.git`
-`git fetch && git checkout che`
 
-Install nodejs (tested on 0.12.0 on windows)
+`git fetch && git checkout che`
 
 Run `npm install` to install all dev deps
 Run `bower install` to get all the static deps
