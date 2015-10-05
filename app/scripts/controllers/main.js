@@ -7,11 +7,14 @@
  * # MainCtrl
  * Controller of the appApp
  */
-angular.module('appApp')
-  .controller('MainCtrl', function () {
+angular.module('smb')
+  .controller('MainController', [function() {
+    
+  	console.log('main controller loaded!');
+
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
-  });
+  }]);

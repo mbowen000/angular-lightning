@@ -1,56 +1,34 @@
-<!doctype html>
-<html>
+<apex:page applyHtmlTag="false" applyBodyTag="false" showHeader="false">
+<html ng-app="smb">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+  
+    <!-- this is what needs to change per environment -->
+    <!-- build:devonly -->
+    <base href="https://localhost:9000"/>
+    <!-- endbuild -->
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/main.css"/>
     <!-- endbuild -->
   </head>
-  <body ng-app="smb">
+  <body ng-controller="MainController">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-
-            <a class="navbar-brand" href="#/">app</a>
-          </div>
-
-          <div class="collapse">
-
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-    <div ng-view=""></div>
-    </div>
-
-    <div class="footer">
-      <div class="container">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-    </div>
-
-
+    <!-- angular templating -->
+    <!-- this is where content will be injected -->
+    <div class="ng-view"></div>
+  
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -75,8 +53,8 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-        <script src="scripts/controllers/home.js"></script>
+        <script src="templateCache/templateCache.js"></script>
         <!-- endbuild -->
 </body>
 </html>
+</apex:page>

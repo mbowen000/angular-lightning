@@ -1,38 +1,36 @@
-'use strict';
+  // create the module and name it scotchApp
+  var scotchApp = angular.module('smb', ['ngRoute']);
 
-/**
- * @ngdoc overview
- * @name appApp
- * @description
- * # appApp
- *
- * Main module of the application.
- */
-angular
-  .module('appApp', [
-    'ngMessages',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch'
-  ])
-  .config(function ($routeProvider) {
+  // configure our routes
+  scotchApp.config(function($routeProvider) {
     $routeProvider
+
+      // route for the home page
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
+        templateUrl : 'views/home.html',
+        controller  : 'MainController'
       })
+
+      // route for the about page
       .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
+        templateUrl : 'pages/about.html',
+        controller  : 'aboutController'
       })
-      .when('/home', {
-        templateUrl: 'views/home.html',
-        controller: 'HomeCtrl',
-        controllerAs: 'home'
-      })
-      .otherwise({
-        redirectTo: '/'
+
+      // route for the contact page
+      .when('/contact', {
+        templateUrl : 'pages/contact.html',
+        controller  : 'contactController'
       });
+  });
+
+  // create the controller and inject Angular's $scope
+ 
+
+  scotchApp.controller('aboutController', function($scope) {
+    $scope.message = 'Look! I am an about page.';
+  });
+
+  scotchApp.controller('contactController', function($scope) {
+    $scope.message = 'Contact us! JK. This is just a demo.';
   });

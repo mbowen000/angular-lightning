@@ -16,7 +16,8 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
-    cdnify: 'grunt-google-cdn'
+    cdnify: 'grunt-google-cdn',
+    antdeploy: 'grunt-ant-sfdc'
   });
 
   // Configurable paths for the application
@@ -78,6 +79,7 @@ module.exports = function (grunt) {
       livereload: {
         options: {
           open: true,
+          protocol: 'https',
           middleware: function (connect) {
             return [
               connect.static('.tmp'),
@@ -182,7 +184,7 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
-        src: ['<%= yeoman.app %>/index.html'],
+        src: ['<%= yeoman.app %>/vfpage.page'],
         ignorePath:  /\.\.\//
       },
       test: {
@@ -219,7 +221,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
+      html: '<%= yeoman.app %>/vfpage.page',
       options: {
         dest: '<%= yeoman.dist %>',
         flow: {
@@ -236,9 +238,10 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on filerev and the useminPrepare configuration
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
+      html: ['<%= yeoman.dist %>/{,*/}{*.html,*.page}'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       js: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
+      staticResource: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
       options: {
         assetsDirs: [
           '<%= yeoman.dist %>',
@@ -247,6 +250,14 @@ module.exports = function (grunt) {
         ],
         patterns: {
           js: [[/(images\/[^''""]*\.(png|jpg|jpeg|gif|webp|svg))/g, 'Replacing references to images']]
+        },
+        blockReplacements: {
+          js: function(block) {
+            return '<script src="{!URLFOR($Resource.smb_blocks, \'dist/' + block.dest + '\')}" />';
+          },
+          css: function(block) {
+            return '<link rel="stylesheet" href="'+ block.dest +'" />';
+          }
         }
       }
     },
@@ -319,13 +330,23 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'appApp',
+          module: 'smb',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
         cwd: '<%= yeoman.app %>',
         src: 'views/{,*/}*.html',
         dest: '.tmp/templateCache.js'
+      },
+      dev: {
+        options: {
+          module: 'smb',
+          htmlmin: '<%= htmlmin.dist.options %>',
+          usemin: 'scripts/scripts.js'
+        },
+        cwd: '<%= yeoman.app %>',
+        src: 'views/{,*/}*.html',
+        dest: '<%= yeoman.app%>/templateCache/templateCache.js'
       }
     },
 
@@ -361,6 +382,8 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             '*.html',
+            '*.page',
+            '*.page-meta.xml',
             'images/{,*/}*.{webp}',
             'styles/fonts/{,*/}*.*'
           ]
@@ -376,7 +399,21 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      }
+      },
+      salesforceDeploy: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.dist %>',
+          dest: 'deploy-sf/pages/',
+          src: ['vfpage.page', 'vfpage.page-meta.xml']
+        },
+        {
+          expand: true,
+          cwd: 'dist-sf',
+          dest: 'deploy-sf/staticresources',
+          src: '*.resource'
+        }]
+      } 
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -400,6 +437,27 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+     zip: {
+      'dist-sf/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*']
+    },
+    antdeploy: {
+      options: {},
+      // specify one deploy target 
+      dev1: {
+        options: {
+          user:      'mike@smbhd.com.developer',
+          pass:      'b1234567!',
+          token:     'mLJrj00sjHb3dMQ4MNGOfDBH',
+          serverurl: 'https://login.salesforce.com', // default => https://login.salesforce.com 
+          root:      'deploy-sf'
+        },
+        pkg: {
+          staticresource: ['*'],
+          apexpage: ['*']
+        }
+      }
     }
   });
 
@@ -412,12 +470,20 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'ngtemplates:dev',
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
       'watch'
     ]);
   });
+
+  grunt.registerTask('buildSalesforce', [
+    'build',
+    'zip',
+    'copy:salesforceDeploy',
+    'antdeploy'
+  ]);
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
@@ -446,7 +512,7 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'uglify',
-    'filerev',
+    //'filerev',
     'usemin',
     'htmlmin'
   ]);
