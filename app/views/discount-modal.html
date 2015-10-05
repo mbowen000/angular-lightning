@@ -1,0 +1,19 @@
+<div class="modal-header">
+	<h3>Change Discount</h3>
+</div>
+
+<div class="modal-body">
+	<form name="discountForm">
+		<div class="form-group">
+			<label>Discount Amount</label>
+			<div class="input-group" ng-class="{'has-error': discountForm.Discount__c.$invalid}">
+				<span class="input-group-addon">$</span>
+				<input type="number" name="Discount__c" min="0" max="{{purchase.getSubTotal() + purchase.getTotalSalesTax() + purchase.getTotalCountyTax() + 0.01}}" class="form-control" ng-model="purchase.Discount__c"/>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-default" ng-click="done()">Done</button>
+</div>

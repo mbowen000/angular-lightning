@@ -1,60 +1,78 @@
-<apex:page applyHtmlTag="false" applyBodyTag="false" showHeader="false">
-<html ng-app="smb">
-  <head>
-    <meta charset="utf-8"/>
-    <title></title>
-    <meta name="description" content=""/>
-    <meta name="viewport" content="width=device-width"/>
-  
-    <!-- this is what needs to change per environment -->
-    <!-- build:devonly -->
-    <base href="https://localhost:9000"/>
-    <!-- endbuild -->
+<apex:page controller="POSSystemController" applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
+        
+    <head>
+        
+        <!-- build:devonly -->
+        <base href="https://localhost:9000"/>
+        <!-- endbuild -->
 
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css"/>
-    <!-- endbuild -->
-  </head>
-  <body ng-controller="MainController">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+        
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        
+        <!-- build:css(.) styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+        <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <!-- endbower -->
+        <!-- endbuild -->
+        
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css"/>
+        <!-- endbuild -->
 
-    <!-- angular templating -->
-    <!-- this is where content will be injected -->
-    <div class="ng-view"></div>
-  
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+    </head>
+
+    <body ng-app="pointofsale">
+
+    <div ng-controller="appcontroller">
+        <div class="ng-view layout"></div>
+      </div>
+
+    </body>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="templateCache/templateCache.js"></script>
-        <!-- endbuild -->
-</body>
-</html>
+    <script>
+      // Keep this in the VF page to capture the Session Id and store it in an Angular Constant
+      angular.module('config', [])
+          .constant('appconfig', {
+            SESSION_ID: '{!$Api.Session_ID}',       // client session id from visualforce
+            defaultPricebookName: 'test',         // this denotes which pricebook will be attached to newly created opportunities
+              staticResourceUrl: 'https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/'
+          });
+      window.remoteActionURL = '{!$RemoteAction.POSSystemController.runPayment}';
+      window.logoUrl = "{!URLFOR($Resource.che, 'logo_color.jpg')}";
+    </script>
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/forceng.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/opportunity.js"></script>
+    <script src="scripts/productwrapper.js"></script>
+    <script src="scripts/pricebook.js"></script>
+    <script src="scripts/purchase.js"></script>
+    <script src="scripts/payment/paymentcontroller.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:devonly -->
+    <script src="templateCache/templateCache.js"></script>
+    <!-- endbuild -->
+
 </apex:page>

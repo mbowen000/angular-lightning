@@ -1,82 +1,58 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="smb">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-    <!-- Add your site or application content here -->
-    <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-
-            <a class="navbar-brand" href="#/">app</a>
-          </div>
-
-          <div class="collapse">
-
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-    <div ng-view=""></div>
-    </div>
-
-    <div class="footer">
-      <div class="container">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-    </div>
+<apex:page controller="POSSystemController" applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
+        
+    <head>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css"/>
+        <link rel="stylesheet" href="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/angular-block-ui.min.css"/>
+        <link rel="stylesheet" href="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/pos.css"/>
+        
+        <!-- scripts -->
+        <!-- <script src="//code.jquery.com/jquery-2.1.4.min.js"></script> -->
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-animate.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/forceng.js" type="text/javascript"></script>
+        <!--<script src="../../soap/ajax/34.0/connection.js" type="text/javascript"></script>-->
+        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+        <script src="//cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/angular-block-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
 
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    </head>
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
+    <script>
+        // Keep this in the VF page to capture the Session Id and store it in an Angular Constant
+        angular.module('config', [])
+            .constant('appconfig', {
+              SESSION_ID: '{!$Api.Session_ID}',       // client session id from visualforce
+              defaultPricebookName: 'test',         // this denotes which pricebook will be attached to newly created opportunities
+                staticResourceUrl: 'https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/'
+            });
+        window.remoteActionURL = '{!$RemoteAction.POSSystemController.runPayment}';
+        window.logoUrl = "{!URLFOR($Resource.che, 'logo_color.jpg')}";
     </script>
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+    <body ng-app="pointofsale">
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-        <script src="scripts/controllers/home.js"></script>
-        <!-- endbuild -->
-</body>
-</html>
+    <div ng-controller="appcontroller">
+        <div class="ng-view layout"></div>
+      </div>
+
+    </body>
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/app.js" type="text/javascript"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/opportunity.js" type="text/javascript"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/productwrapper.js" type="text/javascript"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/pricebook.js" type="text/javascript"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/purchase.js" type="text/javascript"></script>
+    <script src="https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/payment/paymentcontroller.js" type="text/javascript"></script>
+
+</apex:page>

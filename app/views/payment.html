@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Process Payment</h3>
+    </div>
+</div>
+
+
+<div class="payment" ng-repeat="payment in payments" ng-init="payment.formName = 'paymentform' + $index">
+    
+
+    <div ng-form="{{payment.formName}}" novalidate class="form">
+    
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Payment #{{$index+1}}</h4>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div ng-show="{{payment.formName}}.$valid">Form is Valid</div>
+                <div ng-show="{{payment.formName}}.$invalid">Form is Invalid</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6">
+    	    <!-- use ng form validation see: https://docs.angularjs.org/guide/forms -->
+                <div class="form-group"  ng-class="{ 'has-error': {{payment.formName}}.BluePay__Address__c.$invalid && {{payment.formName}}.BluePay__Address__c.$touched }">
+    			 <input class="form-control" name="BluePay__Address__c" type="text" placeholder="Billing Address" ng-model="payment.BluePay__Address__c" required="true"/><br/>
+                </div>
+                <input class="form-control" type="text" placeholder="Billing City" ng-model="payment.BluePay__City__c"/></br>
+                <input class="form-control" type="text" placeholder="Billing State" ng-model="payment.BluePay__State__c"/></br>
+                <input class="form-control" type="text" placeholder="Billing Zip/Postal Code" ng-model="payment.BluePay__Zipcode__c"/></br>
+                <input class="form-control" type="text" placeholder="Phone" ng-model="payment.BluePay__Phone__c"/><br/>
+                <input class="form-control" type="text" placeholder="Email" ng-model="payment.BluePay__Email__c"/>
+            </div>
+            <div class="col-xs-6">
+                <input class="form-control" type="text" placeholder="Amount" ng-model="payment.BluePay__Amount__c"/><br/>
+                <input class="form-control" type="text" placeholder="Credit Card #" ng-model="payment.BluePay__Card_Number__c"/><br/>
+                <input class="form-control" type="text" placeholder="Expiration Month (MM)" ng-model="payment.BluePay__Expiration_Month__c"/><br/>
+                <input class="form-control" type="text" placeholder="Expiration Year (YY)" ng-model="payment.BluePay__Expiration_Year__c"/><br/>
+                <input class="form-control" type="text" placeholder="Card Verification Value" ng-model="payment.BluePay__CVV2__c"/><br/>
+                <button ng-click="payment.save()">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-primary" ng-click="addPayment()">Add Another Payment</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="pull-right">
+            <p>Total of Payments: {{paymentTotal() | currency }}</p>
+            <p><b>Remaining Balance: {{remainingBalance() | currency }}</b></p>
+        </div>
+    </div>
+</div>

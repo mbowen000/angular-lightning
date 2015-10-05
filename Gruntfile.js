@@ -241,7 +241,7 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.dist %>/{,*/}{*.html,*.page}'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       js: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
-      staticResource: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
+      //staticResource: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
       options: {
         assetsDirs: [
           '<%= yeoman.dist %>',
@@ -256,7 +256,7 @@ module.exports = function (grunt) {
             return '<script src="{!URLFOR($Resource.smb_blocks, \'dist/' + block.dest + '\')}" />';
           },
           css: function(block) {
-            return '<link rel="stylesheet" href="'+ block.dest +'" />';
+            return '<link rel="stylesheet" href="{!URLFOR($Resource.smb_blocks, \'dist/' + block.dest + '\')}" />';
           }
         }
       }
@@ -330,7 +330,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'smb',
+          module: 'pointofsale',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -340,7 +340,7 @@ module.exports = function (grunt) {
       },
       dev: {
         options: {
-          module: 'smb',
+          module: 'pointofsale',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -409,9 +409,24 @@ module.exports = function (grunt) {
         },
         {
           expand: true,
-          cwd: 'dist-sf',
+          cwd: 'sf-resources',
           dest: 'deploy-sf/staticresources',
-          src: '*.resource'
+          src: 'template.resource-meta.xml',
+          rename: function(dest, src) {
+            return dest + '/' + src.replace('template', 'smb_blocks'); // we should come up with a schema to process multiple template files here in the future
+          }
+        }]
+      },
+      // copies the vfpage.page to vfpage-dev.page so it can be deployed to the org (need some unique developer ID prefix)
+      salesforceDev: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          src: 'vfpage.page*',
+          dest: 'deploy-sf/pages/',
+          rename: function(dest, src) {
+            return dest + '/' + src.replace('vfpage', 'vfpage_dev');
+          }
         }]
       } 
     },
@@ -440,22 +455,34 @@ module.exports = function (grunt) {
     },
 
      zip: {
-      'dist-sf/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*']
+      'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*']
     },
     antdeploy: {
       options: {},
       // specify one deploy target 
-      dev1: {
+      dist: {
         options: {
-          user:      'mike@smbhd.com.developer',
-          pass:      'b1234567!',
-          token:     'mLJrj00sjHb3dMQ4MNGOfDBH',
-          serverurl: 'https://login.salesforce.com', // default => https://login.salesforce.com 
+          user:      'che@smbhd.com.dev',
+          pass:      's1234567!',
+          token:     '',
+          serverurl: 'https://test.salesforce.com', // default => https://login.salesforce.com 
           root:      'deploy-sf'
         },
         pkg: {
           staticresource: ['*'],
-          apexpage: ['*']
+          apexpage: ['vfpage']
+        }
+      },
+      dev: {
+        options: {
+          user:      'che@smbhd.com.dev',
+          pass:      's1234567!',
+          token:     '',
+          serverurl: 'https://test.salesforce.com', // default => https://login.salesforce.com 
+          root:      'deploy-sf'
+        },
+        pkg: {
+          apexpage: ['vfpage_dev']
         }
       }
     }
@@ -473,6 +500,8 @@ module.exports = function (grunt) {
       'ngtemplates:dev',
       'concurrent:server',
       'autoprefixer:server',
+      'copy:salesforceDev',
+      'antdeploy:dev',
       'connect:livereload',
       'watch'
     ]);
@@ -482,7 +511,7 @@ module.exports = function (grunt) {
     'build',
     'zip',
     'copy:salesforceDeploy',
-    'antdeploy'
+    'antdeploy:dist'
   ]);
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
@@ -509,7 +538,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
+    //'cdnify',
     'cssmin',
     'uglify',
     //'filerev',

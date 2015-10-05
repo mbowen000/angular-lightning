@@ -1,0 +1,9 @@
+<span>
+	<span ng-if="productWrapperProducts.productAlias.Sales_Tax_Amount__c > 0">
+		+ {{productWrapperProducts.productAlias.Sales_Tax_Amount__c * purchaseProductWrapper.Quantity__c | currency}} Sales Tax
+	</span>
+
+	<span ng-if="productWrapperProducts.productAlias.County_Tax_Amount__c > 0">
+		+ {{productWrapperProducts.productAlias.County_Tax_Amount__c * purchaseProductWrapper.Quantity__c | currency}} County Tax
+	</span>	
+</span>
