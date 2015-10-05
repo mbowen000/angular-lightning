@@ -58,7 +58,7 @@
               staticResourceUrl: 'https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/'
           });
       window.remoteActionURL = '{!$RemoteAction.POSSystemController.runPayment}';
-      window.logoUrl = "{!URLFOR($Resource.che, 'logo_color.jpg')}";
+      //window.logoUrl = "{!URLFOR($Resource.che, 'logo_color.jpg')}";
     </script>
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->

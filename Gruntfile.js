@@ -53,6 +53,10 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
+      templates: {
+        files: ['<%= yeoman.app %>/views/**/*'],
+        tasks: ['ngtemplates:dev']
+      },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -455,7 +459,7 @@ module.exports = function (grunt) {
     },
 
      zip: {
-      'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*']
+      'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*', 'dist/images/**/*']
     },
     antdeploy: {
       options: {},
@@ -500,11 +504,20 @@ module.exports = function (grunt) {
       'ngtemplates:dev',
       'concurrent:server',
       'autoprefixer:server',
-      'copy:salesforceDev',
-      'antdeploy:dev',
+      'copy:salesforceDev'
+    ]);
+
+    if(target !== 'skipdeploy') {
+      grunt.task.run([
+        'antdeploy:dev',
+      ]);
+    }
+
+    grunt.task.run([
       'connect:livereload',
       'watch'
     ]);
+    
   });
 
   grunt.registerTask('buildSalesforce', [
