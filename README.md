@@ -18,6 +18,13 @@ Pull down the code and switch to the branch:
 Run `npm install` to install all dev deps
 Run `bower install` to get all the static deps
 
+**Create Env File**
+You need to create an environment file for your developer environment as to not conflict with other members of your team if there are (and there should be) multiple teammates working on the same code.
+
+- Make a copy of environments/COMPUTERNAME-env.json.template (in the environments folder)
+- Make sure you replace COMPUTERNAME with the name of your machine. if you're unsure of what that is type `echo %COMPUTERNAME%` in Command Prompt (for windows)
+- Change the "devName" key/value pair to your developer name (no spaces or characters that aren't allowed in Visualforce Page names here)
+
 ### Dev & Deployment
 
 Run `grunt serve` for developer tasks. This will:

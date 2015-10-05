@@ -26,11 +26,22 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  grunt.log.write('Computername: ' + process.env.COMPUTERNAME);
+  var environment = {
+    computername: process.env.COMPUTERNAME
+  };
+
+  var environmentConfig = grunt.file.readJSON('environments/' + environment.computername + '-env.json');
+
+  var pageName = "vfpage_" + environmentConfig.devName;
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
     // Project settings
     yeoman: appConfig,
+
+    devName: environmentConfig.devName || 'dev',  //e.g. MIKE-THINK-env.json will pull this in as 'mike'
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
@@ -429,7 +440,7 @@ module.exports = function (grunt) {
           src: 'vfpage.page*',
           dest: 'deploy-sf/pages/',
           rename: function(dest, src) {
-            return dest + '/' + src.replace('vfpage', 'vfpage_dev');
+            return dest + '/' + src.replace('vfpage', pageName);
           }
         }]
       } 
@@ -486,7 +497,7 @@ module.exports = function (grunt) {
           root:      'deploy-sf'
         },
         pkg: {
-          apexpage: ['vfpage_dev']
+          apexpage: [pageName]
         }
       }
     }
