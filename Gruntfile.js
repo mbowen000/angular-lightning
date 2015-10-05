@@ -26,22 +26,16 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
-  grunt.log.write('Computername: ' + process.env.COMPUTERNAME);
-  var environment = {
-    computername: process.env.COMPUTERNAME
-  };
+  // include smbblocks config
+  require('./sf-resources/grunt/smbblocks.js')(grunt);
 
-  var environmentConfig = grunt.file.readJSON('environments/' + environment.computername + '-env.json');
-
-  var pageName = "vfpage_" + environmentConfig.devName;
+  var environmentConfig = grunt.config.get('environmentConfig');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
 
     // Project settings
     yeoman: appConfig,
-
-    devName: environmentConfig.devName || 'dev',  //e.g. MIKE-THINK-env.json will pull this in as 'mike'
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
@@ -345,7 +339,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'pointofsale',
+          module: grunt.config.get('environmentConfig').appName,
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -355,7 +349,7 @@ module.exports = function (grunt) {
       },
       dev: {
         options: {
-          module: 'pointofsale',
+          module:  grunt.config.get('environmentConfig').appName,
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -420,7 +414,10 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= yeoman.dist %>',
           dest: 'deploy-sf/pages/',
-          src: ['vfpage.page', 'vfpage.page-meta.xml']
+          src: ['vfpage.page', 'vfpage.page-meta.xml'],
+          rename: function(dest, src) {
+            return dest + '/' + src.replace('vfpage', environmentConfig.prodPageName);
+          }
         },
         {
           expand: true,
@@ -440,7 +437,7 @@ module.exports = function (grunt) {
           src: 'vfpage.page*',
           dest: 'deploy-sf/pages/',
           rename: function(dest, src) {
-            return dest + '/' + src.replace('vfpage', pageName);
+            return dest + '/' + src.replace('vfpage', environmentConfig.pageName);
           }
         }]
       } 
@@ -476,28 +473,16 @@ module.exports = function (grunt) {
       options: {},
       // specify one deploy target 
       dist: {
-        options: {
-          user:      'che@smbhd.com.dev',
-          pass:      's1234567!',
-          token:     '',
-          serverurl: 'https://test.salesforce.com', // default => https://login.salesforce.com 
-          root:      'deploy-sf'
-        },
+        options: grunt.config.get('environmentConfig').credentials,
         pkg: {
           staticresource: ['*'],
-          apexpage: ['vfpage']
+          apexpage: [grunt.config.get('environmentConfig').prodPageName]
         }
       },
       dev: {
-        options: {
-          user:      'che@smbhd.com.dev',
-          pass:      's1234567!',
-          token:     '',
-          serverurl: 'https://test.salesforce.com', // default => https://login.salesforce.com 
-          root:      'deploy-sf'
-        },
+        options: grunt.config.get('environmentConfig').credentials,
         pkg: {
-          apexpage: [pageName]
+          apexpage: [grunt.config.get('environmentConfig').pageName]
         }
       }
     }

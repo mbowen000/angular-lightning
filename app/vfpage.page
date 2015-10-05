@@ -1,4 +1,4 @@
-<apex:page controller="POSSystemController" applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
         
     <head>
         
@@ -11,9 +11,6 @@
         
         <!-- build:css(.) styles/vendor.css -->
         <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
-        <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.css" />
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
         <!-- endbower -->
         <!-- endbuild -->
         
@@ -24,7 +21,7 @@
 
     </head>
 
-    <body ng-app="pointofsale">
+    <body ng-app="testapp">
 
     <div ng-controller="appcontroller">
         <div class="ng-view layout"></div>
@@ -34,41 +31,26 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <script>
       // Keep this in the VF page to capture the Session Id and store it in an Angular Constant
       angular.module('config', [])
-          .constant('appconfig', {
-            SESSION_ID: '{!$Api.Session_ID}',       // client session id from visualforce
-            defaultPricebookName: 'test',         // this denotes which pricebook will be attached to newly created opportunities
-              staticResourceUrl: 'https://dl.dropboxusercontent.com/spa/64s72hc16s4ai10/CHE/public/'
-          });
-      window.remoteActionURL = '{!$RemoteAction.POSSystemController.runPayment}';
-      //window.logoUrl = "{!URLFOR($Resource.che, 'logo_color.jpg')}";
+        .constant('appconfig', {
+          SESSION_ID: '{!$Api.Session_ID}'       // client session id from visualforce
+        });
     </script>
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/forceng.js"></script>
     <script src="scripts/app.js"></script>
-    <script src="scripts/opportunity.js"></script>
-    <script src="scripts/productwrapper.js"></script>
-    <script src="scripts/pricebook.js"></script>
-    <script src="scripts/purchase.js"></script>
-    <script src="scripts/payment/paymentcontroller.js"></script>
     <!-- endbuild -->
 
     <!-- build:devonly -->
