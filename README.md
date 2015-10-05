@@ -2,6 +2,15 @@
 
 ## Build & development
 
+### Initial Build & Pre Reqs
+
+Install nodejs (tested on 0.12.0 on windows)
+
+Run `npm install` to install all dev deps
+Run `bower install` to get all the static deps
+
+### Dev & Deployment
+
 Run `grunt serve` for developer tasks. This will:
 
 - Deploy a copy of the vfpage.page to vfpage_dev.page (this will be your development version)
