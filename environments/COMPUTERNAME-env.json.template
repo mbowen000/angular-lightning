@@ -1,6 +1,6 @@
 {
 	"appName": "testapp",
-	"vfPageName": "PointOfSale",
+	"vfPageName": "vfpage",
 	"devName": "mike",
 	"credentials": {
 		"user":      "mike@smbhd.com.developer",

@@ -51,15 +51,15 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
+        files: ['test/spec/**/*.js'],
+        tasks: ['newer:jshint:test', 'karma:unit']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
       templates: {
-        files: ['<%= yeoman.app %>/views/**/*'],
+        files: ['<%= yeoman.app %>/views/**/*.html'],
         tasks: ['ngtemplates:dev']
       },
       gruntfile: {
@@ -91,6 +91,13 @@ module.exports = function (grunt) {
           protocol: 'https',
           middleware: function (connect) {
             return [
+              // middleware that allows CORS requests (for serving static resources during dev to salesforce page)
+              // see https://gist.github.com/Vp3n/5340891
+              function(req, res, next) {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.setHeader('Access-Control-Allow-Methods', '*');
+                next();
+              },
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
@@ -460,9 +467,20 @@ module.exports = function (grunt) {
 
     // Test settings
     karma: {
+      options: {
+        configFile: 'test/karma.conf.js'
+      },
       unit: {
-        configFile: 'test/karma.conf.js',
-        singleRun: true
+        singleRun: true,
+        configFile: 'test/karma.conf.js'
+      },
+      coverage: {
+        singleRun: false,
+        reporters: ['progress', 'coverage']
+      },
+      keepalive: {
+        singleRun: false,
+        browsers: ['Chrome']
       }
     },
 
@@ -505,7 +523,7 @@ module.exports = function (grunt) {
 
     if(target !== 'skipdeploy') {
       grunt.task.run([
-        'antdeploy:dev',
+        'antdeploy:dev'
       ]);
     }
 
@@ -528,14 +546,22 @@ module.exports = function (grunt) {
     grunt.task.run(['serve:' + target]);
   });
 
-  grunt.registerTask('test', [
+  grunt.registerTask('test', function(keepalive) {
+    grunt.task.run([
     'clean:server',
     'wiredep',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
-    'karma'
-  ]);
+    ]);
+
+    if(keepalive) {
+      grunt.task.run(['karma:keepalive']);
+    }
+    else {
+      grunt.task.run(['karma:unit']);
+    }
+  });
 
   grunt.registerTask('build', [
     'clean:dist',

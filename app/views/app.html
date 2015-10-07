@@ -1,1 +1,36 @@
-Main Template
+<div ng-include="'views/header.html'"></div>
+
+<div class="slds-grid slds-wrap">
+  <nav class="slds-col slds-size--1-of-1"></nav>
+  <aside class="slds-col slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--4-of-12">
+    <ul ng-repeat="page in pages">
+      <li>{{page.attributes.name}}</li>
+    </ul>
+  </aside>
+  <main class="slds-col slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--8-of-12">
+    
+    
+
+    <div ng-repeat="page in pages">
+      <div class="slds-text-heading--medium">{{page.attributes.name}}</div>
+      
+      <div class="slds-form--stacked">
+        
+        <div ng-repeat="section in page.attributes.sections.models"> 
+          <div class="slds-text-heading--small">{{section.name}}</div>
+
+          <div class="slds-form-element" ng-repeat="field in section.fields">
+            <label class="slds-form-element__label" for="inputSample2">{{field.label}}</label>
+            <div class="slds-form-element__control">
+              <input id="inputSample2" class="slds-input" type="text" placeholder="" />
+            </div>
+          </div>
+
+        </div>
+      
+      </div>
+
+    </div>
+
+  </main>
+</div>

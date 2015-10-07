@@ -11,6 +11,7 @@
         
         <!-- build:css(.) styles/vendor.css -->
         <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/salesforce-lightning-design-system/assets/styles/salesforce-lightning-design-system.css" />
         <!-- endbower -->
         <!-- endbuild -->
         
@@ -23,9 +24,9 @@
 
     <body ng-app="testapp">
 
-    <div ng-controller="appcontroller">
-        <div class="ng-view layout"></div>
-      </div>
+    
+    <div class="ng-view layout"></div>
+    
 
     </body>
 
@@ -51,6 +52,12 @@
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/forceng.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/core.js"></script>
+
+    <!-- these are custom -->
+    <script src="scripts/page.js"></script>
+    <script src="scripts/section.js"></script>
+    <script src="scripts/field.js"></script>
     <!-- endbuild -->
 
     <!-- build:devonly -->

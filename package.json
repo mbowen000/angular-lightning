@@ -29,6 +29,8 @@
     "grunt-zip": "^0.17.1",
     "jit-grunt": "^0.9.1",
     "jshint-stylish": "^1.0.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.5.2",
     "karma-jasmine": "*",
     "karma-phantomjs-launcher": "*",
     "time-grunt": "^1.0.0",
