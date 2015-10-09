@@ -1,0 +1,66 @@
+[1mComputername: MIKE-THINK[22m
+Page Name: vfpage_mike
+
+[4mRunning "test" task[24m
+
+[4mRunning "clean:server" (clean) task[24m
+[32m>> [39m1 path cleaned.
+
+[4mRunning "wiredep:app" (wiredep) task[24m
+
+[4mRunning "wiredep:test" (wiredep) task[24m
+
+[4mRunning "concurrent:test" (concurrent) task[24m
+    
+[1mComputername: MIKE-THINK[22m
+Page Name: vfpage_mike
+
+[4mRunning "copy:styles" (copy) task[24m
+Copied 1 file
+
+[32mDone, without errors.[39m
+
+
+Execution Time (2015-10-08 20:26:20 UTC)
+loading tasks               102ms  ████████████████████████ 70%
+loading grunt-contrib-copy   29ms  ███████ 20%
+copy:styles                  14ms  ████ 10%
+Total 146ms
+
+[4mRunning "autoprefixer:server" (autoprefixer) task[24m
+File .tmp/styles/main.css created.
+
+[4mRunning "autoprefixer:dist" (autoprefixer) task[24m
+File .tmp/styles/main.css created.
+
+[4mRunning "connect:test" (connect) task[24m
+Started connect web server on http://localhost:9001
+
+[4mRunning "karma:unit" (karma) task[24m
+[33m08 10 2015 15:26:23.793:WARN [watcher]: [39mPattern "C:/Users/Mike/projects/smbblocks/angularvf/test/mock/**/*.js" does not match any file.
+[32m08 10 2015 15:26:23.823:INFO [karma]: [39mKarma v0.13.10 server started at http://localhost:8080/
+[32m08 10 2015 15:26:23.834:INFO [launcher]: [39mStarting browser PhantomJS
+[32m08 10 2015 15:26:24.490:INFO [PhantomJS 1.9.8 (Windows 8 0.0.0)]: [39mConnected on socket 7aJ2rF6sZoBcsxLCAAAA with id 72471970
+PhantomJS 1.9.8 (Windows 8 0.0.0) ERROR
+  Error: [$injector:nomod] Module 'testapp.templates' is not available! You either misspelled the module name or forgot to load it. If registering a module ensure that you specify the dependencies as the second argument.
+  http://errors.angularjs.org/1.4.7/$injector/nomod?p0=testapp.templates
+  at C:/Users/Mike/projects/smbblocks/angularvf/bower_components/angular/angular.js:1988
+
+
+Warning: Task "karma:unit" failed. Use --force to continue.
+
+Aborted due to warnings.
+
+
+Execution Time (2015-10-08 20:26:19 UTC)
+loading tasks                  102ms  █ 2%
+wiredep:app                    249ms  ██ 5%
+concurrent:test                693ms  █████ 14%
+loading grunt-autoprefixer     273ms  ██ 6%
+autoprefixer:server             67ms  █ 1%
+loading grunt-contrib-connect  170ms  ██ 4%
+connect:test                   461ms  ███ 10%
+loading grunt-karma             1.3s  █████████ 27%
+karma:unit                      1.4s  ██████████ 30%
+Total 4.8s
+

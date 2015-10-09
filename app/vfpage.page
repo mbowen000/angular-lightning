@@ -1,4 +1,4 @@
-<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false" controller="PageRemoter">
         
     <head>
         
@@ -38,6 +38,7 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-safeapply/safe-apply.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

@@ -61,7 +61,14 @@ angular.module('testapp.core', [])
 		sObject: 'fakeobject',
 		attrs: ['Id'],
 		limit: 1000,
-		initialize: function() {}
+		initialize: function() {},
+		get: function(attr) {
+			return this.attributes[attr];
+		},
+		set: function(attr, value) {
+			this.attributes[attr] = value;
+			return this;
+		}
 	});
 
 	Model.extend = extend;
@@ -87,7 +94,7 @@ angular.module('testapp.core', [])
 			this.sObject = options.sObject;
 		}
 		if(models) {
-			this.models = models;
+			this.parseModels(models);
 		}
 
 		this.initialize.apply(this, arguments);
@@ -109,14 +116,16 @@ angular.module('testapp.core', [])
 			return force.query(soql).then(function(response) {
 				// create models out of response
 
-				var models = self.parseModels(response.records);
+				self.parseModels(response.records);
 
-				return models;
+				return self;
 			});
 		},
 
 		parseModels: function(data) {
 			var self = this;
+
+			this.reset();
 
 			if(data) {
 				_.each(data, function(record) {
@@ -126,6 +135,9 @@ angular.module('testapp.core', [])
 			}
 
 			return self.models;
+		},
+		reset: function() {
+			this.models = [];
 		}
 	});
 

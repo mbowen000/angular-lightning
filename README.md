@@ -11,7 +11,7 @@
 
 Pull down the code:
 
-`git clone https://mbowen000@bitbucket.org/mbowen000/smbblocks-angularvf.git`
+`git clone https://[YOURUSERNAME]@bitbucket.org/mbowen000/smbblocks-angularvf.git`
 
 Run `npm install` to install all dev deps
 Run `bower install` to get all the static deps

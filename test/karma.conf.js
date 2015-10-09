@@ -28,11 +28,14 @@ module.exports = function(config) {
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/underscore/underscore.js',
+      'bower_components/angular-safeapply/safe-apply.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
       "test/mock/**/*.js",
-      "test/spec/**/*.js"
+      "test/spec/**/*.js",
+      "app/views/**/*.html"
+      
     ],
 
     // list of files / patterns to exclude
@@ -59,13 +62,22 @@ module.exports = function(config) {
       "karma-phantomjs-launcher",
       "karma-jasmine",
       "karma-chrome-launcher",
-      "karma-coverage"
+      "karma-coverage",
+      "karma-ng-html2js-preprocessor"
     ],
 
     reporters: ['progress'],
 
     preprocessors: {
-      'app/scripts/**/*.js': ['coverage']
+      'app/scripts/**/*.js': ['coverage'],
+      '**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+    
+      stripPrefix: 'app/',
+      moduleName: 'templates'
+      
     },
 
     // Continuous Integration mode

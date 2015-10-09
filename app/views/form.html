@@ -1,0 +1,18 @@
+<div ng-repeat="page in form.pages">
+
+	<div class="slds-text-heading--medium">{{page.name}}</div>
+	  
+  	<div class="slds-form--stacked">
+    
+	    <div ng-repeat="section in page.sections"> 
+	      <div class="slds-text-heading--small">{{section.name}}</div>
+
+	      <div class="slds-form-element" smb-field field="field" ng-repeat="field in section.fields">
+	        <!-- form field template injected here -->
+	      </div>
+
+	    </div>
+  
+	</div>
+
+</div>

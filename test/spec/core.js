@@ -37,6 +37,19 @@ describe('A Model...', function() {
     expect(mymodel.value).toEqual('test');
 
   });
+
+  it('should be properly instantiated with values & have getter/setter methods for the attributes it contains', function() {
+
+    var model = new Model({
+      test: 'test1',
+      another: 'test2'
+    });
+
+    expect(model.attributes.test).toEqual('test1');
+    //expect(_.keys(model.attributes).length).toEqual(2);
+    expect(model.get('test')).toEqual('test1');
+
+  });
 });
 
 describe('A Collection...: ', function () {
@@ -114,10 +127,10 @@ describe('A Collection...: ', function () {
     var collection = new TestCollection();
 
 
-    collection.fetch().then(function(models) {
+    collection.fetch().then(function() {
       
-      expect(models).toBeDefined();
-      expect(models.length).toEqual(10);
+      expect(collection.models).toBeDefined();
+      expect(collection.models.length).toEqual(10);
       
       // it should create models in the collection
       expect(collection.models.length).toEqual(10);

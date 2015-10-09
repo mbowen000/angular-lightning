@@ -40,19 +40,7 @@
                             ],
                             "value": "Consulting;Lease",
                             "tooltip": "",
-                            "dependency": {
-                                "type": "1AND2",
-                                "criteria": [
-                                    {
-                                        "field": "Base_Fee__c",
-                                        "condition": true
-                                    },
-                                    {
-                                        "field": "Base_Fee__c",
-                                        "condition": ">500.00"
-                                    }
-                                ]
-                            }
+                            "dependency": {}
                         },
                         {
                             "name": "Reason_For_MOA__c",
@@ -66,7 +54,8 @@
                             ],
                             "value": "",
                             "tooltip": "",
-                            "dependency": {}
+                            "dependency": {},
+                            "visible": true
                         },
                         {
                             "name": "Contract_Start_Date__c",
@@ -74,7 +63,33 @@
                             "multival": false,
                             "required": true,
                             "label": "Contract Start Date",
-                            "value": "109290380430",
+                            "value": "2016-10-22",
+                            "tooltip": "",
+                            "dependency": {
+                                "type": "1 OR 2",
+                                "criteria": [
+                                    {
+                                        "field": "Base_Fee__c",
+                                        "operator": "equals",
+                                        "condition": "test"
+                                    },
+                                    {
+                                        "field": "Base_Fee__c",
+                                        "operator": "equals",
+                                        "condition": "test2"
+                                    }
+                                ],
+                                "invoke": "show"
+                            },
+                            "visible": false
+                        }, 
+                        {
+                            "name": "Base_Fee__c",
+                            "type": "text",
+                            "multival": false,
+                            "required": true,
+                            "label": "Base Fee",
+                            "value": "",
                             "tooltip": "",
                             "dependency": {}
                         }

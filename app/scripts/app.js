@@ -2,7 +2,8 @@ angular.module('testapp', [
 	'config', 
 	'ngRoute',
 	'forceng',
-	'testapp.page'
+	'testapp.page',
+	'SafeApply'
 	])
 
 .config(function($routeProvider, $sceDelegateProvider) {
@@ -31,18 +32,23 @@ angular.module('testapp', [
 	});
 }])
 
-.controller('appcontroller', ['$scope', 'PageService', function($scope, PageService) {
+.controller('appcontroller', ['$scope', 'FormService', function($scope, FormService) {
 	'use strict';
 
 	$scope.app = {
 		name: 'POS Application'
 	};
 
-	PageService.getPages().then(function(response) {
-		console.log(response);
-		$scope.pages = response;
-	});
 	
+	/*
+	PageService.getPages().then(function(collection) {
+		$scope.pages = collection;
+	});
+	*/
+
+	FormService.getFormConfig().then(function(config) {
+		$scope.form = config;
+	});	
 
 	// will retrieve these via service call
 	// $scope.steps = new StepsCollection({

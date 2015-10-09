@@ -32,6 +32,7 @@
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.5.2",
     "karma-jasmine": "*",
+    "karma-ng-html2js-preprocessor": "^0.2.0",
     "karma-phantomjs-launcher": "*",
     "time-grunt": "^1.0.0",
     "underscore": "^1.8.3"
