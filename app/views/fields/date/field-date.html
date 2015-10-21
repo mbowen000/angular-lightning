@@ -1,0 +1,12 @@
+<!-- <input class="slds-input" type="date" ng-model="field.value" ng-required="field.required" /> -->
+
+    <div class="slds-form-element__control">
+      <div class="slds-input-has-icon slds-input-has-icon--right">
+        <!-- <span smb-icon type="utility" icon="event" size="x-small"></span> -->
+        <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='field.value' ng-required='field.required' smb-field-date-input ng-focus="isOpen = true" ng-disabled="field.disabled || $parent.$parent.section.state.status === 'pending'"/>
+      </div>
+    </div>
+
+  <!-- dropdown here -->
+  <!-- <div smb-field-date-dropdown ng-show="isOpen" ng-click="isOpen = true" class="smb-date-dropdown"></div> -->
+

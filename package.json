@@ -35,7 +35,8 @@
     "karma-ng-html2js-preprocessor": "^0.2.0",
     "karma-phantomjs-launcher": "*",
     "time-grunt": "^1.0.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "rimraf": "2.2.8"
   },
   "engines": {
     "node": ">=0.10.0"

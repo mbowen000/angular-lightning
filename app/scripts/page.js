@@ -1,70 +1,72 @@
-angular.module('testapp.page', [
-	'testapp.core',
-	'testapp.section'
-])
+angular.module('testapp.page', ['testapp.section'])
 
-.constant('FormConfigConfig', {
-	objectName: ''
-})
-
-.factory('PageModel', ['Model', 'SectionCollection', '$q', '$rootScope', function(Model, SectionCollection, $q, $rootScope) {
+.factory('Page', ['Section', '$rootScope', function(Section, $rootScope) {
 	'use strict';
-
-	var PageModel = Model.extend({
-		initialize: function() {
-			if(this.attributes.sections) {
-				// create a new collection for the sections
-				//var sectionCollection = new SectionCollection(this.attributes.sections);
-				//this.attributes.sections = sectionCollection;
-			}
-		},
-		fetch: function() {
-			var self = this;
-			return $q(function(resolve, reject) {
-				Visualforce.remoting.Manager.invokeAction('PageRemoter.getPage', self.get('name'), function(response) {
-					self.attributes = response;
-					self.initialize();
-					resolve(response);
-					$rootScope.$safeApply();
+	return function(options) {
+		var self = this;
+		_.extend(this, options, {
+			progress: function() {
+				var validCount = 0;
+				_.each(this.sections, function(section) {
+					if(section.formCtrl && section.formCtrl.$valid) {
+						validCount++;
+					}
 				});
-			});
-		}
-	});
+				return Math.round((validCount / this.sections.length) * 100) || 100;
+			},
+			activate: function() {
+				this.active = true;
+				$rootScope.$broadcast('activate-page', this);
+			},
+			deactivate: function() {
+				this.active = false;
+			}
+		});
 
-	return PageModel;
+		// create section objects for each of the section elements
+		var sections = [];
+		_.each(this.sections, function(section) {
+			sections.push(new Section(section));
+		});
+		this.sections = sections;
+
+		$rootScope.$on('activate-page', function($event, page) {
+			if(self !== page) {
+				self.deactivate();
+			}
+		});
+
+		return this;
+	};
 }])
 
-.factory('PageCollection', ['Collection', 'PageModel', '$q', '$http', '$rootScope', function(Collection, PageModel, $q, $http, $rootScope) {
+.controller('PageController', ['$scope', function($scope) {
 	'use strict';
 
-	return Collection.extend({
-		model: PageModel,
+	var formCtrl;
 
-		fetch: function() {
-			var self = this;
-			return $http.get('assets/mockresponse-spconfig.json').then(function(response) {
-				self.parseModels(response.data.pages);
-				return self;
-			});
-			// return $q(function(resolve, reject) {
-			// 	Visualforce.remoting.Manager.invokeAction('PageRemoter.getPages', function(response) {
-			// 		self.parseModels(response);
-			// 		resolve(self);
-			// 		$rootScope.$safeApply();
-			// 	});
-			// });
-		}
+	this.init = function(element, controllers) {
+		this.element = element;
+		formCtrl = controllers[2];
+
+		$scope.page.formCtrl = formCtrl;
+	};
+
+	_.extend(this, {
+
 	});
+
+	return this;
 }])
 
-.service('PageService', ['PageCollection', function(PageCollection) {
+.directive('smbPage', [function() {
 	'use strict';
-
-	var pageCollection = new PageCollection();
-
 	return {
-		getPages: function() {
-			return pageCollection.fetch();
+		require: ['smbPage', '^smbForm', 'form'],
+		controller: 'PageController',
+		link: function(scope, element, attrs, controllers) {
+			controllers[0].init(element, controllers);
+			return this;
 		}
 	};
 }]);

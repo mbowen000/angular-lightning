@@ -1,134 +1,90 @@
-angular.module('testapp.field', ['testapp.core'])
+angular.module('testapp.field', [
+	'testapp.core', 
+	'testapp.fieldDatepicker', 
+	'testapp.fieldDropdown', 
+	'testapp.fieldPicklist',
+	'testapp.fieldText',
+	'testapp.fieldTextarea',
+	'testapp.fieldWysiwyg'
+	])
 
-.factory('FieldCollection', ['Collection', 'FieldModel', function(Collection, FieldModel) {
+.factory('Field', [function() {
 	'use strict';
-	return Collection.extend({
-		model: FieldModel,
-		initialize: function() {
-
-		}
-	});
-}])
-
-.factory('FieldModel', ['Model', function(Model) {
-	'use strict';
-	return Model.extend({
-		initialize: function() {
-			if(this.get('type') === 'date') {
-				this.prepareDateModel();
-			}
-		},
-		prepareDateModel: function() {
-			this.set('value', new Date(this.get("value")));
-		}
-	});
-}])
-
-.directive('smbForm', [function() {
-	'use strict';
-	return {
-		templateUrl: 'views/form.html',
-		scope: {
-			form: '=form'
-		},
-		require: ['smbForm'],
-		controller: function($scope) {
-			this.init = function(element, controllers) {
-				this.controllers = controllers;
-				this.element = element;				
-			};	
-
-			_.extend(this, {
-				// look up a field by name ( needs to traverse the page -> section -> field structure so might be slow with large forms!!! )
-				// if this gets slow, could cache all the fields in a flattened array of fields and use that to search
-				findFieldByName: function(name) {
-					var needle = null;
-					_.each($scope.form.pages, function(page) { 
-						_.each(page.sections, function(section) {
-							needle = _.findWhere(section.fields, {name: name});
-						});
-					});
-
-					return needle;
-				},
-				digestChange: function(field) {
-					
-					// right now this is just a marshaller
-
-					// this function can do any filtering necessary etc and act as a Marshal for changes in fields. Throttling etc could happen here too.
-					$scope.$broadcast('dependency-detected', field);
-				}
-
-			});
-
+	return function(options) {
+		_.extend(this, options, {
 			
-
-		},
-		link: function(scope, element, attrs, controllers) {
-			controllers[0].init(element, controllers);
-			return this;
-		}
+		});
 	};
 }])
 
-.directive('smbField', ['Evaluator', function(Evaluator) {
+.controller('FieldController', ['$scope', 'Evaluator', function($scope, Evaluator) {
+	'use strict';
+
+	var self = this;
+	this.init = function(element, controllers) {
+		this.controllers = controllers;
+		this.scope = $scope;
+		this.element = element;
+		this.elemId = _.uniqueId('elem_');
+		this.model = null;
+		if(controllers[2]) {
+			this.model = controllers[2];
+			// put the form ctrlr on the service object for use
+			$scope.field.formCtrl = controllers[2];
+		}
+		_.defaults($scope.field, {
+			visible: true,
+			required: false,
+			dependency: {},
+			name: 'unknown'
+		});
+
+		this.setupDependencies();
+
+		$scope.$watch('field.value', function(newVal, oldVal) {	
+			self.emitChange($scope.field);
+		});
+
+		// set up listener to listen to changes form-wide
+		$scope.$on('dependency-detected', _.bind(self.listenToChanges, self));
+	};	
+
+	_.extend(this, {
+		setupDependencies: function() {
+			// for each dependency push into the top-level form
+			if(_.keys($scope.field.dependency).length > 0) {
+				this.evaluator = new Evaluator($scope.field.dependency, this);
+			}
+		},
+		emitChange: function(field) {
+			if(self.controllers[1]) {
+				self.controllers[1].digestChange(field);	
+			}
+		},
+		listenToChanges: function($event, dependency) {
+			
+			if(this.evaluator) {
+				// we might care
+				if(_.contains(this.evaluator.getFieldsThatMatter(), dependency.name)) {
+					// we do care
+					//this.controllers[1].evaluate(this.evaluator);
+					this.evaluator.evaluate($scope);
+				}
+			}
+
+		}
+	});
+}])
+
+.directive('smbField', [function() {
 	'use strict';
 	return {
 		templateUrl: 'views/field.html',
 		scope: {
 			field: '=field'
 		},
-		require: ['smbField', '^smbForm'],
-		controller: function($scope) {
-			var self = this;
-			this.init = function(element, controllers) {
-				this.controllers = controllers;
-				this.scope = $scope;
-				this.element = element;
-				this.elemId = _.uniqueId('elem_');
-				_.defaults($scope.field, {
-					visible: true,
-					required: false,
-					dependency: {}
-				});
-
-				this.setupDependencies();
-
-				$scope.$watch('field.value', function(newVal, oldVal) {
-					if(newVal !== oldVal) {
-						self.emitChange($scope.field);
-					}
-				});
-
-				// set up listener to listen to changes form-wide
-				$scope.$on('dependency-detected', _.bind(self.listenToChanges, self));
-			};	
-
-			_.extend(this, {
-				setupDependencies: function() {
-					// for each dependency push into the top-level form
-					if(_.keys($scope.field.dependency).length > 0) {
-						this.evaluator = new Evaluator($scope.field.dependency, this);
-					}
-				},
-				emitChange: function(field) {
-					self.controllers[1].digestChange(field);
-				},
-				listenToChanges: function($event, dependency) {
-					
-					if(this.evaluator) {
-						// we might care
-						if(_.contains(this.evaluator.getFieldsThatMatter(), dependency.name)) {
-							// we do care
-							//this.controllers[1].evaluate(this.evaluator);
-							this.evaluator.evaluate($scope);
-						}
-					}
-
-				}
-			});
-
-		},
+		require: ['smbField', '?^smbForm', '^form'],
+		controller: 'FieldController',
 		link: function(scope, element, attrs, controllers) {
 			controllers[0].init(element, controllers);
 			return this;
@@ -198,45 +154,5 @@ angular.module('testapp.field', ['testapp.core'])
 
 		});
 		
-	};
-}])
-
-.directive('smbFieldDate', [function() {
-	'use strict';
-	return {
-		templateUrl: 'views/field-date.html',
-		require: ['smbFieldDate', '^smbField'],
-		controller: function($scope) {
-			this.init = function(element, controllers) {
-				this.controllers = controllers;
-				this.element = element;
-			};
-
-			return this;
-		},
-		link: function(scope, element, attrs, controllers) {
-			controllers[0].init(element, controllers);
-			return this;
-		}
-	};
-}])
-
-.directive('smbFieldPicklist', [function() {
-	'use strict';
-	return {
-		templateUrl: 'views/field-picklist.html',
-		require: ['^smbField']
-	};
-}])
-
-.service('FormService', ['$http', function($http) {
-	'use strict';
-	return {
-		getFormConfig: function() {
-			return $http.get('assets/mockresponse-spconfig.json').then(function(response) {
-				//self.parseModels(response.data.pages);
-				return response.data;
-			});
-		}
 	};
 }]);

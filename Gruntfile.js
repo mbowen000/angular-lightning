@@ -36,6 +36,7 @@ module.exports = function (grunt) {
 
     // Project settings
     yeoman: appConfig,
+    envConfig: environmentConfig,
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
@@ -51,7 +52,7 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['test/spec/**/*.js'],
+        files: ['test/spec/**/*.js', 'test/spec/fields/**/*.js'],
         tasks: ['newer:jshint:test', 'karma:unit']
       },
       styles: {
@@ -64,6 +65,10 @@ module.exports = function (grunt) {
       },
       gruntfile: {
         files: ['Gruntfile.js']
+      },
+      visualforce: {
+        files: ['app/vfpage.page'],
+        tasks: ['copy:salesforceDev', 'antdeploy:dev']
       },
       livereload: {
         options: {
@@ -168,7 +173,8 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      salesforce: ['deploy-sf/pages/**/*', '!deploy-sf/staticresources/']
     },
 
     // Add vendor prefixed styles
@@ -351,7 +357,7 @@ module.exports = function (grunt) {
           usemin: 'scripts/scripts.js'
         },
         cwd: '<%= yeoman.app %>',
-        src: 'views/{,*/}*.html',
+        src: 'views/**/*.html',
         dest: '.tmp/templateCache.js'
       },
       dev: {
@@ -361,7 +367,7 @@ module.exports = function (grunt) {
           usemin: 'scripts/scripts.js'
         },
         cwd: '<%= yeoman.app %>',
-        src: 'views/{,*/}*.html',
+        src: 'views/**/*.html',
         dest: '<%= yeoman.app%>/templateCache/templateCache.js'
       }
     },
@@ -408,7 +414,13 @@ module.exports = function (grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
-        }]
+        },
+        {
+          expand: true,
+          cwd: '<%= yeoman.app %>/assets',
+          dest: '<%= yeoman.dist %>/assets',
+          src: ['**/*']
+          }]
       },
       styles: {
         expand: true,
@@ -442,10 +454,16 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= yeoman.app %>',
           src: 'vfpage.page*',
-          dest: 'deploy-sf/pages/',
+          dest: 'deploy-sf/pages',
           rename: function(dest, src) {
             return dest + '/' + src.replace('vfpage', environmentConfig.pageName);
           }
+        },
+        {
+            expand: true,
+            cwd: '<%= yeoman.app %>/salesforce',
+            src: '**/*',
+            dest: 'deploy-sf/'
         }]
       } 
     },
@@ -484,8 +502,8 @@ module.exports = function (grunt) {
       }
     },
 
-     zip: {
-      'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*', 'dist/images/**/*']
+    zip: {
+      'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*', 'dist/images/**/*', 'dist/assets/**/*']
     },
     antdeploy: {
       options: {},
@@ -494,13 +512,27 @@ module.exports = function (grunt) {
         options: grunt.config.get('environmentConfig').credentials,
         pkg: {
           staticresource: ['*'],
-          apexpage: [grunt.config.get('environmentConfig').prodPageName]
+          apexpage: [grunt.config.get('environmentConfig').prodPageName],
+          apexclass: ['*']
         }
       },
       dev: {
         options: grunt.config.get('environmentConfig').credentials,
         pkg: {
-          apexpage: [grunt.config.get('environmentConfig').pageName]
+          apexpage: [grunt.config.get('environmentConfig').pageName],
+          apexclass: ['*']
+        }
+      }
+    },
+    targethtml: {
+      dist: {
+        files: {
+          'dist/vfpage.page': 'dist/vfpage.page'
+        }
+      },
+      dev: {
+        files: {
+          'deploy-sf/pages/<%=envConfig.pageName%>.page' : 'deploy-sf/pages/<%=envConfig.pageName%>.page'
         }
       }
     }
@@ -514,11 +546,13 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'clean:salesforce',
       'wiredep',
       'ngtemplates:dev',
       'concurrent:server',
       'autoprefixer:server',
-      'copy:salesforceDev'
+      'copy:salesforceDev',
+      'targethtml:dev'
     ]);
 
     if(target !== 'skipdeploy') {
@@ -569,7 +603,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'ngtemplates',
+    'ngtemplates:dist',
     'concat',
     'ngAnnotate',
     'copy:dist',
@@ -578,7 +612,8 @@ module.exports = function (grunt) {
     'uglify',
     //'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'targethtml:dist'
   ]);
 
   grunt.registerTask('default', [

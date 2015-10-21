@@ -1,1 +1,61 @@
 /* this should be sass */
+
+/* Header */
+.header-inner {
+	margin-bottom:15px;
+}
+.smb-page-header {
+	margin-top:5px;
+}
+.smb-section-title {
+	margin-bottom:10px;
+}
+/* End Header */
+
+/* Affixed SideNav */
+div.slds-card.steps {
+	position:fixed;
+}
+/* End Affixed SideNav */
+
+/* Progress Indication */
+.progress-container {
+	margin:10px 0px;
+}
+.progressbar {
+	background-color:#D7D7D7;
+	height:1px;
+	width:100%;
+	margin-top:11px;
+}
+.progressbar.progressbar-minimal {
+	margin:0px;
+}
+.progressbar .progress {
+	background-color:black;
+	height:1px;
+}
+table.slds-table td.progresswrapper {
+	margin:0px;
+	padding:0px;
+}
+/* End Progress Indication */
+
+/* Forms/Sections */
+div.smb-section {
+	margin-bottom:15px;
+}
+.slds-picklist.slds-picklist--multi ul {
+	width:120px;
+}
+.slds-form-element {
+	margin-bottom:10px;
+}
+/* End Forms/Sections */
+
+
+/* Custom Icon Colors */
+.slds-icon-text-success {
+	fill:#acd360;
+}
+/* End Custom Icon Colors */

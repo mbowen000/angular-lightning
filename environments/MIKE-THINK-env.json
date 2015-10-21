@@ -1,12 +1,12 @@
 {
 	"appName": "testapp",
-	"vfPageName": "vfpage",
+	"vfPageName": "dealjourney",
 	"devName": "mike",
 	"credentials": {
-		"user":      "mike@smbhd.com.developer",
-		"pass":      "b1234567!",
-		"token":     "X4NC8YsygBOvlTE3gwpuxNdjY",
-		"serverurl": "https://login.salesforce.com", 
+		"user":      "spplus@smbhd.com.sandbox",
+		"pass":      "a12345678!",
+		"token":     "nN3p8495vgZJBLgb39axgSkPZ",
+		"serverurl": "https://test.salesforce.com", 
 		"root":      "deploy-sf"
 	}
 }

@@ -1,20 +1,20 @@
-<span class="fieldwrapper" ng-if="field.visible">
 
-	<label class="slds-form-element__label" for="inputSample2">{{field.label}}</label>
 
-	<div ng-switch="field.type">
-		
-		<!-- dynamic field generation -->
-		<div ng-switch-when="text">
-		  <div class="slds-form-element__control">
-		    <input id="inputSample2" class="slds-input" type="text" placeholder="" ng-model="field.value" />
-		  </div>
-		</div>
+<label class="slds-form-element__label smb-field-label" for="inputSample2" ng-class="{ 'disabled': !field.visible }">{{field.label}}</label>
 
-		<div ng-switch-when="date" smb-field-date required="field.required"></div>
+<div class="smb-field-wrap-main" ng-switch="field.type" ng-class="{ 'disabled': !field.visible }">
+	
+	<!-- dynamic field generation -->
+	<div ng-switch-when="text" smb-field-text></div>
 
-		<div ng-switch-when="picklist" smb-field-picklist></div>
+	<div ng-switch-when="date" smb-field-date></div>
 
-	</div>
+	<div ng-switch-when="picklist" smb-field-picklist></div>
+	
+	<div ng-switch-when="dropdown" smb-field-dropdown></div>
 
-</span>
+	<div ng-switch-when="textarea" smb-field-textarea></div>
+
+	<div ng-switch-when="wysiwyg" smb-field-wysiwyg></div>
+
+</div>

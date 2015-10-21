@@ -1,21 +1,57 @@
-angular.module('testapp.section', ['testapp.core', 'testapp.field'])
+angular.module('testapp.section', ['testapp.field'])
 
-.factory('SectionCollection', ['Collection', 'SectionModel', function(Collection, SectionModel) {
+.factory('Section', ['Field', function(Field) {
 	'use strict';
-	return Collection.extend({
-		model: SectionModel
-	});
+	return function(options) {
+		_.extend(this, options, {
+			progress: function() {
+				var validCount = 0;
+				_.each(this.elements, function(element) {
+					if(element.formCtrl && element.formCtrl.$valid) {
+						validCount++;
+					}
+				});
+				return Math.round((validCount / this.elements.length) * 100) || 0;
+			}
+		});
+
+		var elements = [];
+		_.each(this.elements, function(field) {
+			elements.push(new Field(field));
+		});
+		this.elements = elements;
+
+		return this;
+	};
 }])
 
-.factory('SectionModel', ['Model', 'FieldCollection', function(Model, FieldCollection) {
+.controller('SectionController', ['$scope', function($scope) {
 	'use strict';
-	return Model.extend({
-		initialize: function() {
-			console.log(this);
-			if(this.attributes.fields) {
-				var fieldCollection = new FieldCollection(this.attributes.fields);
-				this.attributes.fields = fieldCollection;
-			}
-		}
+
+	var formCtrl;
+
+	this.init = function(element, controllers) {
+		this.element = element;
+		formCtrl = controllers[2];
+
+		$scope.section.formCtrl = formCtrl;
+	};
+
+	_.extend(this, {
+
 	});
+
+	return this;
+}])
+
+.directive('smbSection', [function() {
+	'use strict';
+	return {
+		require: ['smbSection', '^smbPage', 'form'],
+		controller: 'SectionController',
+		link: function(scope, element, attrs, controllers) {
+			controllers[0].init(element, controllers);
+			return this;
+		}
+	};
 }]);

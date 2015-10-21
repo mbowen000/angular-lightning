@@ -1,10 +1,18 @@
 <apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false" controller="PageRemoter">
         
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
     <head>
         
+        <!--(if target dist)><!-->
+        <base href="{!URLFOR($Resource.smb_blocks, "dist/")}"/>
+        <!--<!(endif)-->
+
         <!-- build:devonly -->
         <base href="https://localhost:9000"/>
         <!-- endbuild -->
+
+
 
         
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -12,6 +20,7 @@
         <!-- build:css(.) styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/salesforce-lightning-design-system/assets/styles/salesforce-lightning-design-system.css" />
+        <link rel="stylesheet" href="bower_components/trix/dist/trix.css" />
         <!-- endbower -->
         <!-- endbuild -->
         
@@ -32,6 +41,7 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
@@ -39,6 +49,8 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/angular-safeapply/safe-apply.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/trix/dist/trix.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -46,9 +58,24 @@
       // Keep this in the VF page to capture the Session Id and store it in an Angular Constant
       angular.module('config', [])
         .constant('appconfig', {
-          SESSION_ID: '{!$Api.Session_ID}'       // client session id from visualforce
+            SESSION_ID: '{!$Api.Session_ID}',       // client session id from visualforce
+            env: 'staging',
+            assetBase: '{!URLFOR($Resource.smb_blocks, "dist/")}',
+            url: 'https://sptest--sandbox--c.cs8.visual.force.com'
         });
     </script>
+
+    <!-- build:devonly -->
+    <script>
+      angular.module('config', [])
+        .constant('appconfig', {
+            SESSION_ID: '{!$Api.Session_ID}',       // client session id from visualforce
+            env: 'dev',
+            assetBase: '{!URLFOR($Resource.smb_blocks, "dist/")}',
+            url: 'https://sptest--sandbox--c.cs8.visual.force.com'
+        });
+    </script>
+    <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/forceng.js"></script>
@@ -56,13 +83,26 @@
     <script src="scripts/core.js"></script>
 
     <!-- these are custom -->
+    <script src="scripts/form.js"></script>
     <script src="scripts/page.js"></script>
     <script src="scripts/section.js"></script>
     <script src="scripts/field.js"></script>
+    <script src="scripts/fields/field-datepicker.js"></script>
+    <script src="scripts/fields/field-picklist.js"></script>
+    <script src="scripts/fields/field-dropdown.js"></script>
+    <script src="scripts/fields/field-text.js"></script>
+    <script src="scripts/fields/field-textarea.js"></script>
+    <script src="scripts/fields/field-wysiwyg.js"></script>
+
+    <script src="scripts/utils/progress.js"></script>
+    <script src="scripts/utils/icon.js"></script>
+    <script src="scripts/utils/tooltip.js"></script>
     <!-- endbuild -->
 
     <!-- build:devonly -->
     <script src="templateCache/templateCache.js"></script>
     <!-- endbuild -->
+
+</html>
 
 </apex:page>
