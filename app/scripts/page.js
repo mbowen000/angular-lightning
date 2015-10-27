@@ -20,6 +20,13 @@ angular.module('testapp.page', ['testapp.section'])
 			},
 			deactivate: function() {
 				this.active = false;
+			},
+			toJSON: function() {
+				return _.extend(_.pick(this, 'name'), {
+					sections: _.map(this.sections, function(section) {
+						return section.toJSON();
+					})
+				});				
 			}
 		});
 

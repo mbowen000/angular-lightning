@@ -12,6 +12,13 @@ angular.module('testapp.section', ['testapp.field'])
 					}
 				});
 				return Math.round((validCount / this.elements.length) * 100) || 0;
+			},
+			toJSON: function() {
+				return _.extend(_.pick(this, 'name'), {
+					elements: _.map(this.elements, function(element) {
+						return element.toJSON();
+					})
+				});	
 			}
 		});
 

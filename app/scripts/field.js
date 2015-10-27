@@ -12,7 +12,9 @@ angular.module('testapp.field', [
 	'use strict';
 	return function(options) {
 		_.extend(this, options, {
-			
+			toJSON: function() {
+				return _.pick(this, ['name', 'value']);
+			}
 		});
 	};
 }])

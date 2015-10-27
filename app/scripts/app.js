@@ -60,6 +60,10 @@ angular.module('testapp', [
 		$scope.form = config;
 	});	
 
+	$scope.saveForm = function() {
+		FormService.saveFormConfig($scope.form);
+	};
+
 }])
 
 .directive('smbStepoverview', [function() {
