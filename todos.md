@@ -57,8 +57,10 @@
 2) **Angular-VF** (Platform that has simple angular structure and Build Process for Team-Projects)
 3) **Standard-Parking** Deal Journey - Everything else on top
 
+- [ ] Create "kitchen sink" for all the elements
 - [ ] Sections - Hide/Show Conditionally (Or Dim / Grey Out) Depending on Reqs
 - [ ] Pages - Hide/Show Conditionally
+
 
 ## Nice to Haves
 
@@ -69,4 +71,6 @@
 	- ToJSON methods inherit
 	- Can override most methods
 	- Unit tested
+
+- [ ] Open source project for Lightning Angular components
 

@@ -552,14 +552,8 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer:server',
       'copy:salesforceDev',
-      'targethtml:dev'
+      //'targethtml:dev'
     ]);
-
-    if(target !== 'skipdeploy') {
-      grunt.task.run([
-        'antdeploy:dev'
-      ]);
-    }
 
     grunt.task.run([
       'connect:livereload',

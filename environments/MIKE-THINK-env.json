@@ -3,9 +3,9 @@
 	"vfPageName": "dealjourney",
 	"devName": "mike",
 	"credentials": {
-		"user":      "spplus@smbhd.com.sandbox",
-		"pass":      "a12345678!",
-		"token":     "nN3p8495vgZJBLgb39axgSkPZ",
+		"user":      "test@test.com",
+		"pass":      "test",
+		"token":     "test12345",
 		"serverurl": "https://test.salesforce.com", 
 		"root":      "deploy-sf"
 	}

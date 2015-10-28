@@ -1,4 +1,4 @@
-angular.module('testapp.fieldDatepicker', [])
+angular.module('angular-lightning.datepicker', [])
 
 .constant('DateConfig', {
 	numWeeksShown: 5
