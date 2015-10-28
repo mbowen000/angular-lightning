@@ -29,7 +29,7 @@ angular.module('testapp.form', ['testapp.field', 'testapp.page'])
 .service('FormService', ['$q', 'Form', function($q, Form) {
 	'use strict';
 	return {
-		getFormConfig: function() {
+		getFormConfig: function(id) {
 			// return $http.get('assets/mockresponse-spconfig.json').then(function(response) {
 			// 	//self.parseModels(response.data.pages);
 
@@ -46,12 +46,12 @@ angular.module('testapp.form', ['testapp.field', 'testapp.page'])
 			// });
 			
 			return $q(function(resolve, reject) {
-				Visualforce.remoting.Manager.invokeAction('PageRemoter.getFormConfig', function(status, result) {
-					if(result) {
-						resolve(new Form(result.result));
+				Visualforce.remoting.Manager.invokeAction('PageRemoter.getFormConfig', id, function(result, event) {
+					if(event.status) {
+						resolve(new Form(result));
 					}
 					else {
-						reject(status);
+						reject(event.message);
 					}
 				});
 			});

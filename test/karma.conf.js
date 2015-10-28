@@ -32,6 +32,8 @@ module.exports = function(config) {
       'bower_components/angular-safeapply/safe-apply.js',
       'bower_components/moment/moment.js',
       'bower_components/trix/dist/trix.js',
+      'bower_components/angular-inform/dist/angular-inform.js',
+      'bower_components/angular-block-ui/dist/angular-block-ui.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

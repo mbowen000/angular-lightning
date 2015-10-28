@@ -6,13 +6,15 @@ angular.module('testapp', [
 	'testapp.form',
 	'testapp.progress',
 	'testapp.icon',
-	'testapp.tooltip'
+	'testapp.tooltip',
+	'blockUI',
+	'inform'
 	])
 
 .config(function($routeProvider, $sceDelegateProvider, $sceProvider, appconfig) {
 	'use strict';
 
-	$routeProvider.when('/', {
+	$routeProvider.when('/:objectId', {
 		controller: 'appcontroller',
 		templateUrl: 'views/app.html'
 	}).otherwise({
@@ -48,19 +50,26 @@ angular.module('testapp', [
 	}
 }])
 
-.controller('appcontroller', ['$scope', 'FormService', function($scope, FormService) {
+.controller('appcontroller', ['$scope', 'FormService', '$routeParams', 'blockUI', 'inform', function($scope, FormService, $routeParams, blockUI, inform) {
 	'use strict';
 
 	$scope.app = {
-		name: 'POS Application'
+		name: 'POS Application', 
+		objectId: $routeParams.objectId
 	};
 
-	FormService.getFormConfig().then(function(config) {
+	blockUI.start('Loading Deal Journey...');
+	FormService.getFormConfig($scope.app.objectId).then(function(config) {
 		// this is what the form module uses to build up the form
 		$scope.form = config;
-	});	
+	}).catch(function(error) {
+		inform.add('Error loading deal journey, please contact an administrator...', {type: 'danger'});
+	}).finally(function() {
+		blockUI.stop();
+	});
 
 	$scope.saveForm = function() {
+
 		FormService.saveFormConfig($scope.form);
 	};
 

@@ -12,7 +12,9 @@
     "angular-safeapply": "~1.0.4",
     "jquery": "~2.1.4",
     "moment": "~2.10.6",
-    "trix" : "git://github.com/mbowen000/trix.git#bower"
+    "trix": "git://github.com/mbowen000/trix.git#bower",
+    "angular-inform": "~0.0.18",
+    "angular-block-ui": "~0.2.0"
   },
   "overrides": {},
   "devDependencies": {

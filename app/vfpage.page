@@ -21,6 +21,8 @@
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/salesforce-lightning-design-system/assets/styles/salesforce-lightning-design-system.css" />
         <link rel="stylesheet" href="bower_components/trix/dist/trix.css" />
+        <link rel="stylesheet" href="bower_components/angular-inform/dist/angular-inform.css" />
+        <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.css" />
         <!-- endbower -->
         <!-- endbuild -->
         
@@ -51,6 +53,8 @@
     <script src="bower_components/angular-safeapply/safe-apply.js"></script>
     <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/trix/dist/trix.js"></script>
+    <script src="bower_components/angular-inform/dist/angular-inform.js"></script>
+    <script src="bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
