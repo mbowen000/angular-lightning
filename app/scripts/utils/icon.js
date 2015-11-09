@@ -1,4 +1,4 @@
-angular.module('testapp.icon', []).
+angular.module('angular-lightning.icon', []).
 
 directive('smbIcon', ['$rootScope', function($rootScope) {
 	'use strict';

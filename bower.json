@@ -1,6 +1,7 @@
 {
   "name": "lightning-angular",
   "version": "0.0.0",
+  "main": "./dist/scripts/scripts.js",
   "dependencies": {
     "angular": "^1.3.0",
     "underscore": "~1.8.3",

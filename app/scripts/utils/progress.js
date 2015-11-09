@@ -1,4 +1,4 @@
-angular.module('testapp.progress', [])
+angular.module('angular-lightning.progress', [])
 
 	.directive('smbProgressbar', [function() {
 		'use strict';

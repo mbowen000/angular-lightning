@@ -1,4 +1,4 @@
-angular.module('testapp.tooltip', [])
+angular.module('angular-lightning.tooltip', [])
 
 	.directive('smbTooltip', ['$compile', function($compile) {
 		'use strict';

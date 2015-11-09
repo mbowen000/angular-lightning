@@ -206,7 +206,7 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
-        src: ['<%= yeoman.app %>/vfpage.page'],
+        src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
       },
       test: {
@@ -243,16 +243,33 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= yeoman.app %>/vfpage.page',
-      options: {
-        dest: '<%= yeoman.dist %>',
-        flow: {
-          html: {
-            steps: {
-              js: ['concat', 'uglifyjs'],
-              css: ['cssmin']
-            },
-            post: {}
+      'dist':{
+        src: '<%= yeoman.app %>/index.html',
+        options: {
+          dest: '<%= yeoman.dist %>',
+          flow: {
+            html: {
+              steps: {
+                js: ['concat', 'uglifyjs'],
+                css: ['cssmin']
+              },
+              post: {}
+            }
+          }
+        }
+      },
+      'dev':{
+        src: '<%= yeoman.app %>/index.html',
+        options: {
+          dest: '<%= yeoman.dist %>',
+          flow: {
+            html: {
+              steps: {
+                js: ['concat'],
+                css: ['cssmin']
+              },
+              post: {}
+            }
           }
         }
       }
@@ -352,7 +369,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: grunt.config.get('environmentConfig').appName,
+          module: 'angular-lightning',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -465,7 +482,17 @@ module.exports = function (grunt) {
             src: '**/*',
             dest: 'deploy-sf/'
         }]
-      } 
+      },
+      dev: {
+        files: [
+          {
+            expand: true,
+            cwd: '.tmp/concat',
+            src: 'scripts/**/*',
+            dest: 'dist/'
+          }
+        ]
+      }
     },
 
     // Run some tasks in parallel to speed up the build process
@@ -527,7 +554,7 @@ module.exports = function (grunt) {
     targethtml: {
       dist: {
         files: {
-          'dist/vfpage.page': 'dist/vfpage.page'
+          'dist/index.html': 'dist/index.html'
         }
       },
       dev: {
@@ -594,7 +621,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'useminPrepare',
+    'useminPrepare:dist',
     'concurrent:dist',
     'autoprefixer',
     'ngtemplates:dist',
@@ -607,7 +634,26 @@ module.exports = function (grunt) {
     //'filerev',
     'usemin',
     'htmlmin',
-    'targethtml:dist'
+    //'targethtml:dist'
+  ]);
+
+  grunt.registerTask('buildDev', [
+    'clean:dist',
+    'wiredep',
+    'useminPrepare:dev',
+    'concurrent:dist',
+    'autoprefixer',
+    'ngtemplates:dist',
+    'concat',
+    'ngAnnotate',
+    //'cdnify',
+    'cssmin',
+    //'uglify',
+    //'filerev',
+    'usemin',
+    'htmlmin',
+    'copy:dev'
+    //'targethtml:dist'
   ]);
 
   grunt.registerTask('default', [
