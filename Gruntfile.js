@@ -27,7 +27,7 @@ module.exports = function (grunt) {
   };
 
   // include smbblocks config
-  require('./sf-resources/grunt/smbblocks.js')(grunt);
+  //require('./sf-resources/grunt/smbblocks.js')(grunt);
 
   var environmentConfig = grunt.config.get('environmentConfig');
 
@@ -376,16 +376,6 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>',
         src: 'views/**/*.html',
         dest: '.tmp/templateCache.js'
-      },
-      dev: {
-        options: {
-          module:  grunt.config.get('environmentConfig').appName,
-          htmlmin: '<%= htmlmin.dist.options %>',
-          usemin: 'scripts/scripts.js'
-        },
-        cwd: '<%= yeoman.app %>',
-        src: 'views/**/*.html',
-        dest: '<%= yeoman.app%>/templateCache/templateCache.js'
       }
     },
 
@@ -445,44 +435,6 @@ module.exports = function (grunt) {
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
       },
-      salesforceDeploy: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          dest: 'deploy-sf/pages/',
-          src: ['vfpage.page', 'vfpage.page-meta.xml'],
-          rename: function(dest, src) {
-            return dest + '/' + src.replace('vfpage', environmentConfig.prodPageName);
-          }
-        },
-        {
-          expand: true,
-          cwd: 'sf-resources',
-          dest: 'deploy-sf/staticresources',
-          src: 'template.resource-meta.xml',
-          rename: function(dest, src) {
-            return dest + '/' + src.replace('template', 'smb_blocks'); // we should come up with a schema to process multiple template files here in the future
-          }
-        }]
-      },
-      // copies the vfpage.page to vfpage-dev.page so it can be deployed to the org (need some unique developer ID prefix)
-      salesforceDev: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>',
-          src: 'vfpage.page*',
-          dest: 'deploy-sf/pages',
-          rename: function(dest, src) {
-            return dest + '/' + src.replace('vfpage', environmentConfig.pageName);
-          }
-        },
-        {
-            expand: true,
-            cwd: '<%= yeoman.app %>/salesforce',
-            src: '**/*',
-            dest: 'deploy-sf/'
-        }]
-      },
       dev: {
         files: [
           {
@@ -532,34 +484,10 @@ module.exports = function (grunt) {
     zip: {
       'deploy-sf/staticresources/smb_blocks.resource': ['dist/scripts/**/*', 'dist/styles/**/*', 'dist/images/**/*', 'dist/assets/**/*']
     },
-    antdeploy: {
-      options: {},
-      // specify one deploy target 
-      dist: {
-        options: grunt.config.get('environmentConfig').credentials,
-        pkg: {
-          staticresource: ['*'],
-          apexpage: [grunt.config.get('environmentConfig').prodPageName],
-          apexclass: ['*']
-        }
-      },
-      dev: {
-        options: grunt.config.get('environmentConfig').credentials,
-        pkg: {
-          apexpage: [grunt.config.get('environmentConfig').pageName],
-          apexclass: ['*']
-        }
-      }
-    },
     targethtml: {
       dist: {
         files: {
           'dist/index.html': 'dist/index.html'
-        }
-      },
-      dev: {
-        files: {
-          'deploy-sf/pages/<%=envConfig.pageName%>.page' : 'deploy-sf/pages/<%=envConfig.pageName%>.page'
         }
       }
     }

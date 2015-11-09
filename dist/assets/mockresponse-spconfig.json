@@ -1,0 +1,370 @@
+{
+    "pages": [
+        {
+            "name": "General Information",
+            "devname": "general-information",
+            "icon": {
+                "type": "action",
+                "name": "new_note"
+            },
+            "sections": [
+                {
+                    "name": "Owner Information",
+                    "devname": "owner-information",
+                    "elements": [
+                        {
+                            "name": "Owner_Name__c",
+                            "type": "text",
+                            "required": true,
+                            "label": "Name", 
+                            "value": "Max Stein"
+                        },
+                        {
+                            "name": "Owner_Title__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "Title"
+                        },
+                        {
+                            "name": "Owner_Phone__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "Phone"
+                        },
+                        {
+                            "name": "Owner_Create_Date__c",
+                            "type": "date",
+                            "required": false,
+                            "label": "Created Date"
+                        }
+                    ]
+                },
+                {
+                    "name": "Overview",
+                    "devname": "overview",
+                    "state": {
+                        "status": "pending",
+                        "approvals": [
+                            {
+                                "actor": {
+                                    "Id": "003flkj109308f",
+                                    "Name": "Mike Bowen"
+                                },
+                                "status": "pending"
+                            },
+                            {
+                                "actor": {
+                                    "Id": "003flkdjfl3093",
+                                    "Name": "Max Stein"
+                                },
+                                "status": "approved"
+                            }
+                        ]
+                    },
+                    "elements": [
+                        {
+                            "name": "Opportunity__c",
+                            "type": "text",
+                            "required": true,
+                            "label": "Opportunity", 
+                            "value": "Hampton - Navy Yard"
+                        },
+                        {
+                            "name": "Account_Type__c",
+                            "type": "dropdown",
+                            "required": false,
+                            "label": "Account Type",
+                            "picklistvals": [
+                                "Target Account",
+                                "Other"
+                            ], 
+                            "value" : "Target Account"
+                        },
+                        {
+                            "name": "Market_Type__c",
+                            "type": "dropdown",
+                            "required": false,
+                            "label": "Market Type",
+                            "picklistvals": [
+                                "Commercial",
+                                "Residential",
+                                "Other"
+                            ],
+                            "value": "Commercial"
+                        },
+                        {
+                            "name": "Market_Subtype__c",
+                            "type": "dropdown",
+                            "required": false,
+                            "label": "Market Sub-Type",
+                            "picklistvals": [
+                                "Commercial",
+                                "Residential",
+                                "Other"
+                            ],
+                            "value": "Hotel"
+                        },
+                        {
+                            "name": "Account__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "Account",
+                            "value": "Hampton Inn & Suites Washington DC - Navy Yard"
+                        },
+                        {
+                            "name": "Proposal__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "Proposal"
+                        },
+                        {
+                            "name": "Account_Address__c",
+                            "type": "textarea",
+                            "required": false,
+                            "label": "Account Address",
+                            "value": "1265 First St SE\nWashington, DC 20003\nUSA"
+                        },
+                        {
+                            "name": "Regional_Manager__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "Regional Manager",
+                            "value": "Justin Rogers"
+                        },
+                        {
+                            "name": "SVP__c",
+                            "type": "text",
+                            "required": false,
+                            "label": "SVP",
+                            "value": "Chris Sherman"
+                        },
+                        {
+                            "name": "EVP__c",
+                            "type": "text",
+                            "required": true,
+                            "label": "EVP",
+                            "value": "Steve Warshauer"
+                        },
+                        {
+                            "name": "Financial_Analyst__c",
+                            "type": "text",
+                            "required": true,
+                            "label": "Financial Analyst",
+                            "value": "Allison Fink"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Finance And Operations",
+            "devname": "finance-and-operations",
+            "icon": {
+                "type": "action",
+                "name": "new_custom17"
+            },
+            "state": {
+                "status": "pending",
+                "approvals": [
+                    {
+                        "actor": {
+                            "Id": "003flkj109308f",
+                            "Name": "Mike Bowen"
+                        },
+                        "status": "pending"
+                    },
+                    {
+                        "actor": {
+                            "Id": "003flkdjfl3093",
+                            "Name": "Max Stein"
+                        },
+                        "status": "approved"
+                    }
+                ]
+            },
+            "sections": [
+                {
+                    "name": "Client Information",
+                    "devname": "client-information",
+                    "elements": [
+                        {
+                            "type": "textarea",
+                            "label": "Property Manager Information",
+                            "required": true,
+                            "name": "Property_Manager_Information__c"
+                        },
+                        {
+                            "type": "textarea",
+                            "label": "Additional Information / Notes",
+                            "name": "Additional_Info__c"
+                        },
+                        {
+                            "type": "textarea",
+                            "label": "Deal Description & Reason For Approval",
+                            "name": "Deal_Description__c"
+                        }
+                    ]
+                },
+                {
+                    "name": "Deal Terms",
+                    "devname": "deal-terms",
+                    "elements": [
+                        {
+                            "name": "Deal_Type__c",
+                            "type": "picklist",
+                            "multival": true,
+                            "required": true,
+                            "label": "Deal Type",
+                            "picklistvals": [
+                                "Consulting",
+                                "Lease",
+                                "NewPricingModel",
+                                "ReverseManagement",
+                                "TraditionalManagement"
+                            ],
+                            "value": "Consulting;Lease",
+                            "tooltip": "",
+                            "dependency": {}
+                        },
+                        {
+                            "name": "Reason_For_MOA__c",
+                            "type": "dropdown",
+                            "multival": false,
+                            "required": true,
+                            "label": "Reason for MOA",
+                            "picklistvals": [
+                                "Existing Operations",
+                                "New Client/Renewal"
+                            ],
+                            "value": "",
+                            "tooltip": "",
+                            "dependency": {},
+                            "visible": true
+                        },
+                        {
+                            "name": "Contract_Start_Date__c",
+                            "type": "date",
+                            "multival": false,
+                            "required": true,
+                            "label": "Contract Start Date",
+                            "value": "2016-10-22",
+                            "tooltip": "",
+                            "dependency": {
+                                "type": "1 OR 2",
+                                "criteria": [
+                                    {
+                                        "field": "Base_Fee__c",
+                                        "operator": "equals",
+                                        "condition": "test"
+                                    },
+                                    {
+                                        "field": "Base_Fee__c",
+                                        "operator": "equals",
+                                        "condition": "test2"
+                                    }
+                                ],
+                                "invoke": "show"
+                            },
+                            "visible": false
+                        },
+                        {
+                            "name": "Base_Fee__c",
+                            "type": "text",
+                            "multival": false,
+                            "required": true,
+                            "label": "Base Fee",
+                            "value": "",
+                            "tooltip": "",
+                            "dependency": {}
+                        },
+                        {
+                            "name": "Some_Other_Date__c",
+                            "type": "date",
+                            "multival": false,
+                            "required": true,
+                            "label": "Contract End Date",
+                            "value": "2015-10-22",
+                            "tooltip": "",
+                            "dependency": {
+                                "type": "1 OR 2",
+                                "criteria": [],
+                                "invoke": "show"
+                            },
+                            "visible": true
+                        }
+                    ]
+                }, 
+                {
+                    "name": "Deal Details",
+                    "devname": "deal-details",
+                    "elements": [
+                        {
+                            "name" : "Profit__c",
+                            "label" : "What is the Profit & Overhead Percentage of Net Revenue?",
+                            "required" : true,
+                            "type": "text"
+                        },
+                        {
+                            "name" : "Payroll_Burden__c",
+                            "label": "What is the Payroll Purden Percentage",
+                            "type": "text",
+                            "required": true
+                        }
+                    ]   
+                },
+                {
+                    "name": "Revenue",
+                    "devname": "revenue",
+                    "elements": [
+                        {
+                            "name": "revenue_development_description__c",
+                            "label": "Description of Estimated Revenue Development",
+                            "type": "wysiwyg",
+                            "required": true,
+                            "fullwidth": true
+                        }
+                    ]   
+                }
+            ]
+        },
+        {
+            "name": "Contract Compliance",
+            "devname": "contract-compliance",
+            "icon": {
+                "type": "action",
+                "name": "quote"
+            },
+            "state": {
+                "status": "pending",
+                "approvals": [
+                    {
+                        "actor": {
+                            "Id": "003flkj109308f",
+                            "Name": "Mike Bowen"
+                        },
+                        "status": "pending"
+                    },
+                    {
+                        "actor": {
+                            "Id": "003flkdjfl3093",
+                            "Name": "Max Stein"
+                        },
+                        "status": "approved"
+                    }
+                ]
+            },
+            "sections": [
+
+            ]
+        },
+        {
+            "name": "Legal",
+            "devname": "legal",
+            "icon": {
+                "type": "action",
+                "name": "new_custom90"
+            },
+            "sections": []
+        }
+    ]
+}

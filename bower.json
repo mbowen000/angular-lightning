@@ -1,6 +1,6 @@
 {
-  "name": "lightning-angular",
-  "version": "0.0.0",
+  "name": "angular-lightning",
+  "version": "0.0.1",
   "main": "./dist/scripts/scripts.js",
   "dependencies": {
     "angular": "^1.3.0",
