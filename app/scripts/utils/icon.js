@@ -1,6 +1,6 @@
 angular.module('angular-lightning.icon', []).
 
-directive('smbIcon', ['$rootScope', function($rootScope) {
+directive('liIcon', ['$rootScope', function($rootScope) {
 	'use strict';
 	return {
 		templateUrl: 'views/util/icon.html',
@@ -27,7 +27,7 @@ directive('smbIcon', ['$rootScope', function($rootScope) {
 
 			var useElement = $(element).find('use');
 
-			var newRef = $rootScope.iconUrl + 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
+			var newRef = 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
 			$(useElement).attr('xlink:href', newRef);
 
 			if(options.type === 'action') {

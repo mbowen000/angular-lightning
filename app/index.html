@@ -5,7 +5,6 @@
         <!-- build:css(.) styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/salesforce-lightning-design-system/assets/styles/salesforce-lightning-design-system.css" />
-        <link rel="stylesheet" href="bower_components/trix/dist/trix.css" />
         <link rel="stylesheet" href="bower_components/angular-inform/dist/angular-inform.css" />
         <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.css" />
         <!-- endbower -->
@@ -21,14 +20,32 @@
     <script>
     </script>
 
-    <body ng-app="angular-lightning-demo">
+    <body ng-app="angular-lightning-demo" ng-controller="DemoController as dc">
         
+        <h1 class="slds-text-heading--large">Angular Lightning</h1>
+        <p>AngularJS Directives for Salesforce Lightning Design System</p>
+
+        <br/>
+        <h2 class="slds-text-heading--medium">Form Fields</h2>
+    
+        <br/>
+        <h3 class="slds-text-heading--small">Datepicker</h3>
+
         <div class="slds-form-element__control">
             <div class="slds-input-has-icon slds-input-has-icon--right">
                 <!-- <span smb-icon type="utility" icon="event" size="x-small"></span> -->
-                <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='field.value' ng-required='field.required' smb-field-date-input ng-focus="isOpen = true" ng-disabled="field.disabled || $parent.$parent.section.state.status === 'pending'"/>
+                <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='datefield' ng-required='datefield.required' li-datepicker ng-focus="isOpen = true" ng-disabled="datefield.disabled || $parent.$parent.section.state.status === 'pending'"/>
             </div>
         </div>
+
+        <div class="slds-form-element__control" li-picklist options="dc.picklistfield.picklistvals" selected="dc.picklistfield.value"></div>
+
+        
+
+        <br/>
+        <h2 class="slds-text-heading--medium">Icons</h2>
+
+        <span li-icon type="utility" icon="warning" size="x-small" color="warning"></span>
 
     </body>
 
@@ -39,7 +56,6 @@
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/angular-safeapply/safe-apply.js"></script>
     <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/trix/dist/trix.js"></script>
     <script src="bower_components/angular-inform/dist/angular-inform.js"></script>
     <script src="bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
     <!-- endbower -->
@@ -48,7 +64,11 @@
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/main.js"></script>
     <script src="scripts/fields/field-datepicker.js"></script>
+    <script src="scripts/fields/field-picklist.js"></script>
     <script src="scripts/utils/icon.js"></script>
     <!-- endbuild -->
+
+    <!-- include the demo script outside of the usemin block (we dont want it included in the dist code) -->
+    <script src="scripts/demo/demo.js"></script>
 
 </apex:page>

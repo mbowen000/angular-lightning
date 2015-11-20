@@ -93,7 +93,7 @@ module.exports = function (grunt) {
       livereload: {
         options: {
           open: true,
-          protocol: 'https',
+          protocol: 'http',
           middleware: function (connect) {
             return [
               // middleware that allows CORS requests (for serving static resources during dev to salesforce page)
@@ -376,6 +376,16 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>',
         src: 'views/**/*.html',
         dest: '.tmp/templateCache.js'
+      },
+      dev: {
+        options: {
+          module: 'angular-lightning',
+          htmlmin: '<%= htmlmin.dist.options %>',
+          usemin: 'scripts/scripts.js'
+        },
+        cwd: '<%= yeoman.app %>',
+        src: 'views/**/*.html',
+        dest: '.tmp/templateCache.js'
       }
     },
 
@@ -506,7 +516,7 @@ module.exports = function (grunt) {
       'ngtemplates:dev',
       'concurrent:server',
       'autoprefixer:server',
-      'copy:salesforceDev',
+      //'copy:salesforceDev',
       //'targethtml:dev'
     ]);
 

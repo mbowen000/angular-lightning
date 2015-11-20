@@ -174,30 +174,10 @@ angular.module('angular-lightning.datepicker', [])
 	return this;	
 }])
 
-.directive('smbFieldDate', ['DateService', function(DateService) {
+.directive('liDatepicker', ['DateService', function(DateService) {
 	'use strict';
 	return {
-		templateUrl: 'views/fields/date/field-date.html',
-		require: ['smbFieldDate'],
-		controller: function($scope) {
-			this.init = function(element, controllers) {
-				this.controllers = controllers;
-				this.element = element;		
-			};
-
-			return this;
-		},
-		link: function(scope, element, attrs, controllers) {
-			controllers[0].init(element, controllers);
-			return this;
-		}
-	};
-}])
-
-.directive('smbFieldDateInput', ['DateService', function(DateService) {
-	'use strict';
-	return {
-		require: ['smbFieldDateInput','?^smbFieldDate', 'ngModel'],
+		require: ['liDatepicker','?^smbFieldDate', 'ngModel'],
 		controller: 'DateDropdownController',
 		// controller: function($scope) {
 

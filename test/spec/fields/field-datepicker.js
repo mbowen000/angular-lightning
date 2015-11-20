@@ -4,7 +4,7 @@ describe('Date Directive...', function() {
 
 	var $rootScope, $compile, field, $controller, $document, DateConfig;
 
-	beforeEach(module('templates', 'testapp.field', 'testapp.fieldDatepicker'));
+	beforeEach(module('templates', 'angular-lightning.datepicker'));
 
 	beforeEach(inject(function(_$rootScope_, _$compile_, _$controller_, _$document_, _DateConfig_) {
 		$rootScope = _$rootScope_;
