@@ -2,6 +2,9 @@
   "name": "app",
   "private": true,
   "devDependencies": {
+    "autoprefixer": "^6.1.2",
+    "browserslist": "^1.0.1",
+    "caniuse-db": "^1.0.30000372",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",
     "grunt-ant-sfdc": "^0.2.6",
@@ -34,9 +37,11 @@
     "karma-jasmine": "*",
     "karma-ng-html2js-preprocessor": "^0.2.0",
     "karma-phantomjs-launcher": "*",
+    "num2fraction": "^1.2.2",
+    "postcss": "^5.0.12",
+    "rimraf": "2.2.8",
     "time-grunt": "^1.0.0",
-    "underscore": "^1.8.3",
-    "rimraf": "2.2.8"
+    "underscore": "^1.8.3"
   },
   "engines": {
     "node": ">=0.10.0"
