@@ -316,9 +316,13 @@ angular.module('angular-lightning.picklist', [])
 		}	
 	};
 }]);
-angular.module('angular-lightning.icon', []).
+angular.module('angular-lightning.icon', [])
 
-directive('liIcon', ['$rootScope', function($rootScope) {
+.value('iconConfig', {
+	iconUrl: 'assets/icons/'
+})
+
+.directive('liIcon', ['iconConfig', function(iconConfig) {
 	'use strict';
 	return {
 		templateUrl: 'views/util/icon.html',
@@ -338,6 +342,9 @@ directive('liIcon', ['$rootScope', function($rootScope) {
 			});
 
 			scope.options = options;
+
+			var url = iconConfig.iconUrl;
+			console.log(iconConfig.iconUrl);
 			
 			var classes = [];
 
@@ -345,7 +352,7 @@ directive('liIcon', ['$rootScope', function($rootScope) {
 
 			var useElement = $(element).find('use');
 
-			var newRef = 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
+			var newRef = iconConfig.iconUrl + 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
 			$(useElement).attr('xlink:href', newRef);
 
 			if(options.type === 'action') {
@@ -425,35 +432,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/field-picklist.html',
-    "<div class=\"slds-picklist--draggable slds-grid\" ng-controller=\"liPicklistController as pc\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> <!-- <li draggable=\"true\" id=\"po-1-1\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"-1\" role=\"option\">\r" +
-    "\n" +
-    "          <span class=\"slds-truncate\">\r" +
-    "\n" +
-    "            <span>Option Two</span>\r" +
-    "\n" +
-    "          </span>\r" +
-    "\n" +
-    "        </li>\r" +
-    "\n" +
-    "        <li draggable=\"true\" id=\"po-2-2\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"-1\" role=\"option\">\r" +
-    "\n" +
-    "          <span class=\"slds-truncate\">\r" +
-    "\n" +
-    "            <span>Option Three</span>\r" +
-    "\n" +
-    "          </span>\r" +
-    "\n" +
-    "        </li>\r" +
-    "\n" +
-    "        <li draggable=\"true\" id=\"po-3-3\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"-1\" role=\"option\">\r" +
-    "\n" +
-    "          <span class=\"slds-truncate\">\r" +
-    "\n" +
-    "            <span>Option Four</span>\r" +
-    "\n" +
-    "          </span>\r" +
-    "\n" +
-    "        </li> --> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeValues()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"addValues()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
+    "<div class=\"slds-picklist--draggable slds-grid\" ng-controller=\"liPicklistController as pc\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeValues()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"addValues()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
   );
 
 

@@ -53,7 +53,7 @@ module.exports = function (grunt) {
       },
       jsTest: {
         files: ['test/spec/**/*.js', 'test/spec/fields/**/*.js'],
-        tasks: ['newer:jshint:test', 'karma:unit']
+        tasks: ['newer:jshint:test', 'karma:unit', 'buildDev']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
       },
       templates: {
         files: ['<%= yeoman.app %>/views/**/*.html'],
-        tasks: ['ngtemplates:dev']
+        tasks: ['ngtemplates:dev', 'buildDev']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -79,16 +79,28 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      },
+      dev: {
+        options: {
+          livereload: '<%= connect.options.livereload %>'
+        },
+        files: [
+          '<%= yeoman.app %>/{,*/}*.html',
+          '<%= yeoman.app %>/scripts/{,*/}*.js'
+        ],
+        tasks: [
+          'buildDev'
+        ]
       }
     },
 
     // The actual grunt server settings
     connect: {
       options: {
-        port: 9000,
+        port: 9001,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
-        livereload: 35729
+        livereload: 35730
       },
       livereload: {
         options: {
@@ -522,7 +534,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'connect:livereload',
-      'watch'
+      'watch:dev'
     ]);
     
   });
@@ -590,7 +602,7 @@ module.exports = function (grunt) {
     //'filerev',
     'usemin',
     'htmlmin',
-    'copy:dev'
+    'copy:dev',
     //'targethtml:dist'
   ]);
 

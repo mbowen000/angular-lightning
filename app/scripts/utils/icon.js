@@ -1,6 +1,10 @@
-angular.module('angular-lightning.icon', []).
+angular.module('angular-lightning.icon', [])
 
-directive('liIcon', ['$rootScope', function($rootScope) {
+.value('iconConfig', {
+	iconUrl: 'assets/icons/'
+})
+
+.directive('liIcon', ['iconConfig', function(iconConfig) {
 	'use strict';
 	return {
 		templateUrl: 'views/util/icon.html',
@@ -20,6 +24,9 @@ directive('liIcon', ['$rootScope', function($rootScope) {
 			});
 
 			scope.options = options;
+
+			var url = iconConfig.iconUrl;
+			console.log(iconConfig.iconUrl);
 			
 			var classes = [];
 
@@ -27,7 +34,7 @@ directive('liIcon', ['$rootScope', function($rootScope) {
 
 			var useElement = $(element).find('use');
 
-			var newRef = 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
+			var newRef = iconConfig.iconUrl + 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
 			$(useElement).attr('xlink:href', newRef);
 
 			if(options.type === 'action') {
