@@ -47,6 +47,15 @@
 
         <span li-icon type="utility" icon="warning" size="x-small" color="warning"></span>
 
+        <h2 class="slds-text-heading--medium">Modals</h2>
+
+        <div ng-controller="DemoModalController as mc">
+            <!-- todo: move this to external template in controller -->
+            <button ng-click='mc.open()'>Open</button>
+        </div>
+
+
+
     </body>
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -66,9 +75,11 @@
     <script src="scripts/fields/field-datepicker.js"></script>
     <script src="scripts/fields/field-picklist.js"></script>
     <script src="scripts/utils/icon.js"></script>
+    <script src="scripts/utils/modal.js"></script>
     <!-- endbuild -->
 
     <!-- include the demo script outside of the usemin block (we dont want it included in the dist code) -->
     <script src="scripts/demo/demo.js"></script>
+    <script src="scripts/demo/modal-demo.js"></script>
 
 </apex:page>
