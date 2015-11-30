@@ -2,7 +2,8 @@
 angular.module('angular-lightning', [ 
 	'angular-lightning.datepicker',
 	'angular-lightning.picklist',
-	'angular-lightning.icon'
+	'angular-lightning.icon',
+	'angular-lightning.modal'
 ]);
 angular.module('angular-lightning.datepicker', [])
 
@@ -419,6 +420,69 @@ angular.module('angular-lightning.icon', [])
 		}
 	};
 }]);
+angular.module('angular-lightning.modal', [])
+
+/**
+* The service is responsible for creating the modal on the document... can in the future put things here to manage multiple modals etc.
+**/
+.factory('liModalService', ['$rootScope', '$compile', function($rootScope, $compile) {
+	'use strict';
+	var modal = null;
+
+	// this we should allow to be passed in so we can augment an existing scope
+	var modalScope = $rootScope.$new();
+	modalScope.close = function() {
+		modal.remove();
+	};
+
+	var $modalService = {
+		// some properties here
+	};
+
+	$modalService.open = function(options) {
+		// append to dom here
+		var modalEl = angular.element('<div li-modal></div>');
+		modal = $compile(modalEl)(modalScope);
+
+		$("body").append(modal);
+	};
+
+	return $modalService;
+}])
+
+.directive('liModal', [function() {
+	'use strict';
+	return {
+		templateUrl: 'views/util/modal.html',
+		link: function(scope, elem, attrs) {
+			console.log('linked');
+		}
+	}
+}])
+
+.provider('liModal', function() {
+	'use strict';
+	var $modalProvider = {
+		options: {
+
+		},
+		$get: ['liModalService', function(liModalService) {
+			var $modal = {};
+
+			$modal.open = function(options) {
+				liModalService.open(options);
+			};
+
+			$modal.close = function() {
+				liModalService.close();
+			};
+
+			return $modal;
+		}]
+	}
+
+	return $modalProvider;
+});
 angular.module('angular-lightning').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -428,6 +492,11 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
     "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\r" +
     "\n" +
     "\t     \t\t\t</div> --> <div class=\"slds-media__body\"> <h2 class=\"slds-text-heading--small slds-truncate\">Summary</h2> </div> </div> </div> <div class=\"slds-card__body\"> <table class=\"slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal page-nav\"> <tr ng-repeat-start=\"page in form.pages\" ng-click=\"page.activate()\"> <td>{{page.name}} ({{page.progress()}}%)</td> <td style=\"text-align:right\"> <!-- invalid icon --> <span smb-icon type=\"utility\" icon=\"warning\" size=\"x-small\" color=\"warning\" ng-if=\"page.formCtrl.$invalid\"></span> <!-- valid icon --> <span smb-icon type=\"utility\" icon=\"success\" size=\"x-small\" color=\"success\" ng-if=\"page.formCtrl.$valid\"></span> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\" ng-if=\"page.active\"></span> </td> </tr> <tr ng-repeat-end class=\"progresswrappertr\"> <td colspan=\"2\" class=\"progresswrapper\"> <div smb-progressbar minimal value=\"page.progress()\"></div> </td> </tr> </table> </div> </div> </aside> <main class=\"layout-main slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--8-of-12\"> <div smb-form form=\"form\" ng-form=\"mainform\" ng-if=\"form\"></div> <button class=\"slds-button slds-button--brand\" ng-click=\"saveForm()\">Save</button> </main> </div>"
+  );
+
+
+  $templateCache.put('views/demo/modal-demo.html',
+    "template!"
   );
 
 
@@ -487,6 +556,11 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
   $templateCache.put('views/util/icon.html',
     "<!-- <span class=\"slds-icon__container--circle slds-icon-action-update slds-media__figure\"> --> <svg aria-hidden=\"true\" ng-class=\"classes\"> <use xlink:href=\"#\"></use> </svg> <span class=\"slds-assistive-text\">{{page.name}}</span> <!-- </span> -->"
+  );
+
+
+  $templateCache.put('views/util/modal.html',
+    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Header</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit officia tempor esse quis. Cillum sunt ad dolore quis aute consequat ipsum magna exercitation reprehenderit magna. Tempor cupidatat consequat elit dolor adipisicing.</p> <p>Dolor eiusmod sunt ex incididunt cillum quis nostrud velit duis sit officia. Lorem aliqua enim laboris do dolor eiusmod officia. Mollit incididunt nisi consectetur esse laborum eiusmod pariatur proident. Eiusmod et adipisicing culpa deserunt nostrud ad veniam nulla aute est. Labore esse esse cupidatat amet velit id elit consequat minim ullamco mollit enim excepteur ea.</p> </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> <div class=\"slds-backdrop slds-backdrop--open\"></div> </div>"
   );
 
 
