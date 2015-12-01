@@ -9,11 +9,7 @@ angular.module('angular-lightning.modal', [])
 	var modalBackdrop = null;
 
 	// this we should allow to be passed in so we can augment an existing scope
-	var modalScope = $rootScope.$new();
-	modalScope.close = function() {
-		modal.remove();
-		modalBackdrop.remove();
-	};
+	var modalScope = null;
 
 	var $modalService = {
 		// some properties here
@@ -23,6 +19,14 @@ angular.module('angular-lightning.modal', [])
 		// append to dom here
 		var modalEl = angular.element('<div li-modal></div>');
 		
+		modalScope = (options.scope || $rootScope).$new();
+
+		// add a standard close function
+		modalScope.close = function() {
+			modal.remove();
+			modalBackdrop.remove();
+		};
+
 		modalEl.attr({
 			'template-url': options.templateUrl
 		});

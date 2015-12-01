@@ -431,11 +431,7 @@ angular.module('angular-lightning.modal', [])
 	var modalBackdrop = null;
 
 	// this we should allow to be passed in so we can augment an existing scope
-	var modalScope = $rootScope.$new();
-	modalScope.close = function() {
-		modal.remove();
-		modalBackdrop.remove();
-	};
+	var modalScope = null;
 
 	var $modalService = {
 		// some properties here
@@ -445,6 +441,14 @@ angular.module('angular-lightning.modal', [])
 		// append to dom here
 		var modalEl = angular.element('<div li-modal></div>');
 		
+		modalScope = (options.scope || $rootScope).$new();
+
+		// add a standard close function
+		modalScope.close = function() {
+			modal.remove();
+			modalBackdrop.remove();
+		};
+
 		modalEl.attr({
 			'template-url': options.templateUrl
 		});
@@ -511,7 +515,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/demo/modal-demo.html',
-    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Header</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div></div>"
+    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-modal--large slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Demo for Angular Lightning</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
   );
 
 
