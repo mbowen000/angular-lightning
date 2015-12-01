@@ -34,7 +34,7 @@ angular.module('angular-lightning.icon', [])
 
 			var useElement = $(element).find('use');
 
-			var newRef = iconConfig.iconUrl + 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
+			var newRef = iconConfig.iconUrl + options.type + '-sprite/svg/symbols.svg#' + options.icon;
 			$(useElement).attr('xlink:href', newRef);
 
 			if(options.type === 'action') {

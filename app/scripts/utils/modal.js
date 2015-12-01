@@ -6,11 +6,13 @@ angular.module('angular-lightning.modal', [])
 .factory('liModalService', ['$rootScope', '$compile', function($rootScope, $compile) {
 	'use strict';
 	var modal = null;
+	var modalBackdrop = null;
 
 	// this we should allow to be passed in so we can augment an existing scope
 	var modalScope = $rootScope.$new();
 	modalScope.close = function() {
 		modal.remove();
+		modalBackdrop.remove();
 	};
 
 	var $modalService = {
@@ -20,8 +22,19 @@ angular.module('angular-lightning.modal', [])
 	$modalService.open = function(options) {
 		// append to dom here
 		var modalEl = angular.element('<div li-modal></div>');
+		
+		modalEl.attr({
+			'template-url': options.templateUrl
+		});
 		modal = $compile(modalEl)(modalScope);
 
+		var modalElBackdrop = angular.element('<div class="slds-backdrop slds-backdrop--open"></div>');
+		modalBackdrop = $compile(modalElBackdrop)(modalScope);
+
+		// append the backdrop first
+		$("body").append(modalBackdrop);
+
+		// then the modal
 		$("body").append(modal);
 	};
 
@@ -31,7 +44,9 @@ angular.module('angular-lightning.modal', [])
 .directive('liModal', [function() {
 	'use strict';
 	return {
-		templateUrl: 'views/util/modal.html',
+		templateUrl: function(tElem, tAttrs) {
+			return tAttrs.templateUrl || 'views/util/modal.html';
+		},
 		link: function(scope, elem, attrs) {
 			console.log('linked');
 		}

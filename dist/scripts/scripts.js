@@ -353,7 +353,7 @@ angular.module('angular-lightning.icon', [])
 
 			var useElement = $(element).find('use');
 
-			var newRef = iconConfig.iconUrl + 'assets/icons/' + options.type + '-sprite/svg/symbols.svg#' + options.icon;
+			var newRef = iconConfig.iconUrl + options.type + '-sprite/svg/symbols.svg#' + options.icon;
 			$(useElement).attr('xlink:href', newRef);
 
 			if(options.type === 'action') {
@@ -428,11 +428,13 @@ angular.module('angular-lightning.modal', [])
 .factory('liModalService', ['$rootScope', '$compile', function($rootScope, $compile) {
 	'use strict';
 	var modal = null;
+	var modalBackdrop = null;
 
 	// this we should allow to be passed in so we can augment an existing scope
 	var modalScope = $rootScope.$new();
 	modalScope.close = function() {
 		modal.remove();
+		modalBackdrop.remove();
 	};
 
 	var $modalService = {
@@ -442,8 +444,19 @@ angular.module('angular-lightning.modal', [])
 	$modalService.open = function(options) {
 		// append to dom here
 		var modalEl = angular.element('<div li-modal></div>');
+		
+		modalEl.attr({
+			'template-url': options.templateUrl
+		});
 		modal = $compile(modalEl)(modalScope);
 
+		var modalElBackdrop = angular.element('<div class="slds-backdrop slds-backdrop--open"></div>');
+		modalBackdrop = $compile(modalElBackdrop)(modalScope);
+
+		// append the backdrop first
+		$("body").append(modalBackdrop);
+
+		// then the modal
 		$("body").append(modal);
 	};
 
@@ -453,7 +466,9 @@ angular.module('angular-lightning.modal', [])
 .directive('liModal', [function() {
 	'use strict';
 	return {
-		templateUrl: 'views/util/modal.html',
+		templateUrl: function(tElem, tAttrs) {
+			return tAttrs.templateUrl || 'views/util/modal.html';
+		},
 		link: function(scope, elem, attrs) {
 			console.log('linked');
 		}
@@ -496,12 +511,12 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/demo/modal-demo.html',
-    "template!"
+    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Header</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div></div>"
   );
 
 
   $templateCache.put('views/field-picklist.html',
-    "<div class=\"slds-picklist--draggable slds-grid\" ng-controller=\"liPicklistController as pc\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeValues()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"addValues()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
+    "<div class=\"slds-picklist--draggable slds-grid\" ng-controller=\"liPicklistController as pc\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeValues()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"addValues()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
   );
 
 
@@ -560,7 +575,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/util/modal.html',
-    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Header</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit officia tempor esse quis. Cillum sunt ad dolore quis aute consequat ipsum magna exercitation reprehenderit magna. Tempor cupidatat consequat elit dolor adipisicing.</p> <p>Dolor eiusmod sunt ex incididunt cillum quis nostrud velit duis sit officia. Lorem aliqua enim laboris do dolor eiusmod officia. Mollit incididunt nisi consectetur esse laborum eiusmod pariatur proident. Eiusmod et adipisicing culpa deserunt nostrud ad veniam nulla aute est. Labore esse esse cupidatat amet velit id elit consequat minim ullamco mollit enim excepteur ea.</p> </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> <div class=\"slds-backdrop slds-backdrop--open\"></div> </div>"
+    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Header</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit officia tempor esse quis. Cillum sunt ad dolore quis aute consequat ipsum magna exercitation reprehenderit magna. Tempor cupidatat consequat elit dolor adipisicing.</p> <p>Dolor eiusmod sunt ex incididunt cillum quis nostrud velit duis sit officia. Lorem aliqua enim laboris do dolor eiusmod officia. Mollit incididunt nisi consectetur esse laborum eiusmod pariatur proident. Eiusmod et adipisicing culpa deserunt nostrud ad veniam nulla aute est. Labore esse esse cupidatat amet velit id elit consequat minim ullamco mollit enim excepteur ea.</p> </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
   );
 
 

@@ -5,3 +5,22 @@
 body { 
 	padding:20px;
 }
+
+/* For some reason we're not getting this from the SLDS .. investigate */
+.slds-backdrop {
+	-webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    width: 100%;
+    height: 100%;    
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(126,140,153,0.8);
+    z-index: 9000;
+}
+
+.slds-icon {
+	fill: currentColor;
+}

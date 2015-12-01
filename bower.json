@@ -5,12 +5,12 @@
   "dependencies": {
     "angular": "^1.3.0",
     "underscore": "~1.8.3",
-    "salesforce-lightning-design-system": "git://github.com/mbowen000/design-system-bower.git#addingmain",
     "angular-safeapply": "~1.0.4",
     "jquery": "~2.1.4",
     "moment": "~2.10.6",
     "angular-inform": "~0.0.18",
-    "angular-block-ui": "~0.2.0"
+    "angular-block-ui": "~0.2.0",
+    "salesforce-lightning-design-system": "~0.12.0"
   },
   "overrides": {},
   "devDependencies": {
