@@ -3,7 +3,8 @@ angular.module('angular-lightning', [
 	'angular-lightning.datepicker',
 	'angular-lightning.picklist',
 	'angular-lightning.icon',
-	'angular-lightning.modal'
+	'angular-lightning.modal',
+	'angular-lightning.lookup'
 ]);
 angular.module('angular-lightning.datepicker', [])
 
@@ -264,34 +265,54 @@ angular.module('angular-lightning.picklist', [])
 	};
 }])
 
-.controller('liPicklistController', [function() {
+.controller('liPicklistController', ['$scope', function($scope) {
 	'use strict';
-	this.init = function(scope, element) { 
-		console.log('init');
-		this.element = element;
-		this.scope = scope;
+	var element, modelCtrl;
 
-		this.reconcileValues();
+	// init this with previously loaded values from ngModel (if they exist)
+	$scope.selected = [];
+	
+
+	this.init = function(_scope, _element, _attrs, controllers) { 
+		element = _element;
+		modelCtrl = controllers[1];
+		//reconcileValues();
 	};
 
-	this.selectOption = function(option) {
-		this.selectedOption = option;
-		console.log(this);
+	$scope.highlightOption = function(option) {
+		$scope.highlighted = option;
+	}
+
+	$scope.selectHighlighted = function() {
+		$scope.selected.push($scope.highlighted);
+		reconcileValues();
+		// add to ngModel (do some parsing like adding semi-colons if needed)
+
+		// add some logic to make sure we can't add the value 2 times after already adding it
+	}
+
+	$scope.removeHighlighted = function() {
+		$scope.selected.splice($scope.selected.indexOf($scope.highlighted));
+		$scope.options.push($scope.highlighted);
+		reconcileValues();
+
+		// add some logic to make sure we can't "remove" the item twice
+	}
+
+	var reconcileValues = function() {
+		// get the diff
+		var diff = _.difference($scope.options, $scope.selected);
+		$scope.options = [];
+		_.each(diff, function(d) {
+			$scope.options.push(d);
+		})
 	};
 
-	this.reconcileValues = function() {
-		var self = this; 1, 2, 3 | 1, 2
-		var clone = [];
-		_.each(self.scope.options, function(option) {
-			if(self.scope.selected.indexOf(option) !== -1) {
-				// if its found in the selected list, remove it
-				clone = self.scope.options.slice(self.scope.options);
-				clone.splice(clone.indexOf(option), 1);
-				//newArr = self.scope.options.slice();
-			}
-		});
-		self.scope.options = clone;
-	};
+	$scope.$watchCollection('selected', function(newVals, oldVals) {
+		console.log(newVals);
+		// set the ngModel.$modelValue here? just set it to the value of the array prob?
+		modelCtrl.$modelValue = newVals;
+	});
 }])
 
 .directive('liPicklist', [function() {
@@ -303,7 +324,7 @@ angular.module('angular-lightning.picklist', [])
 		},
 		controller: 'liPicklistController',
 		templateUrl: 'views/field-picklist.html',
-		require: ['liPicklist'],
+		require: ['liPicklist', 'ngModel'],
 		link: function(scope, element, attrs, controllers) {
 			var picklistController;
 
@@ -312,10 +333,96 @@ angular.module('angular-lightning.picklist', [])
 			}
 
 			if(picklistController) {
-				picklistController.init(scope, element);
+				picklistController.init(scope, element, attrs, controllers);
 			}
 		}	
 	};
+}]);
+angular.module('angular-lightning.lookup', [])
+
+.controller('liLookupController', ['$compile', '$parse', '$q', function($compile, $parse, $q) {
+	'use strict';
+	this.init = function(_scope, _element, _attrs, controllers) { 
+		var scope, element, attrs, modelCtrl;
+		element = _element;
+		scope = _scope.$new();
+		attrs = _attrs;
+		modelCtrl = controllers[1];
+
+		scope.matches = [];
+
+		// create ui elements for the dropdown
+		var dropdownElem = angular.element('<div li-lookup-dropdown></div>');
+		dropdownElem.attr({
+			matches: 'matches',
+			currentVal: 'currentVal',
+			isFocused: 'isFocused'
+		});
+
+		// compile the ui element
+		var dropdownDomElem = $compile(dropdownElem)(scope);
+
+		// insert it into the dom
+		$(element).parents('.slds-lookup').append(dropdownDomElem);
+
+		// parse the expression the user has provided for what function/value to execute (right now assuming its a function)
+		var parsedExpression = $parse(attrs.liLookup);
+
+		// create a listener for typing
+		element.bind('keydown', function(event) {
+			// when the deferred given to us by the expression resolves, we'll loop over all the results and put them into the matches scope var which 
+			// has been handed down to the dropdown directive
+			// we need to give the current model value to the functoin we're executing as a local
+			var locals = {
+				$viewValue: modelCtrl.$viewValue
+			}
+
+			$q.when(parsedExpression(scope, locals)).then(function(results) {
+				scope.matches.length = 0;
+				_.each(results, function(result) {
+					scope.matches.push(result);
+				});
+
+				scope.currentVal = modelCtrl.$viewValue;
+			});
+		});
+
+		element.bind('focus', function(event) {
+			scope.isFocused = true;
+			scope.$digest();
+		});
+
+		// implement blur & documentClickBind() function from the datepicker to choose if we hide the dropdown when we click outside the element
+
+
+	};
+
+}])
+
+.directive('liLookup', [function() {
+	'use strict';
+	return {
+		controller: 'liLookupController',
+		require: ['liLookup', 'ngModel'],
+		link: function(scope, element, attrs, controllers) {
+			var lookupController;
+
+			if(controllers.length > 0) {
+				lookupController = controllers[0];
+			}
+
+			if(lookupController) {
+				lookupController.init(scope, element, attrs, controllers);
+			}
+		}	
+	};
+}])
+
+.directive('liLookupDropdown', [function() {
+	'use strict';
+	return {
+		templateUrl: 'views/fields/lookup/lookup-dropdown.html'
+	}
 }]);
 angular.module('angular-lightning.icon', [])
 
@@ -506,21 +613,19 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   'use strict';
 
   $templateCache.put('views/app.html',
-    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\r" +
-    "\n" +
-    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\r" +
-    "\n" +
+    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\n" +
+    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\n" +
     "\t     \t\t\t</div> --> <div class=\"slds-media__body\"> <h2 class=\"slds-text-heading--small slds-truncate\">Summary</h2> </div> </div> </div> <div class=\"slds-card__body\"> <table class=\"slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal page-nav\"> <tr ng-repeat-start=\"page in form.pages\" ng-click=\"page.activate()\"> <td>{{page.name}} ({{page.progress()}}%)</td> <td style=\"text-align:right\"> <!-- invalid icon --> <span smb-icon type=\"utility\" icon=\"warning\" size=\"x-small\" color=\"warning\" ng-if=\"page.formCtrl.$invalid\"></span> <!-- valid icon --> <span smb-icon type=\"utility\" icon=\"success\" size=\"x-small\" color=\"success\" ng-if=\"page.formCtrl.$valid\"></span> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\" ng-if=\"page.active\"></span> </td> </tr> <tr ng-repeat-end class=\"progresswrappertr\"> <td colspan=\"2\" class=\"progresswrapper\"> <div smb-progressbar minimal value=\"page.progress()\"></div> </td> </tr> </table> </div> </div> </aside> <main class=\"layout-main slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--8-of-12\"> <div smb-form form=\"form\" ng-form=\"mainform\" ng-if=\"form\"></div> <button class=\"slds-button slds-button--brand\" ng-click=\"saveForm()\">Save</button> </main> </div>"
   );
 
 
   $templateCache.put('views/demo/modal-demo.html',
-    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-modal--large slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Demo for Angular Lightning</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
+    "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-modal--large slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Demo for Angular Lightning</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! <br> {{message}} </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
   );
 
 
   $templateCache.put('views/field-picklist.html',
-    "<div class=\"slds-picklist--draggable slds-grid\" ng-controller=\"liPicklistController as pc\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeValues()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"addValues()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected\" ng-click=\"pc.selectOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
+    "<div class=\"slds-picklist--draggable slds-grid\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">First Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Second Category</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
   );
 
 
@@ -535,10 +640,8 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
-    "\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
-    "\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -560,6 +663,11 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
   $templateCache.put('views/fields/field-wysiwyg.html',
     "<trix-editor></trix-editor>"
+  );
+
+
+  $templateCache.put('views/fields/lookup/lookup-dropdown.html',
+    "<div class=\"slds-lookup__menu\" role=\"listbox\" ng-if=\"isFocused\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-text-default slds-icon--small\"> <use xlink:href=\"/assets/icons/utility-sprite/svg/symbols.svg#search\"></use> </svg>&quot;{{currentVal}}&quot; in Accounts</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches\"> <a id=\"s01\" href=\"#\" role=\"option\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-standard-account slds-icon--small\"> <use xlink:href=\"/assets/icons/standard-sprite/svg/symbols.svg#account\"></use> </svg>Paddy&#x27;s Pub</a> </li> </ul> </div>"
   );
 
 

@@ -3,5 +3,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.datepicker',
 	'angular-lightning.picklist',
 	'angular-lightning.icon',
-	'angular-lightning.modal'
+	'angular-lightning.modal',
+	'angular-lightning.lookup'
 ]);

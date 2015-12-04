@@ -12,34 +12,54 @@ angular.module('angular-lightning.picklist', [])
 	};
 }])
 
-.controller('liPicklistController', [function() {
+.controller('liPicklistController', ['$scope', function($scope) {
 	'use strict';
-	this.init = function(scope, element) { 
-		console.log('init');
-		this.element = element;
-		this.scope = scope;
+	var element, modelCtrl;
 
-		this.reconcileValues();
+	// init this with previously loaded values from ngModel (if they exist)
+	$scope.selected = [];
+	
+
+	this.init = function(_scope, _element, _attrs, controllers) { 
+		element = _element;
+		modelCtrl = controllers[1];
+		//reconcileValues();
 	};
 
-	this.selectOption = function(option) {
-		this.selectedOption = option;
-		console.log(this);
+	$scope.highlightOption = function(option) {
+		$scope.highlighted = option;
+	}
+
+	$scope.selectHighlighted = function() {
+		$scope.selected.push($scope.highlighted);
+		reconcileValues();
+		// add to ngModel (do some parsing like adding semi-colons if needed)
+
+		// add some logic to make sure we can't add the value 2 times after already adding it
+	}
+
+	$scope.removeHighlighted = function() {
+		$scope.selected.splice($scope.selected.indexOf($scope.highlighted));
+		$scope.options.push($scope.highlighted);
+		reconcileValues();
+
+		// add some logic to make sure we can't "remove" the item twice
+	}
+
+	var reconcileValues = function() {
+		// get the diff
+		var diff = _.difference($scope.options, $scope.selected);
+		$scope.options = [];
+		_.each(diff, function(d) {
+			$scope.options.push(d);
+		})
 	};
 
-	this.reconcileValues = function() {
-		var self = this; 1, 2, 3 | 1, 2
-		var clone = [];
-		_.each(self.scope.options, function(option) {
-			if(self.scope.selected.indexOf(option) !== -1) {
-				// if its found in the selected list, remove it
-				clone = self.scope.options.slice(self.scope.options);
-				clone.splice(clone.indexOf(option), 1);
-				//newArr = self.scope.options.slice();
-			}
-		});
-		self.scope.options = clone;
-	};
+	$scope.$watchCollection('selected', function(newVals, oldVals) {
+		console.log(newVals);
+		// set the ngModel.$modelValue here? just set it to the value of the array prob?
+		modelCtrl.$modelValue = newVals;
+	});
 }])
 
 .directive('liPicklist', [function() {
@@ -51,7 +71,7 @@ angular.module('angular-lightning.picklist', [])
 		},
 		controller: 'liPicklistController',
 		templateUrl: 'views/field-picklist.html',
-		require: ['liPicklist'],
+		require: ['liPicklist', 'ngModel'],
 		link: function(scope, element, attrs, controllers) {
 			var picklistController;
 
@@ -60,7 +80,7 @@ angular.module('angular-lightning.picklist', [])
 			}
 
 			if(picklistController) {
-				picklistController.init(scope, element);
+				picklistController.init(scope, element, attrs, controllers);
 			}
 		}	
 	};

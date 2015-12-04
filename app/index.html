@@ -38,9 +38,21 @@
             </div>
         </div>
 
-        <div class="slds-form-element__control" li-picklist options="dc.picklistfield.picklistvals" selected="dc.picklistfield.value"></div>
+        <div class="slds-form-element__control" li-picklist options="dc.picklistfield.picklistvals" ng-model="dc.picklistfield.value"></div>
 
-        
+        <h3 class="slds-text-heading--small">Lookup</h3>
+        <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label" for="lookup">Accounts</label>
+            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon">
+                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+              </svg>
+              <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" li-lookup="dc.lookupTest($viewValue)" ng-model="dc.typeaheadVal" />
+            </div>
+          </div>
+        </div>
+
 
         <br/>
         <h2 class="slds-text-heading--medium">Icons</h2>
@@ -74,6 +86,7 @@
     <script src="scripts/main.js"></script>
     <script src="scripts/fields/field-datepicker.js"></script>
     <script src="scripts/fields/field-picklist.js"></script>
+    <script src="scripts/fields/field-lookup.js"></script>
     <script src="scripts/utils/icon.js"></script>
     <script src="scripts/utils/modal.js"></script>
     <!-- endbuild -->

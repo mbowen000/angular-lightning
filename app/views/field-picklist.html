@@ -1,9 +1,9 @@
-<div class="slds-picklist--draggable slds-grid" ng-controller="liPicklistController as pc">
+<div class="slds-picklist--draggable slds-grid">
   <div class="slds-form-element">
     <span class="slds-form-element__label" aria-label="select-1">First Category</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in options" ng-click="pc.selectOption(option)">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="highlightOption(option)">
           <span class="slds-truncate">
             <span>{{option}}</span>
           </span>
@@ -12,10 +12,10 @@
     </div>
   </div>
   <div class="slds-grid slds-grid--vertical">
-    <button class="slds-button slds-button--icon-container" ng-click="removeValues()">
+    <button class="slds-button slds-button--icon-container" ng-click="removeHighlighted()">
       <span li-icon type="utility" icon="left" size="x-small"></span>
     </button>
-    <button class="slds-button slds-button--icon-container" ng-click="addValues()">
+    <button class="slds-button slds-button--icon-container" ng-click="selectHighlighted()">
       <span li-icon type="utility" icon="right" size="x-small"></span>
     </button>
   </div>
@@ -23,7 +23,7 @@
     <span class="slds-form-element__label" aria-label="select-2">Second Category</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in selected" ng-click="pc.selectOption(option)">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in selected track by $index">
           <span class="slds-truncate">
             <span>{{option}}</span>
           </span>    

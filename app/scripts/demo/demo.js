@@ -1,6 +1,6 @@
 angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightning-demo.modal'])
 
-.controller("DemoController", ['PicklistService', function(PicklistService) {
+.controller("DemoController", ['PicklistService', '$http', function(PicklistService, $http) {
 	'use strict';
 	return _.extend(this, {
 		datefield: null,
@@ -10,6 +10,19 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 				'option 1', 'option 2', 'option 3'
 			],
 			value: PicklistService.getArrayFromDelimted('option 2;option 3')
+		},
+		lookupTest: function(val) {
+			console.log(val);
+			return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
+		      params: {
+		        address: val,
+		        sensor: false
+		      }
+		    }).then(function(response){
+		      return response.data.results.map(function(item){
+		        return item.formatted_address;
+		      });
+		    });
 		}
 	});
 }]);
