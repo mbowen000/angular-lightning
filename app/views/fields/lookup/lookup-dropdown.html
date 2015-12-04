@@ -1,0 +1,16 @@
+<div class="slds-lookup__menu" role="listbox" ng-if="isFocused">
+  <div class="slds-lookup__item">
+    <button class="slds-button">
+      <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--small">
+        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+      </svg>&quot;{{currentVal}}&quot; in Accounts</button>
+  </div>
+  <ul class="slds-lookup__list" role="presentation">
+    <li class="slds-lookup__item" ng-repeat="match in matches track by $index">
+      <a id="s01" href="#" role="option">
+        <svg aria-hidden="true" class="slds-icon slds-icon-standard-account slds-icon--small">
+          <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+        </svg>Paddy&#x27;s Pub</a>
+    </li>
+  </ul>
+</div>
