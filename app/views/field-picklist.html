@@ -4,7 +4,7 @@
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
         <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="highlightOption(option)">
-          <span class="slds-truncate">
+          <span class="slds-truncate" ng-class="{selected: option==highlighted}">
             <span>{{option}}</span>
           </span>
         </li>
@@ -12,19 +12,19 @@
     </div>
   </div>
   <div class="slds-grid slds-grid--vertical">
-    <button class="slds-button slds-button--icon-container" ng-click="removeHighlighted()">
-      <span li-icon type="utility" icon="left" size="x-small"></span>
-    </button>
     <button class="slds-button slds-button--icon-container" ng-click="selectHighlighted()">
       <span li-icon type="utility" icon="right" size="x-small"></span>
+    </button>
+    <button class="slds-button slds-button--icon-container" ng-click="removeHighlighted()">
+      <span li-icon type="utility" icon="left" size="x-small"></span>
     </button>
   </div>
   <div class="slds-form-element">
     <span class="slds-form-element__label" aria-label="select-2">Selected</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in selected track by $index">
-          <span class="slds-truncate">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="highlightOption(option)">
+          <span class="slds-truncate" ng-class="{selected: option==highlighted}">
             <span>{{option}}</span>
           </span>    
         </li>

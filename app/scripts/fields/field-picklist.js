@@ -23,7 +23,13 @@ angular.module('angular-lightning.picklist', [])
 	this.init = function(_scope, _element, _attrs, controllers) { 
 		element = _element;
 		modelCtrl = controllers[1];
-		//reconcileValues();
+
+		modelCtrl.$render = function() {
+			if (modelCtrl.$modelValue) {
+			    $scope.selected = modelCtrl.$modelValue.split(';');
+				reconcileValues();
+			}
+		};
 	};
 
 	$scope.highlightOption = function(option) {
@@ -31,17 +37,21 @@ angular.module('angular-lightning.picklist', [])
 	}
 
 	$scope.selectHighlighted = function() {
-		$scope.selected.push($scope.highlighted);
-		reconcileValues();
+		if ($scope.highlighted != null && _.indexOf($scope.options, $scope.highlighted) > -1) {
+			$scope.selected.push($scope.highlighted);
+			reconcileValues();
+		}
 		// add to ngModel (do some parsing like adding semi-colons if needed)
 
 		// add some logic to make sure we can't add the value 2 times after already adding it
 	}
 
 	$scope.removeHighlighted = function() {
-		$scope.selected.splice($scope.selected.indexOf($scope.highlighted));
-		$scope.options.push($scope.highlighted);
-		reconcileValues();
+		if ($scope.highlighted != null && _.indexOf($scope.selected, $scope.highlighted) > -1) {
+			$scope.selected.splice($scope.selected.indexOf($scope.highlighted), 1);
+			$scope.options.push($scope.highlighted);
+			reconcileValues();
+		}
 
 		// add some logic to make sure we can't "remove" the item twice
 	}
@@ -52,13 +62,14 @@ angular.module('angular-lightning.picklist', [])
 		$scope.options = [];
 		_.each(diff, function(d) {
 			$scope.options.push(d);
-		})
+		});
+		$scope.highlighted = null;
 	};
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
 		console.log(newVals);
 		// set the ngModel.$modelValue here? just set it to the value of the array prob?
-		modelCtrl.$modelValue = newVals;
+		modelCtrl.$setViewValue(newVals.join(';'));
 	});
 }])
 
