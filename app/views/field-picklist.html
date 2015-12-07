@@ -3,8 +3,8 @@
     <span class="slds-form-element__label" aria-label="select-1">Available</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="highlightOption(option)">
-          <span class="slds-truncate" ng-class="{selected: option==highlighted}">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="highlightOption(option)" aria-selected="{{option==highlighted}}">
+          <span class="slds-truncate">
             <span>{{option}}</span>
           </span>
         </li>
@@ -23,8 +23,8 @@
     <span class="slds-form-element__label" aria-label="select-2">Selected</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" aria-selected="false" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="highlightOption(option)">
-          <span class="slds-truncate" ng-class="{selected: option==highlighted}">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="highlightOption(option)" aria-selected="{{option==highlighted}}">
+          <span class="slds-truncate">
             <span>{{option}}</span>
           </span>    
         </li>
