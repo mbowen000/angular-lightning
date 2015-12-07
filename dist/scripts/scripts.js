@@ -269,9 +269,7 @@ angular.module('angular-lightning.picklist', [])
 	'use strict';
 	var element, modelCtrl;
 
-	// init this with previously loaded values from ngModel (if they exist)
 	$scope.selected = [];
-	
 
 	this.init = function(_scope, _element, _attrs, controllers) { 
 		element = _element;
@@ -294,9 +292,6 @@ angular.module('angular-lightning.picklist', [])
 			$scope.selected.push($scope.highlighted);
 			reconcileValues();
 		}
-		// add to ngModel (do some parsing like adding semi-colons if needed)
-
-		// add some logic to make sure we can't add the value 2 times after already adding it
 	}
 
 	$scope.removeHighlighted = function() {
@@ -305,8 +300,6 @@ angular.module('angular-lightning.picklist', [])
 			$scope.options.push($scope.highlighted);
 			reconcileValues();
 		}
-
-		// add some logic to make sure we can't "remove" the item twice
 	}
 
 	var reconcileValues = function() {
@@ -320,8 +313,6 @@ angular.module('angular-lightning.picklist', [])
 	};
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
-		console.log(newVals);
-		// set the ngModel.$modelValue here? just set it to the value of the array prob?
 		modelCtrl.$setViewValue(newVals.join(';'));
 	});
 }])
