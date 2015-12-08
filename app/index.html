@@ -48,7 +48,7 @@
               <svg aria-hidden="true" class="slds-input__icon">
                 <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
               </svg>
-              <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" li-lookup="dc.lookupTest($viewValue)" ng-model="dc.typeaheadVal" />
+              <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" object-name="Demo Locations" li-lookup="location as location.formatted_address for location in dc.lookupTest($viewValue)" ng-model="dc.typeaheadVal" />
             </div>
           </div>
         </div>

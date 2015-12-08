@@ -24,7 +24,12 @@ angular.module('angular-lightning.picklist', [])
 
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
-			    $scope.selected = modelCtrl.$modelValue.split(';');
+				if (modelCtrl.$modelValue.indexOf(';') > -1) {
+				    $scope.selected = modelCtrl.$modelValue.split(';');
+				}
+				else {
+					$scope.selected = modelCtrl.$modelValue;
+				}
 				reconcileValues();
 			}
 		};
