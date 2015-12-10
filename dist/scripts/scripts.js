@@ -72,18 +72,16 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', function(_originalScope, $document, DateService, $compile) {
+.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', function($scope, $document, DateService, $compile) {
 	'use strict';
 
 	var self = this;
-	var ngModelCtrl, inputEl, $popup, $yearPicker, $scope;
-
-	$scope = _originalScope;
+	var ngModelCtrl, inputEl, $popup, $yearPicker;
 
 	this.init = function(element, controllers) {
 		this.controllers = controllers;
 		this.element = inputEl = element;
-		ngModelCtrl = controllers[1];
+		ngModelCtrl = controllers[2];
 
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
@@ -92,11 +90,6 @@ angular.module('angular-lightning.datepicker', [])
 			ngModelCtrl.$setViewValue(DateService.getDate(val));
 			unwatch();
 			_buildCalendar();
-		});
-
-		inputEl.bind('focus', function() {
-			$scope.isOpen = true;
-			$scope.$digest();
 		});
 
 	};
@@ -137,7 +130,7 @@ angular.module('angular-lightning.datepicker', [])
 			$scope.month = DateService.buildMonth(moment());
 		}
 
-		var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
+		var popupEl = angular.element('<div smb-field-date-dropdown ng-show="isOpen" ng-click="isOpen = true" class="smb-date-dropdown"></div>');
 
 		$popup = $compile(popupEl)($scope);
 		$(inputEl).after($popup);
@@ -153,7 +146,7 @@ angular.module('angular-lightning.datepicker', [])
 				return;
 			}
 
-			var yearPickerEl = angular.element('<span li-date-year-picker></span>');
+			var yearPickerEl = angular.element('<span smb-field-date-year-picker></span>');
 			yearPickerEl.attr({
 				'current-year' : 'getCurrentDate()'
 			});	
@@ -192,9 +185,31 @@ angular.module('angular-lightning.datepicker', [])
 .directive('liDatepicker', ['DateService', function(DateService) {
 	'use strict';
 	return {
-		require: ['liDatepicker','ngModel'],
+		require: ['liDatepicker','?^smbFieldDate', 'ngModel'],
 		controller: 'DateDropdownController',
-		scope: true,
+		// controller: function($scope) {
+
+
+		// 	this.init = function(element, controllers) {				
+		// 		this.controllers = controllers;
+		// 		this.element =  element;
+		// 		var ngModelCtrl = controllers[2];
+
+		// 		// turn the date string into a Date object (should turn into moment for future purposes)
+		// 		//$scope.field.value = DateService.getDate($scope.field.value);
+		// 		// ngModelCtrl.$setViewValue(DateService.getDate(ngModelCtrl.$viewValue));
+		// 		var unwatch = $scope.$watch(function() {
+		// 			return ngModelCtrl.$modelValue;
+		// 		}, function(val) {
+		// 			console.log(val);
+		// 			ngModelCtrl.$setViewValue(DateService.getDate(val));
+		// 			unwatch();
+		// 		});
+				
+		// 	};
+
+		// 	return this;
+		// },
 		link: function(scope, element, attrs, controllers) {
 			controllers[0].init(element, controllers);
 			return this;
@@ -202,7 +217,7 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.directive('liDateDropdown', [function() {
+.directive('smbFieldDateDropdown', [function() {
 	'use strict';
 	return {
 		templateUrl: 'views/fields/date/field-date-dropdown.html',
@@ -215,7 +230,7 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.directive('liDateYearPicker', ['DateService', function(DateService) {
+.directive('smbFieldDateYearPicker', ['DateService', function(DateService) {
 	'use strict';
 	return {
 		templateUrl: 'views/fields/date/field-date-yearpicker.html',
@@ -254,14 +269,23 @@ angular.module('angular-lightning.picklist', [])
 	'use strict';
 	var element, modelCtrl;
 
-	// init this with previously loaded values from ngModel (if they exist)
 	$scope.selected = [];
-	
 
 	this.init = function(_scope, _element, _attrs, controllers) { 
 		element = _element;
 		modelCtrl = controllers[1];
-		//reconcileValues();
+
+		modelCtrl.$render = function() {
+			if (modelCtrl.$modelValue) {
+				if (modelCtrl.$modelValue.indexOf(';') > -1) {
+				    $scope.selected = modelCtrl.$modelValue.split(';');
+				}
+				else {
+					$scope.selected = modelCtrl.$modelValue;
+				}
+				reconcileValues();
+			}
+		};
 	};
 
 	$scope.highlightOption = function(option) {
@@ -269,19 +293,18 @@ angular.module('angular-lightning.picklist', [])
 	}
 
 	$scope.selectHighlighted = function() {
-		$scope.selected.push($scope.highlighted);
-		reconcileValues();
-		// add to ngModel (do some parsing like adding semi-colons if needed)
-
-		// add some logic to make sure we can't add the value 2 times after already adding it
+		if ($scope.highlighted != null && _.indexOf($scope.options, $scope.highlighted) > -1) {
+			$scope.selected.push($scope.highlighted);
+			reconcileValues();
+		}
 	}
 
 	$scope.removeHighlighted = function() {
-		$scope.selected.splice($scope.selected.indexOf($scope.highlighted));
-		$scope.options.push($scope.highlighted);
-		reconcileValues();
-
-		// add some logic to make sure we can't "remove" the item twice
+		if ($scope.highlighted != null && _.indexOf($scope.selected, $scope.highlighted) > -1) {
+			$scope.selected.splice($scope.selected.indexOf($scope.highlighted), 1);
+			$scope.options.push($scope.highlighted);
+			reconcileValues();
+		}
 	}
 
 	var reconcileValues = function() {
@@ -290,13 +313,12 @@ angular.module('angular-lightning.picklist', [])
 		$scope.options = [];
 		_.each(diff, function(d) {
 			$scope.options.push(d);
-		})
+		});
+		$scope.highlighted = null;
 	};
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
-		console.log(newVals);
-		// set the ngModel.$modelValue here? just set it to the value of the array prob?
-		modelCtrl.$modelValue = newVals;
+		modelCtrl.$setViewValue(newVals.join(';'));
 	});
 }])
 
@@ -325,7 +347,28 @@ angular.module('angular-lightning.picklist', [])
 }]);
 angular.module('angular-lightning.lookup', [])
 
-.controller('liLookupController', ['$compile', '$parse', '$q', function($compile, $parse, $q) {
+.factory('liLookupParser', ['$parse', function($parse) {
+	var TYPEAHEAD_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+([\s\S]+?)$/;
+    return {
+      parse: function(input) {
+        var match = input.match(TYPEAHEAD_REGEXP);
+        if (!match) {
+          throw new Error(
+            'Expected typeahead specification in form of "_modelValue_ (as _label_)? for _item_ in _collection_"' +
+              ' but got "' + input + '".');
+        }
+
+        return {
+          itemName: match[3],
+          source: $parse(match[4]),
+          viewMapper: $parse(match[2] || match[1]),
+          modelMapper: $parse(match[1])
+        };
+      }
+    };
+}])
+
+.controller('liLookupController', ['$compile', '$parse', '$q', '$timeout', 'liLookupParser', function($compile, $parse, $q, $timeout, lookupParser) {
 	'use strict';
 	this.init = function(_scope, _element, _attrs, controllers) { 
 		var scope, element, attrs, modelCtrl;
@@ -334,52 +377,92 @@ angular.module('angular-lightning.lookup', [])
 		attrs = _attrs;
 		modelCtrl = controllers[1];
 
+		scope.objectName = attrs.objectName;
 		scope.matches = [];
+		scope.selected = null;
+		scope.isFocused = false;
 
-		// create ui elements for the dropdown
-		var dropdownElem = angular.element('<div li-lookup-dropdown></div>');
-		dropdownElem.attr({
-			matches: 'matches',
-			currentVal: 'currentVal',
-			isFocused: 'isFocused'
-		});
+		//Set object to model
+		var parsedModel = $parse(attrs.ngModel);
+	    var $setModelValue = function(scope, newValue) {
+	      return parsedModel.assign(scope, newValue);
+	    };
 
-		// compile the ui element
-		var dropdownDomElem = $compile(dropdownElem)(scope);
-
-		// insert it into the dom
-		$(element).parents('.slds-lookup').append(dropdownDomElem);
-
-		// parse the expression the user has provided for what function/value to execute (right now assuming its a function)
-		var parsedExpression = $parse(attrs.liLookup);
+		// parse the expression the user has provided for what function/value to execute
+		var parsedExpression = lookupParser.parse(attrs.liLookup);
 
 		// create a listener for typing
-		element.bind('keydown', function(event) {
+		element.bind('keyup', function(event) {
 			// when the deferred given to us by the expression resolves, we'll loop over all the results and put them into the matches scope var which 
 			// has been handed down to the dropdown directive
 			// we need to give the current model value to the functoin we're executing as a local
 			var locals = {
 				$viewValue: modelCtrl.$viewValue
-			}
+			};
 
-			$q.when(parsedExpression(scope, locals)).then(function(results) {
+			$q.when(parsedExpression.source(scope, locals)).then(function(results) {
 				scope.matches.length = 0;
 				_.each(results, function(result) {
-					scope.matches.push(result);
+					locals[parsedExpression.itemName] = result;
+					scope.matches.push({
+						label: parsedExpression.viewMapper(scope, locals),
+						model: result
+					});
 				});
 
 				scope.currentVal = modelCtrl.$viewValue;
 			});
 		});
 
-		element.bind('focus', function(event) {
-			scope.isFocused = true;
-			scope.$digest();
+
+		//This is what sets the label on the input!
+		modelCtrl.$formatters.push(function(modelValue) {
+			var candidateViewValue, emptyViewValue;
+	        var locals = {};
+
+			locals[parsedExpression.itemName] = modelValue;
+	        candidateViewValue = parsedExpression.viewMapper(scope, locals);
+	        locals[parsedExpression.itemName] = undefined;
+	        emptyViewValue = parsedExpression.viewMapper(scope, locals);
+
+	        return candidateViewValue !== emptyViewValue ? candidateViewValue : modelValue;
 		});
 
-		// implement blur & documentClickBind() function from the datepicker to choose if we hide the dropdown when we click outside the element
+		// create ui elements for the dropdown
+		var dropdownElem = angular.element('<div li-lookup-dropdown></div>');
+		dropdownElem.attr({
+			matches: 'matches',
+			'current-val': 'currentVal',
+			'the-object': 'objectName',
+			select: 'select(idx)'
+		});
 
+		// compile the ui element
+		var dropdownDomElem = $compile(dropdownElem)(scope);
 
+		element.bind('focus', function(event) {
+			// insert it into the dom
+			scope.currentVal = modelCtrl.$viewValue;
+			scope.$digest();
+			$(element).parents('.slds-lookup').append(dropdownDomElem);
+		});
+
+		element.bind('blur', function () {
+			$timeout(function() {
+				$('div[li-lookup-dropdown]').remove();
+			}, 300);
+		});
+
+		scope.select = function(idx) {
+			var locals = {};
+			var model, item;
+
+			locals[parsedExpression.itemName] = item = scope.matches[idx].model;
+      		model = parsedExpression.modelMapper(scope, locals);
+			$setModelValue(scope, model);
+
+			scope.matches = [];
+		};
 	};
 
 }])
@@ -406,7 +489,19 @@ angular.module('angular-lightning.lookup', [])
 .directive('liLookupDropdown', [function() {
 	'use strict';
 	return {
-		templateUrl: 'views/fields/lookup/lookup-dropdown.html'
+		templateUrl: 'views/fields/lookup/lookup-dropdown.html',
+		scope: {
+			matches: '=',
+			currentVal: '=',
+			theObject: '=',
+			select: '&'
+		},
+		replace: true,
+		link: function(scope, element, attrs) {
+			scope.selectMatch = function(idx) {
+				scope.select({idx: idx});
+			};
+		}
 	}
 }]);
 angular.module('angular-lightning.icon', [])
@@ -598,8 +693,10 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   'use strict';
 
   $templateCache.put('views/app.html',
-    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\n" +
-    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\n" +
+    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\r" +
+    "\n" +
+    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\r" +
+    "\n" +
     "\t     \t\t\t</div> --> <div class=\"slds-media__body\"> <h2 class=\"slds-text-heading--small slds-truncate\">Summary</h2> </div> </div> </div> <div class=\"slds-card__body\"> <table class=\"slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal page-nav\"> <tr ng-repeat-start=\"page in form.pages\" ng-click=\"page.activate()\"> <td>{{page.name}} ({{page.progress()}}%)</td> <td style=\"text-align:right\"> <!-- invalid icon --> <span smb-icon type=\"utility\" icon=\"warning\" size=\"x-small\" color=\"warning\" ng-if=\"page.formCtrl.$invalid\"></span> <!-- valid icon --> <span smb-icon type=\"utility\" icon=\"success\" size=\"x-small\" color=\"success\" ng-if=\"page.formCtrl.$valid\"></span> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\" ng-if=\"page.active\"></span> </td> </tr> <tr ng-repeat-end class=\"progresswrappertr\"> <td colspan=\"2\" class=\"progresswrapper\"> <div smb-progressbar minimal value=\"page.progress()\"></div> </td> </tr> </table> </div> </div> </aside> <main class=\"layout-main slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--8-of-12\"> <div smb-form form=\"form\" ng-form=\"mainform\" ng-if=\"form\"></div> <button class=\"slds-button slds-button--brand\" ng-click=\"saveForm()\">Save</button> </main> </div>"
   );
 
@@ -610,7 +707,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/field-picklist.html',
-    "<div class=\"slds-picklist--draggable slds-grid\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">Available</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Selected</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" aria-selected=\"false\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
+    "<div class=\"slds-picklist--draggable slds-grid\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">Available</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Selected</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
   );
 
 
@@ -620,13 +717,15 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-dropdown.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
+    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().date() === day.moment.date() }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
   );
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
+    "\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
+    "\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -652,7 +751,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/lookup/lookup-dropdown.html',
-    "<div class=\"slds-lookup__menu\" role=\"listbox\" ng-if=\"isFocused\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-text-default slds-icon--small\"> <use xlink:href=\"/assets/icons/utility-sprite/svg/symbols.svg#search\"></use> </svg>&quot;{{currentVal}}&quot; in Accounts</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\"> <a id=\"s01\" href=\"#\" role=\"option\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-standard-account slds-icon--small\"> <use xlink:href=\"/assets/icons/standard-sprite/svg/symbols.svg#account\"></use> </svg>Paddy&#x27;s Pub</a> </li> </ul> </div>"
+    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-text-default slds-icon--small\"> <use xlink:href=\"/assets/icons/utility-sprite/svg/symbols.svg#search\"></use> </svg>&quot;{{currentVal}}&quot; in {{theObject}}</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\"> <a href=\"javascript:;\" role=\"option\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-standard-account slds-icon--small\"> <use xlink:href=\"/assets/icons/standard-sprite/svg/symbols.svg#account\"></use> </svg>{{match.label}}</a> </li> </ul> </div>"
   );
 
 
