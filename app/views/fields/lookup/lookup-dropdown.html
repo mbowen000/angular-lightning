@@ -7,9 +7,10 @@
   </div>
   <ul class="slds-lookup__list" role="presentation">
     <li class="slds-lookup__item" ng-repeat="match in matches track by $index" ng-click="selectMatch($index)">
+      <a href="javascript:;" role="option">
         <svg aria-hidden="true" class="slds-icon slds-icon-standard-account slds-icon--small">
           <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
-        </svg>{{match.label}}
+        </svg>{{match.label}}</a>
     </li>
   </ul>
 </div>

@@ -95,6 +95,8 @@ angular.module('angular-lightning.lookup', [])
 
 		element.bind('focus', function(event) {
 			// insert it into the dom
+			scope.currentVal = modelCtrl.$viewValue;
+			scope.$digest();
 			$(element).parents('.slds-lookup').append(dropdownDomElem);
 		});
 
