@@ -98,7 +98,6 @@ angular.module('angular-lightning.datepicker', [])
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
 		}, function(val) {
-			console.log(val);
 			ngModelCtrl.$setViewValue(DateService.getDate(val));
 			unwatch();
 			_buildCalendar();

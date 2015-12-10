@@ -1,6 +1,6 @@
 angular.module('angular-lightning.progress', [])
 
-	.directive('smbProgressbar', [function() {
+	.directive('liProgressbar', [function() {
 		'use strict';
 		return {
 			templateUrl: 'views/util/progressbar.html',

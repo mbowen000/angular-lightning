@@ -13,7 +13,7 @@
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css"/>
         <!-- endbuild -->
-
+        <link rel="stylesheet" href="styles/site.css"/>
 
     </head>
 
@@ -22,50 +22,101 @@
 
     <body ng-app="angular-lightning-demo" ng-controller="DemoController as dc">
         
-        <h1 class="slds-text-heading--large">Angular Lightning</h1>
-        <p>AngularJS Directives for Salesforce Lightning Design System</p>
-
-        <br/>
-        <h2 class="slds-text-heading--medium">Form Fields</h2>
-    
-        <br/>
-        <h3 class="slds-text-heading--small">Datepicker</h3>
-
-        <div class="slds-form-element__control">
-            <div class="slds-input-has-icon slds-input-has-icon--right">
-                <!-- <span smb-icon type="utility" icon="event" size="x-small"></span> -->
-                <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datefield' ng-required='dc.datefield.required' li-datepicker ng-disabled="dc.datefield.disabled || $parent.$parent.section.state.status === 'pending'"/>
+    <header class="site-masthead slds-grid">
+        <div class="site-masthead-title slds-col slds-has-flexi-truncate slds-align-middle">
+            <div class="slds-media slds-media--center slds-media--responsive">
+                    <img src="images/angular-lightning.png" width="60" style="margin-right:20px"/>
+                    <!-- <span li-icon type="action" icon="book" color="warning"></span> -->
+                    <div class="slds-media__body">
+                    <div class="slds-grid">
+                        <h1 title="Pills">Angular Lightning</h1>
+                    </div>
+                    <p>AngularJS Directives for Salesforce Lightning Design System</p>
+              
             </div>
         </div>
+    </header>
 
-        <div class="slds-form-element__control" li-picklist options="dc.picklistfield.picklistvals" ng-model="dc.picklistfield.value"></div>
+    <div class="site-content slds-p-around--xx-large">
 
-        <h3 class="slds-text-heading--small">Lookup</h3>
-        <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
-          <div class="slds-form-element">
-            <label class="slds-form-element__label" for="lookup">Accounts</label>
-            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-              <svg aria-hidden="true" class="slds-input__icon">
-                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
-              </svg>
-              <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" object-name="Demo Locations" li-lookup="location as location.formatted_address for location in dc.lookupTest($viewValue)" ng-model="dc.typeaheadVal" />
+        <section>
+            <h2 class="site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Date Picker</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+        
+            <div class="slds-form-element__control">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                    <!-- <span smb-icon type="utility" icon="event" size="x-small"></span> -->
+                    <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datefield' ng-required='dc.datefield.required' li-datepicker ng-disabled="dc.datefield.disabled || $parent.$parent.section.state.status === 'pending'"/>
+                </div>
             </div>
-          </div>
-        </div>
+        </section>
+
+        <section>
+
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Picklist</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+
+            <div class="slds-form-element__control" li-picklist options="dc.picklistfield.picklistvals" ng-model="dc.picklistfield.value"></div>
+
+        </section>
+
+        <section>
+
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Lookup</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+
+            <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+              <div class="slds-form-element">
+                <label class="slds-form-element__label" for="lookup">Accounts</label>
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                  <svg aria-hidden="true" class="slds-input__icon">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                  </svg>
+                  <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" object-name="Demo Locations" li-lookup="location as location.formatted_address for location in dc.lookupTest($viewValue)" ng-model="dc.typeaheadVal" />
+                </div>
+              </div>
+            </div>
+        </section>
 
 
-        <br/>
-        <h2 class="slds-text-heading--medium">Icons</h2>
+        <section>
 
-        <span li-icon type="utility" icon="warning" size="x-small" color="warning"></span>
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Icons</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
 
-        <h2 class="slds-text-heading--medium">Modals</h2>
+            <span li-icon type="utility" icon="warning" size="x-small" color="warning"></span>
 
-        <div ng-controller="DemoModalController as mc">
-            <!-- todo: move this to external template in controller -->
-            <button ng-click='mc.open()'>Open</button>
-        </div>
+        </section>
 
+        <section>
+
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Modals</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+        
+
+            <div ng-controller="DemoModalController as mc">
+                <!-- todo: move this to external template in controller -->
+                <button ng-click='mc.open()'>Open</button>
+            </div>
+
+        </section>
+
+    </div>
 
 
     </body>
