@@ -167,7 +167,8 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
-          jshintrc: 'test/.jshintrc'
+          jshintrc: 'test/.jshintrc',
+          force: true
         },
         src: ['test/spec/{,*/}*.js']
       }

@@ -9,7 +9,8 @@ angular.module('angular-lightning', [
 angular.module('angular-lightning.datepicker', [])
 
 .constant('DateConfig', {
-	numWeeksShown: 5
+	numWeeksShown: 5,
+	dateFormat: 'MM/DD/YYYY'
 })
 
 .service('DateService', ['DateConfig', function(DateConfig) {
@@ -78,7 +79,7 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', function(_originalScope, $document, DateService, $compile) {
+.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', 'DateConfig', function(_originalScope, $document, DateService, $compile, DateConfig) {
 	'use strict';
 
 	var self = this;
@@ -99,14 +100,15 @@ angular.module('angular-lightning.datepicker', [])
 
 		ngModelCtrl.$formatters.push(function(value) {
 			if(value && moment.isMoment(value)) {
-				return value.format('S');
+				return value.format(DateConfig.dateFormat);
 			}
 		});
 
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
 		}, function(val) {
-			ngModelCtrl.$setViewValue(DateService.getDate(val));
+			ngModelCtrl.$setViewValue(DateService.getDate(val).format(DateConfig.dateFormat));
+			ngModelCtrl.$render();
 			unwatch();
 			_buildCalendar();
 		});
@@ -194,7 +196,7 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.month = DateService.buildMonth(currentStart.subtract('1', 'month'));
 	};
 	$scope.selectDay = function(day) {
-		ngModelCtrl.$setViewValue(day.moment.format('L'));
+		ngModelCtrl.$setViewValue(day.moment.format(DateConfig.dateFormat));
 		ngModelCtrl.$render();
 	};
 	$scope.selectYear = function(year) {

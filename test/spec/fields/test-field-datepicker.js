@@ -22,7 +22,7 @@ describe('Date Directive...', function() {
 	beforeEach(function() {
 		
         $scope.datefield =  {
-        	value: '2015-12-01'
+        	value: '12/01/2015'
         };
 
         var markup = '<div><input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model=\'datefield.value\' ng-required=\'datefield.required\' li-datepicker /></div>';
