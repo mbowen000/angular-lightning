@@ -47,7 +47,13 @@ angular.module('angular-lightning.datepicker', [])
 
 	return {
 		getDate: function(value) {
-			return moment(value);
+			if(value) {
+				return moment(value);	
+			}
+			else {
+				return moment();
+			}
+			
 		},
 		buildMonth: function(currentDate) {
 			var start = currentDate.clone();
@@ -64,16 +70,30 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', function($scope, $document, DateService, $compile) {
+.controller('DateDropdownController', ['$scope', '$document', 'DateService', '$compile', function(_originalScope, $document, DateService, $compile) {
 	'use strict';
 
 	var self = this;
-	var ngModelCtrl, inputEl, $popup, $yearPicker;
+	var ngModelCtrl, inputEl, $popup, $yearPicker, $scope;
+
+	$scope = _originalScope;
 
 	this.init = function(element, controllers) {
 		this.controllers = controllers;
 		this.element = inputEl = element;
-		ngModelCtrl = controllers[2];
+		ngModelCtrl = controllers[1];
+
+		ngModelCtrl.$parsers.push(function(value) {
+			if(value) {
+				return moment(value);
+			}
+		});
+
+		ngModelCtrl.$formatters.push(function(value) {
+			if(value && moment.isMoment(value)) {
+				return value.format('S');
+			}
+		});
 
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
@@ -82,6 +102,11 @@ angular.module('angular-lightning.datepicker', [])
 			ngModelCtrl.$setViewValue(DateService.getDate(val));
 			unwatch();
 			_buildCalendar();
+		});
+
+		inputEl.bind('focus', function() {
+			$scope.isOpen = true;
+			$scope.$digest();
 		});
 
 	};
@@ -122,7 +147,7 @@ angular.module('angular-lightning.datepicker', [])
 			$scope.month = DateService.buildMonth(moment());
 		}
 
-		var popupEl = angular.element('<div smb-field-date-dropdown ng-show="isOpen" ng-click="isOpen = true" class="smb-date-dropdown"></div>');
+		var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
 
 		$popup = $compile(popupEl)($scope);
 		$(inputEl).after($popup);
@@ -138,7 +163,7 @@ angular.module('angular-lightning.datepicker', [])
 				return;
 			}
 
-			var yearPickerEl = angular.element('<span smb-field-date-year-picker></span>');
+			var yearPickerEl = angular.element('<span li-date-year-picker></span>');
 			yearPickerEl.attr({
 				'current-year' : 'getCurrentDate()'
 			});	
@@ -162,7 +187,7 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.month = DateService.buildMonth(currentStart.subtract('1', 'month'));
 	};
 	$scope.selectDay = function(day) {
-		ngModelCtrl.$setViewValue(day.moment);
+		ngModelCtrl.$setViewValue(day.moment.format('L'));
 		ngModelCtrl.$render();
 	};
 	$scope.selectYear = function(year) {
@@ -177,31 +202,9 @@ angular.module('angular-lightning.datepicker', [])
 .directive('liDatepicker', ['DateService', function(DateService) {
 	'use strict';
 	return {
-		require: ['liDatepicker','?^smbFieldDate', 'ngModel'],
+		require: ['liDatepicker','ngModel'],
 		controller: 'DateDropdownController',
-		// controller: function($scope) {
-
-
-		// 	this.init = function(element, controllers) {				
-		// 		this.controllers = controllers;
-		// 		this.element =  element;
-		// 		var ngModelCtrl = controllers[2];
-
-		// 		// turn the date string into a Date object (should turn into moment for future purposes)
-		// 		//$scope.field.value = DateService.getDate($scope.field.value);
-		// 		// ngModelCtrl.$setViewValue(DateService.getDate(ngModelCtrl.$viewValue));
-		// 		var unwatch = $scope.$watch(function() {
-		// 			return ngModelCtrl.$modelValue;
-		// 		}, function(val) {
-		// 			console.log(val);
-		// 			ngModelCtrl.$setViewValue(DateService.getDate(val));
-		// 			unwatch();
-		// 		});
-				
-		// 	};
-
-		// 	return this;
-		// },
+		scope: true,
 		link: function(scope, element, attrs, controllers) {
 			controllers[0].init(element, controllers);
 			return this;
@@ -209,7 +212,7 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.directive('smbFieldDateDropdown', [function() {
+.directive('liDateDropdown', [function() {
 	'use strict';
 	return {
 		templateUrl: 'views/fields/date/field-date-dropdown.html',
@@ -222,7 +225,7 @@ angular.module('angular-lightning.datepicker', [])
 	};
 }])
 
-.directive('smbFieldDateYearPicker', ['DateService', function(DateService) {
+.directive('liDateYearPicker', ['DateService', function(DateService) {
 	'use strict';
 	return {
 		templateUrl: 'views/fields/date/field-date-yearpicker.html',

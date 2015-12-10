@@ -46,7 +46,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
+        tasks: ['newer:jshint:all', 'buildDev'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
+        tasks: ['newer:copy:styles', 'autoprefixer', 'buildDev']
       },
       templates: {
         files: ['<%= yeoman.app %>/views/**/*.html'],
@@ -534,7 +534,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'connect:livereload',
-      'watch:dev'
+      'watch'
     ]);
     
   });
