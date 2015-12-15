@@ -150,7 +150,7 @@ angular.module('angular-lightning.datepicker', [])
 	
 	var _buildCalendar = function() {
 		if(ngModelCtrl.$modelValue) {
-			$scope.month = DateService.buildMonth(ngModelCtrl.$modelValue);
+			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 		}
 		else { 
 			$scope.month = DateService.buildMonth(moment());
@@ -188,11 +188,11 @@ angular.module('angular-lightning.datepicker', [])
 	};
 
 	$scope.nextMonth = function() {
-		var currentStart = $scope.month.currentDate.clone().startOf('month');
+		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
 		$scope.month = DateService.buildMonth(currentStart.add('1', 'month'));
 	};
 	$scope.previousMonth = function() {
-		var currentStart = $scope.month.currentDate.clone().startOf('month');
+		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
 		$scope.month = DateService.buildMonth(currentStart.subtract('1', 'month'));
 	};
 	$scope.selectDay = function(day) {
@@ -200,9 +200,9 @@ angular.module('angular-lightning.datepicker', [])
 		ngModelCtrl.$render();
 	};
 	$scope.selectYear = function(year) {
-		ngModelCtrl.$setViewValue(year);
+		ngModelCtrl.$setViewValue(year.format(DateConfig.dateFormat));
 		ngModelCtrl.$render();
-		$scope.month = DateService.buildMonth(ngModelCtrl.$modelValue);
+		$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 	};
 
 	return this;	
@@ -240,7 +240,7 @@ angular.module('angular-lightning.datepicker', [])
 		templateUrl: 'views/fields/date/field-date-yearpicker.html',
 		link: function(scope, element, attrs, controllers) {
 			var currentIndex = 0;
-			var currentYear = scope.getCurrentDate().clone();
+			var currentYear = moment(scope.getCurrentDate()).clone();
 			scope.years = DateService.buildYearsAroundCurrent(currentYear);
 
 			scope.yearNextPage = function() {
@@ -285,7 +285,8 @@ angular.module('angular-lightning.picklist', [])
 				    $scope.selected = modelCtrl.$modelValue.split(';');
 				}
 				else {
-					$scope.selected = modelCtrl.$modelValue;
+					$scope.selected = [];
+					$scope.selected.push(modelCtrl.$modelValue);
 				}
 				reconcileValues();
 			}
