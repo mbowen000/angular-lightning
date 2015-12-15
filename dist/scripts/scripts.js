@@ -537,7 +537,6 @@ angular.module('angular-lightning.icon', [])
 			scope.options = options;
 
 			var url = iconConfig.iconUrl;
-			console.log('icon url: '+iconConfig.iconUrl);
 			
 			var classes = [];
 
@@ -761,7 +760,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/lookup/lookup-dropdown.html',
-    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-text-default slds-icon--small\"> <use xlink:href=\"/assets/icons/utility-sprite/svg/symbols.svg#search\"></use> </svg>&quot;{{currentVal}}&quot; in {{theObject}}</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\"> <a href=\"javascript:;\" role=\"option\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-standard-account slds-icon--small\"> <use xlink:href=\"/assets/icons/standard-sprite/svg/symbols.svg#account\"></use> </svg>{{match.label}}</a> </li> </ul> </div>"
+    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <span li-icon type=\"utility\" icon=\"search\" size=\"small\"></span> &quot;{{currentVal}}&quot; in {{theObject}}</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\"> <a href=\"javascript:;\" role=\"option\"> <span li-icon type=\"standard\" icon=\"account\" size=\"small\"></span> {{match.label}} </a> </li> </ul> </div>"
   );
 
 
