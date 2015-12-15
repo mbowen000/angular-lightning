@@ -42,6 +42,11 @@ angular.module('angular-lightning.modal', [])
 		$("body").append(modal);
 	};
 
+	$modalService.close = function() {
+		modal.remove();
+		modalBackdrop.remove();
+	};
+
 	return $modalService;
 }])
 

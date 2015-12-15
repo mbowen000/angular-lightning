@@ -26,7 +26,7 @@ angular.module('angular-lightning.icon', [])
 			scope.options = options;
 
 			var url = iconConfig.iconUrl;
-			console.log(iconConfig.iconUrl);
+			console.log('icon url: '+iconConfig.iconUrl);
 			
 			var classes = [];
 

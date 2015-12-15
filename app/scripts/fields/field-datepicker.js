@@ -86,7 +86,7 @@ angular.module('angular-lightning.datepicker', [])
 
 		ngModelCtrl.$parsers.push(function(value) {
 			if(value) {
-				return moment(value);
+				return moment(value).format(DateConfig.dateFormat);
 			}
 		});
 
