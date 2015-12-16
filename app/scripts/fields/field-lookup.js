@@ -102,7 +102,7 @@ angular.module('angular-lightning.lookup', [])
 
 		element.bind('blur', function () {
 			$timeout(function() {
-				$('div[li-lookup-dropdown]').remove();
+				$(dropdownElem).remove();
 			}, 300);
 		});
 
