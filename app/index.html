@@ -102,7 +102,7 @@
 
             <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-                  <span li-icon type="utility" icon="search" size="small" color="default" input-icon="true"></span>
+                  <span li-icon type="utility" icon="search" size="small" color="default" add-classes="slds-input__icon"></span>
                   <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" object-name="{{field.ObjectName}}" li-lookup="record as record.Name for record in fieldLookUp(field.ObjectAPI, field.WhereClause, $viewValue)" ng-model="field.typeaheadVal" ng-disabled="field.disabled || $parent.$parent.section.state.status === 'pending'" />
                 </div>
             </div>
