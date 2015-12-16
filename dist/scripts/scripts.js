@@ -94,7 +94,7 @@ angular.module('angular-lightning.datepicker', [])
 
 		ngModelCtrl.$parsers.push(function(value) {
 			if(value) {
-				return moment(value);
+				return moment(value).format(DateConfig.dateFormat);
 			}
 		});
 
@@ -150,7 +150,7 @@ angular.module('angular-lightning.datepicker', [])
 	
 	var _buildCalendar = function() {
 		if(ngModelCtrl.$modelValue) {
-			$scope.month = DateService.buildMonth(ngModelCtrl.$modelValue);
+			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 		}
 		else { 
 			$scope.month = DateService.buildMonth(moment());
@@ -188,11 +188,11 @@ angular.module('angular-lightning.datepicker', [])
 	};
 
 	$scope.nextMonth = function() {
-		var currentStart = $scope.month.currentDate.clone().startOf('month');
+		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
 		$scope.month = DateService.buildMonth(currentStart.add('1', 'month'));
 	};
 	$scope.previousMonth = function() {
-		var currentStart = $scope.month.currentDate.clone().startOf('month');
+		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
 		$scope.month = DateService.buildMonth(currentStart.subtract('1', 'month'));
 	};
 	$scope.selectDay = function(day) {
@@ -200,9 +200,9 @@ angular.module('angular-lightning.datepicker', [])
 		ngModelCtrl.$render();
 	};
 	$scope.selectYear = function(year) {
-		ngModelCtrl.$setViewValue(year);
+		ngModelCtrl.$setViewValue(year.format(DateConfig.dateFormat));
 		ngModelCtrl.$render();
-		$scope.month = DateService.buildMonth(ngModelCtrl.$modelValue);
+		$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 	};
 
 	return this;	
@@ -240,7 +240,7 @@ angular.module('angular-lightning.datepicker', [])
 		templateUrl: 'views/fields/date/field-date-yearpicker.html',
 		link: function(scope, element, attrs, controllers) {
 			var currentIndex = 0;
-			var currentYear = scope.getCurrentDate().clone();
+			var currentYear = moment(scope.getCurrentDate()).clone();
 			scope.years = DateService.buildYearsAroundCurrent(currentYear);
 
 			scope.yearNextPage = function() {
@@ -285,7 +285,8 @@ angular.module('angular-lightning.picklist', [])
 				    $scope.selected = modelCtrl.$modelValue.split(';');
 				}
 				else {
-					$scope.selected = modelCtrl.$modelValue;
+					$scope.selected = [];
+					$scope.selected.push(modelCtrl.$modelValue);
 				}
 				reconcileValues();
 			}
@@ -536,7 +537,6 @@ angular.module('angular-lightning.icon', [])
 			scope.options = options;
 
 			var url = iconConfig.iconUrl;
-			console.log(iconConfig.iconUrl);
 			
 			var classes = [];
 
@@ -655,6 +655,11 @@ angular.module('angular-lightning.modal', [])
 		$("body").append(modal);
 	};
 
+	$modalService.close = function() {
+		modal.remove();
+		modalBackdrop.remove();
+	};
+
 	return $modalService;
 }])
 
@@ -696,6 +701,15 @@ angular.module('angular-lightning.modal', [])
 angular.module('angular-lightning').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('views/app.html',
+    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\r" +
+    "\n" +
+    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\r" +
+    "\n" +
+    "\t     \t\t\t</div> --> <div class=\"slds-media__body\"> <h2 class=\"slds-text-heading--small slds-truncate\">Summary</h2> </div> </div> </div> <div class=\"slds-card__body\"> <table class=\"slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal page-nav\"> <tr ng-repeat-start=\"page in form.pages\" ng-click=\"page.activate()\"> <td>{{page.name}} ({{page.progress()}}%)</td> <td style=\"text-align:right\"> <!-- invalid icon --> <span smb-icon type=\"utility\" icon=\"warning\" size=\"x-small\" color=\"warning\" ng-if=\"page.formCtrl.$invalid\"></span> <!-- valid icon --> <span smb-icon type=\"utility\" icon=\"success\" size=\"x-small\" color=\"success\" ng-if=\"page.formCtrl.$valid\"></span> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\" ng-if=\"page.active\"></span> </td> </tr> <tr ng-repeat-end class=\"progresswrappertr\"> <td colspan=\"2\" class=\"progresswrapper\"> <div smb-progressbar minimal value=\"page.progress()\"></div> </td> </tr> </table> </div> </div> </aside> <main class=\"layout-main slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--8-of-12\"> <div smb-form form=\"form\" ng-form=\"mainform\" ng-if=\"form\"></div> <button class=\"slds-button slds-button--brand\" ng-click=\"saveForm()\">Save</button> </main> </div>"
+  );
+
+
   $templateCache.put('views/demo/modal-demo.html',
     "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-modal--large slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Demo for Angular Lightning</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! <br> {{message}} </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
   );
@@ -706,14 +720,21 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   );
 
 
+  $templateCache.put('views/field.html',
+    "<label class=\"slds-form-element__label smb-field-label\" for=\"inputSample2\" ng-class=\"{ 'disabled': !field.visible }\">{{field.label}}</label> <div class=\"smb-field-wrap-main\" ng-switch=\"field.type\" ng-class=\"{ 'disabled': !field.visible }\"> <!-- dynamic field generation --> <div ng-switch-when=\"text\" smb-field-text></div> <div ng-switch-when=\"date\" smb-field-date></div> <div ng-switch-when=\"picklist\" smb-field-picklist></div> <div ng-switch-when=\"dropdown\" smb-field-dropdown></div> <div ng-switch-when=\"textarea\" smb-field-textarea></div> <div ng-switch-when=\"wysiwyg\" smb-field-wysiwyg></div> </div>"
+  );
+
+
   $templateCache.put('views/fields/date/field-date-dropdown.html',
     "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
   );
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
+    "\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
+    "\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -739,7 +760,12 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/lookup/lookup-dropdown.html',
-    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-text-default slds-icon--small\"> <use xlink:href=\"/assets/icons/utility-sprite/svg/symbols.svg#search\"></use> </svg>&quot;{{currentVal}}&quot; in {{theObject}}</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\"> <a href=\"javascript:;\" role=\"option\"> <svg aria-hidden=\"true\" class=\"slds-icon slds-icon-standard-account slds-icon--small\"> <use xlink:href=\"/assets/icons/standard-sprite/svg/symbols.svg#account\"></use> </svg>{{match.label}}</a> </li> </ul> </div>"
+    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <div class=\"slds-lookup__item\"> <button class=\"slds-button\"> <span li-icon type=\"utility\" icon=\"search\" size=\"small\"></span> &quot;{{currentVal}}&quot; in {{theObject}}</button> </div> <ul class=\"slds-lookup__list\" role=\"presentation\"> <li class=\"slds-lookup__item\" ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\"> <a href=\"javascript:;\" role=\"option\"> <span li-icon type=\"standard\" icon=\"account\" size=\"small\"></span> {{match.label}} </a> </li> </ul> </div>"
+  );
+
+
+  $templateCache.put('views/form.html',
+    "<div ng-repeat=\"page in form.pages\" ng-form=\"{{page.devname}}\" smb-page class=\"page\" ng-show=\"page.active\"> <div class=\"title-container slds-media\"> <span smb-icon type=\"{{page.icon.type}}\" icon=\"{{page.icon.name}}\"></span> <div class=\"slds-text-heading--medium slds-col slds-media__body smb-page-header\">{{page.name}}</div> </div> <div smb-progressbar value=\"page.progress()\"></div> <div class=\"\"> <div ng-repeat=\"section in page.sections\" smb-section ng-form=\"{{section.devname}}\" class=\"smb-section\"> <!-- <div class=\"slds-text-heading--small slds-text-heading--underline\">{{section.name}}</div> --> <h3 class=\"slds-section-title section-group--is-open smb-section-title\"> <span smb-icon type=\"utility\" icon=\"switch\"></span> {{section.name}} <span class=\"slds-badge slds-theme--inverse\" ng-if=\"section.state.status === 'pending'\" smb-tooltip=\"This section is locked by Finance Approval 1 - It will require re-approval if unlocked.\">Locked</span> </h3> <div class=\"slds-grid slds-wrap slds-form--stacked\"> <div class=\"slds-col--padded slds-medium-size--1-of-2 slds-small-size--1-of-1\" ng-class=\"{'slds-size--2-of-2': field.fullwidth}\" ng-repeat=\"field in section.elements\"> <div class=\"slds-form-element\" smb-field field=\"field\" ng-class=\"{'slds-is-required' : field.required, 'slds-has-error' : {{field.name}}.$invalid && {{field.name}}.$dirty }\" ng-form=\"{{field.name}}\"></div> </div> </div> </div> </div> </div>"
   );
 
 

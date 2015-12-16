@@ -28,7 +28,8 @@ angular.module('angular-lightning.picklist', [])
 				    $scope.selected = modelCtrl.$modelValue.split(';');
 				}
 				else {
-					$scope.selected = modelCtrl.$modelValue;
+					$scope.selected = [];
+					$scope.selected.push(modelCtrl.$modelValue);
 				}
 				reconcileValues();
 			}
