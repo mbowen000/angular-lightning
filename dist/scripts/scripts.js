@@ -522,16 +522,19 @@ angular.module('angular-lightning.icon', [])
 		scope: {
 
 		},
+		replace: true,
 		link: function(scope, element, attrs) {
 			var options = _.defaults({
 				type: attrs.type,
 				icon: attrs.icon,
 				size: attrs.size,
-				color: attrs.color
+				color: attrs.color,
+				inputIcon: attrs.inputIcon
 			}, {
 				type: 'action',
 				icon: 'opportunity',
-				size: 'small'
+				size: 'small',
+				inputIcon: false
 			});
 
 			scope.options = options;
@@ -595,6 +598,10 @@ angular.module('angular-lightning.icon', [])
 
 			// always add 
 			classes.push('slds-icon');
+
+			if(options.inputIcon) {
+				classes.push('slds-input__icon');
+			}
 			
 			// push size
 			//classes.push('slds-icon--small');
@@ -701,27 +708,13 @@ angular.module('angular-lightning.modal', [])
 angular.module('angular-lightning').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('views/app.html',
-    "<div inform class=\"inform-fixed\"></div> <div ng-include=\"'views/header.html'\"></div> <div class=\"slds-grid slds-wrap\"> <aside class=\"layout-sidebar slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--4-of-12\"> <div class=\"slds-card steps\" smb-stepoverview> <div class=\"slds-card__header slds-grid\"> <div class=\"slds-media slds-media--center slds-has-flexi-truncate\"> <!-- <div class=\"slds-media__figure\">\r" +
-    "\n" +
-    "\t\t\t        \t<span smb-icon type=\"utility\" icon=\"warning\" color=\"warning\"></span>\r" +
-    "\n" +
-    "\t     \t\t\t</div> --> <div class=\"slds-media__body\"> <h2 class=\"slds-text-heading--small slds-truncate\">Summary</h2> </div> </div> </div> <div class=\"slds-card__body\"> <table class=\"slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal page-nav\"> <tr ng-repeat-start=\"page in form.pages\" ng-click=\"page.activate()\"> <td>{{page.name}} ({{page.progress()}}%)</td> <td style=\"text-align:right\"> <!-- invalid icon --> <span smb-icon type=\"utility\" icon=\"warning\" size=\"x-small\" color=\"warning\" ng-if=\"page.formCtrl.$invalid\"></span> <!-- valid icon --> <span smb-icon type=\"utility\" icon=\"success\" size=\"x-small\" color=\"success\" ng-if=\"page.formCtrl.$valid\"></span> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\" ng-if=\"page.active\"></span> </td> </tr> <tr ng-repeat-end class=\"progresswrappertr\"> <td colspan=\"2\" class=\"progresswrapper\"> <div smb-progressbar minimal value=\"page.progress()\"></div> </td> </tr> </table> </div> </div> </aside> <main class=\"layout-main slds-col--padded slds-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--8-of-12\"> <div smb-form form=\"form\" ng-form=\"mainform\" ng-if=\"form\"></div> <button class=\"slds-button slds-button--brand\" ng-click=\"saveForm()\">Save</button> </main> </div>"
-  );
-
-
   $templateCache.put('views/demo/modal-demo.html',
     "<div> <div aria-hidden=\"false\" role=\"dialog\" class=\"slds-modal slds-modal--large slds-fade-in-open\"> <div class=\"slds-modal__container\"> <div class=\"slds-modal__header\"> <h2 class=\"slds-text-heading--medium\">Modal Demo for Angular Lightning</h2> <button class=\"slds-button slds-button--icon-inverse slds-modal__close\" ng-click=\"close()\"> <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--large\"> <use xlink:href=\"/assets/icons/action-sprite/svg/symbols.svg#close\"></use> </svg> <span class=\"slds-assistive-text\">Close</span> </button> </div> <div class=\"slds-modal__content\"> <div> This is custom content! <br> {{message}} </div> </div> <div class=\"slds-modal__footer\"> <div class=\"slds-x-small-buttons--horizontal\"> <button class=\"slds-button slds-button--neutral\">Cancel</button> <button class=\"slds-button slds-button--neutral slds-button--brand\">Save</button> </div> </div> </div> </div> </div>"
   );
 
 
   $templateCache.put('views/field-picklist.html',
-    "<div class=\"slds-picklist--draggable slds-grid\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">Available</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Selected</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div>"
-  );
-
-
-  $templateCache.put('views/field.html',
-    "<label class=\"slds-form-element__label smb-field-label\" for=\"inputSample2\" ng-class=\"{ 'disabled': !field.visible }\">{{field.label}}</label> <div class=\"smb-field-wrap-main\" ng-switch=\"field.type\" ng-class=\"{ 'disabled': !field.visible }\"> <!-- dynamic field generation --> <div ng-switch-when=\"text\" smb-field-text></div> <div ng-switch-when=\"date\" smb-field-date></div> <div ng-switch-when=\"picklist\" smb-field-picklist></div> <div ng-switch-when=\"dropdown\" smb-field-dropdown></div> <div ng-switch-when=\"textarea\" smb-field-textarea></div> <div ng-switch-when=\"wysiwyg\" smb-field-wysiwyg></div> </div>"
+    "<div class=\"slds-picklist--draggable slds-grid\"> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-1\">Available</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\"> <span class=\"slds-form-element__label\" aria-label=\"select-2\">Selected</span> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"up\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\"> <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\" color=\"default\"></span> </button> </div> </div>"
   );
 
 
@@ -731,10 +724,8 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
-    "\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
-    "\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -764,18 +755,13 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('views/form.html',
-    "<div ng-repeat=\"page in form.pages\" ng-form=\"{{page.devname}}\" smb-page class=\"page\" ng-show=\"page.active\"> <div class=\"title-container slds-media\"> <span smb-icon type=\"{{page.icon.type}}\" icon=\"{{page.icon.name}}\"></span> <div class=\"slds-text-heading--medium slds-col slds-media__body smb-page-header\">{{page.name}}</div> </div> <div smb-progressbar value=\"page.progress()\"></div> <div class=\"\"> <div ng-repeat=\"section in page.sections\" smb-section ng-form=\"{{section.devname}}\" class=\"smb-section\"> <!-- <div class=\"slds-text-heading--small slds-text-heading--underline\">{{section.name}}</div> --> <h3 class=\"slds-section-title section-group--is-open smb-section-title\"> <span smb-icon type=\"utility\" icon=\"switch\"></span> {{section.name}} <span class=\"slds-badge slds-theme--inverse\" ng-if=\"section.state.status === 'pending'\" smb-tooltip=\"This section is locked by Finance Approval 1 - It will require re-approval if unlocked.\">Locked</span> </h3> <div class=\"slds-grid slds-wrap slds-form--stacked\"> <div class=\"slds-col--padded slds-medium-size--1-of-2 slds-small-size--1-of-1\" ng-class=\"{'slds-size--2-of-2': field.fullwidth}\" ng-repeat=\"field in section.elements\"> <div class=\"slds-form-element\" smb-field field=\"field\" ng-class=\"{'slds-is-required' : field.required, 'slds-has-error' : {{field.name}}.$invalid && {{field.name}}.$dirty }\" ng-form=\"{{field.name}}\"></div> </div> </div> </div> </div> </div>"
-  );
-
-
   $templateCache.put('views/header.html',
     "<div class=\"header-inner\" style=\"padding:20px 30px 0px 30px\"> <img src=\"images/sp+.png\"> <h1 class=\"slds-text-heading--large\">Deal Journey</h1> </div>"
   );
 
 
   $templateCache.put('views/util/icon.html',
-    "<!-- <span class=\"slds-icon__container--circle slds-icon-action-update slds-media__figure\"> --> <svg aria-hidden=\"true\" ng-class=\"classes\"> <use xlink:href=\"#\"></use> </svg> <span class=\"slds-assistive-text\">{{page.name}}</span> <!-- </span> -->"
+    "<svg aria-hidden=\"true\" ng-class=\"classes\"> <use xlink:href=\"#\"></use> </svg>"
   );
 
 

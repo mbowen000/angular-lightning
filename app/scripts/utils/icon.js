@@ -11,16 +11,19 @@ angular.module('angular-lightning.icon', [])
 		scope: {
 
 		},
+		replace: true,
 		link: function(scope, element, attrs) {
 			var options = _.defaults({
 				type: attrs.type,
 				icon: attrs.icon,
 				size: attrs.size,
-				color: attrs.color
+				color: attrs.color,
+				inputIcon: attrs.inputIcon
 			}, {
 				type: 'action',
 				icon: 'opportunity',
-				size: 'small'
+				size: 'small',
+				inputIcon: false
 			});
 
 			scope.options = options;
@@ -84,6 +87,10 @@ angular.module('angular-lightning.icon', [])
 
 			// always add 
 			classes.push('slds-icon');
+
+			if(options.inputIcon) {
+				classes.push('slds-input__icon');
+			}
 			
 			// push size
 			//classes.push('slds-icon--small');
