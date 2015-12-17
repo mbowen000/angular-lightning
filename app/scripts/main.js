@@ -4,5 +4,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.picklist',
 	'angular-lightning.icon',
 	'angular-lightning.modal',
-	'angular-lightning.lookup'
+	'angular-lightning.lookup',
+	'angular-lightning.tooltip'
 ]);

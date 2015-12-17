@@ -1,15 +1,16 @@
 angular.module('angular-lightning.tooltip', [])
 
-	.directive('smbTooltip', ['$compile', function($compile) {
+	.directive('liTooltip', ['$compile', '$templateRequest', function($compile, $templateRequest) {
 		'use strict';
 		return {
-			scope: {
-				value: '=',
-
-			},
 			link: function(scope, element, attrs) {
 				
-				var tooltipContent = attrs.smbTooltip;
+				var templateUrl;
+				var scope = scope.$new();
+
+				var tooltipContent = attrs.liTooltip;
+				scope.templateUrl = attrs.template || null;
+				var enabledExpression = attrs.tooltipEnabled || 'always';
 
 				var template = '<div class="slds-tooltip slds-nubbin--left" role="tooltip">' + 
 					'<div class="slds-tooltip__content">' + 
@@ -19,9 +20,27 @@ angular.module('angular-lightning.tooltip', [])
 				  	'</div>' + 
 				'</div>';
 
+				if(scope.templateUrl ) {
+					template = '<div class="slds-tooltip slds-nubbin--left" role="tooltip">' + 
+						'<div class="slds-tooltip__content">' + 
+					    	'<div class="slds-tooltip__body" ng-include="getTemplateUrl()">' +  
+					    	'</div>' +
+					  	'</div>' + 
+					'</div>';
+				}
+				scope.getTemplateUrl = function() {
+					if(scope.templateUrl) {
+						return scope.templateUrl;
+					}
+				} 
+
 				var tooltipElement = $compile(template)(scope);
 
 				var showTooltip = function() {
+					if(!checkIfTooltipShown()) {
+						return false;
+					}
+
 					var pos = $(element).offset();
 					
 					
@@ -43,6 +62,13 @@ angular.module('angular-lightning.tooltip', [])
 					//todo: destroy the scope and any other cleanup
 					tooltipElement.remove();
 				};
+
+				var checkIfTooltipShown = function() {	
+					if(enabledExpression === 'always') {
+						return true;
+					}
+					return scope.$eval(enabledExpression);
+				}
 
 				$(element).hover(showTooltip, removeTooltip);
 

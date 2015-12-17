@@ -126,6 +126,25 @@
 
         </section>
 
+
+        <section>
+
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Tooltips</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+            
+            <a href="#" li-tooltip="{{dc.textfield}}">Tooltip Here</a>
+            <br/>
+            <a href="#" li-tooltip template="views/demo/tooltip-demo.html">Tooltip With Template</a>
+
+            <p>
+                Tooltip enabled if checkbox is checked: <input li-tooltip="hi" tooltip-enabled="dc.enableTooltip" type="checkbox" ng-model="dc.enableTooltip"/>
+            </p>
+
+        </section>
+
     </div>
 
 
@@ -150,6 +169,7 @@
     <script src="scripts/fields/field-lookup.js"></script>
     <script src="scripts/utils/icon.js"></script>
     <script src="scripts/utils/modal.js"></script>
+    <script src="scripts/utils/tooltip.js"></script>
     <!-- endbuild -->
 
     <!-- include the demo script outside of the usemin block (we dont want it included in the dist code) -->
