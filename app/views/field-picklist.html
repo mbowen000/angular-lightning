@@ -1,8 +1,19 @@
-<div class="slds-picklist--draggable slds-grid">
+<style>
+.picklist-label {
+    margin: auto;
+    padding: 0px 50px;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    cursor: default;
+    font-size: 10px;
+}
+</style>
+<div class="slds-picklist--draggable slds-grid" style="display: flex; flex-flow: row wrap;">
   <div class="slds-form-element">
-    <span class="slds-form-element__label" aria-label="select-1">Available</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
+        <span class="picklist-label" aria-label="select-1">Available</span>
         <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="highlightOption(option)" aria-selected="{{option==highlighted}}">
           <span class="slds-truncate">
             <span>{{option}}</span>
@@ -20,9 +31,9 @@
     </button>
   </div>
   <div class="slds-form-element">
-    <span class="slds-form-element__label" aria-label="select-2">Selected</span>
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
+        <span class="picklist-label" aria-label="select-2">Selected</span>
         <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="highlightOption(option)" aria-selected="{{option==highlighted}}">
           <span class="slds-truncate">
             <span>{{option}}</span>
@@ -30,13 +41,5 @@
         </li>
       </ul>
     </div>
-  </div>
-  <div class="slds-grid slds-grid--vertical">
-    <button class="slds-button slds-button--icon-container">
-      <span li-icon type="utility" icon="up" size="x-small" color="default"></span>
-    </button>
-    <button class="slds-button slds-button--icon-container">
-      <span li-icon type="utility" icon="down" size="x-small" color="default"></span>
-    </button>
   </div>
 </div>
