@@ -1,16 +1,19 @@
 <style>
 .picklist-label {
-    margin: auto;
-    padding: 0px 50px;
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    cursor: default;
-    font-size: 10px;
+  margin: auto;
+  padding: 0px 50px;
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  cursor: default;
+  font-size: 10px;
+}
+.slds-picklist__options {
+  width: initial;
 }
 </style>
 <div class="slds-picklist--draggable slds-grid" style="display: flex; flex-flow: row wrap;">
-  <div class="slds-form-element">
+  <div class="slds-form-element" style="flex: 0.5 1 0%;">
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
         <span class="picklist-label" aria-label="select-1">Available</span>
@@ -22,7 +25,7 @@
       </ul>
     </div>
   </div>
-  <div class="slds-grid slds-grid--vertical">
+  <div class="slds-grid slds-grid--vertical" style="width:45px;">
     <button class="slds-button slds-button--icon-container" ng-click="selectHighlighted()">
       <span li-icon type="utility" icon="right" size="x-small" color="default"></span>
     </button>
@@ -30,7 +33,7 @@
       <span li-icon type="utility" icon="left" size="x-small" color="default"></span>
     </button>
   </div>
-  <div class="slds-form-element">
+  <div class="slds-form-element" style="flex: 0.5 1 0%;">
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
         <span class="picklist-label" aria-label="select-2">Selected</span>

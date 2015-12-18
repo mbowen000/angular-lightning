@@ -802,21 +802,27 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   $templateCache.put('views/field-picklist.html',
     "<style>.picklist-label {\r" +
     "\n" +
-    "    margin: auto;\r" +
+    "  margin: auto;\r" +
     "\n" +
-    "    padding: 0px 50px;\r" +
+    "  padding: 0px 50px;\r" +
     "\n" +
-    "    display: block;\r" +
+    "  display: block;\r" +
     "\n" +
-    "    text-align: center;\r" +
+    "  text-align: center;\r" +
     "\n" +
-    "    font-weight: bold;\r" +
+    "  font-weight: bold;\r" +
     "\n" +
-    "    cursor: default;\r" +
+    "  cursor: default;\r" +
     "\n" +
-    "    font-size: 10px;\r" +
+    "  font-size: 10px;\r" +
     "\n" +
-    "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> </div>"
+    "}\r" +
+    "\n" +
+    ".slds-picklist__options {\r" +
+    "\n" +
+    "  width: initial;\r" +
+    "\n" +
+    "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\" style=\"width:45px\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> </div>"
   );
 
 
