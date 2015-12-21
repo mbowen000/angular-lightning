@@ -1057,7 +1057,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/util/tabset.html',
-    "<div class=\"slds-tabs--scoped\"> <ul class=\"slds-tabs--scoped__nav\" style=\"margin-bottom:0\" role=\"tablist\" ng-transclude></ul> <div class=\"slds-tabs--scoped__content\" style=\"background-color:inherit\" ng-repeat=\"tab in tabs\" ng-class=\"{'slds-show': tab.active, 'slds-hide': !tab.active}\" li-tab-content-transclude=\"tab\"></div> </div>"
+    "<div class=\"slds-tabs--scoped\"> <ul class=\"slds-tabs--scoped__nav\" style=\"margin-bottom:0\" role=\"tablist\" ng-transclude></ul> <div class=\"slds-tabs--scoped__content\" ng-repeat=\"tab in tabs\" ng-class=\"{'slds-show': tab.active, 'slds-hide': !tab.active}\" li-tab-content-transclude=\"tab\"></div> </div>"
   );
 
 }]);
