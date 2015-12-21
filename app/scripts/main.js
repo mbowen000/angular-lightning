@@ -5,5 +5,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.icon',
 	'angular-lightning.modal',
 	'angular-lightning.lookup',
-	'angular-lightning.tooltip'
+	'angular-lightning.tooltip',
+	'angular-lightning.tabs'
 ]);

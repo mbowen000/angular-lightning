@@ -24,11 +24,3 @@ body {
 .slds-icon {
 	fill: currentColor;
 }
-
-.picklist-label {
-    margin: auto;
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    cursor: default;
-}
