@@ -35,6 +35,15 @@ angular.module('angular-lightning.lookup', [])
 		scope.selected = null;
 		scope.isFocused = false;
 
+		scope.lookupFields = [];
+		if (attrs.lookupFields) {
+			var lookupFields = attrs.lookupFields.split(',');
+			$.each(lookupFields, function(k, v) {
+				lookupFields[k] = v.trim();
+			});
+			scope.lookupFields = lookupFields;
+		}
+
 		//Set object to model
 		var parsedModel = $parse(attrs.ngModel);
 	    var $setModelValue = function(scope, newValue) {
@@ -87,6 +96,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: 'matches',
 			'current-val': 'currentVal',
 			'the-object': 'objectName',
+			'lookup-fields': 'lookupFields',
 			select: 'select(idx)'
 		});
 
@@ -97,12 +107,13 @@ angular.module('angular-lightning.lookup', [])
 			// insert it into the dom
 			scope.currentVal = modelCtrl.$viewValue;
 			scope.$digest();
+			$(dropdownDomElem).show();
 			$(element).parents('.slds-lookup').append(dropdownDomElem);
 		});
 
 		element.bind('blur', function () {
 			$timeout(function() {
-				$(dropdownElem).remove();
+				$(dropdownDomElem).hide();
 			}, 300);
 		});
 
@@ -147,6 +158,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: '=',
 			currentVal: '=',
 			theObject: '=',
+			lookupFields: '=',
 			select: '&'
 		},
 		replace: true,
@@ -154,6 +166,23 @@ angular.module('angular-lightning.lookup', [])
 			scope.selectMatch = function(idx) {
 				scope.select({idx: idx});
 			};
+
+			scope.getField = function(obj, field) {
+				//Check if field is a relationship
+				if (field.indexOf('.') > -1) {
+					var objs = field.split('.');
+
+					for (var i=0;i<objs.length;i++) {
+						var k = objs[i];
+						obj = obj[k];
+					}
+
+					return obj;
+				}
+				else {
+					return obj[field];
+				}
+			};
 		}
-	}
+	};
 }]);
