@@ -34,14 +34,10 @@ angular.module('angular-lightning.lookup', [])
 		scope.matches = [];
 		scope.selected = null;
 		scope.isFocused = false;
+		scope.dropdownFields = [];
 
-		scope.lookupFields = [];
-		if (attrs.lookupFields) {
-			var lookupFields = attrs.lookupFields.split(',');
-			$.each(lookupFields, function(k, v) {
-				lookupFields[k] = v.trim();
-			});
-			scope.lookupFields = lookupFields;
+		if (JSON.parse(attrs.dropdownFields).length > 0) {
+			scope.dropdownFields = JSON.parse(attrs.dropdownFields);
 		}
 
 		//Set object to model
@@ -96,7 +92,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: 'matches',
 			'current-val': 'currentVal',
 			'the-object': 'objectName',
-			'lookup-fields': 'lookupFields',
+			'dropdown-fields': 'dropdownFields',
 			select: 'select(idx)'
 		});
 
@@ -158,7 +154,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: '=',
 			currentVal: '=',
 			theObject: '=',
-			lookupFields: '=',
+			dropdownFields: '=',
 			select: '&'
 		},
 		replace: true,

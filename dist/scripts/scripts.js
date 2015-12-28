@@ -388,14 +388,10 @@ angular.module('angular-lightning.lookup', [])
 		scope.matches = [];
 		scope.selected = null;
 		scope.isFocused = false;
+		scope.dropdownFields = [];
 
-		scope.lookupFields = [];
-		if (attrs.lookupFields) {
-			var lookupFields = attrs.lookupFields.split(',');
-			$.each(lookupFields, function(k, v) {
-				lookupFields[k] = v.trim();
-			});
-			scope.lookupFields = lookupFields;
+		if (JSON.parse(attrs.dropdownFields).length > 0) {
+			scope.dropdownFields = JSON.parse(attrs.dropdownFields);
 		}
 
 		//Set object to model
@@ -450,7 +446,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: 'matches',
 			'current-val': 'currentVal',
 			'the-object': 'objectName',
-			'lookup-fields': 'lookupFields',
+			'dropdown-fields': 'dropdownFields',
 			select: 'select(idx)'
 		});
 
@@ -512,7 +508,7 @@ angular.module('angular-lightning.lookup', [])
 			matches: '=',
 			currentVal: '=',
 			theObject: '=',
-			lookupFields: '=',
+			dropdownFields: '=',
 			select: '&'
 		},
 		replace: true,
@@ -1056,7 +1052,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/lookup/lookup-dropdown.html',
-    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <table class=\"slds-table slds-table--bordered\" role=\"listbox\"> <thead> <tr> <th colspan=\"{{lookupFields.length}}\"> <span li-icon type=\"utility\" icon=\"search\" size=\"small\" color=\"default\"></span> &quot;{{currentVal}}&quot; in {{theObject}} </th> </tr> <tr> <th>Name</th> <th ng-repeat=\"field in lookupFields\">{{field}}</th> </tr> </thead> <tbody> <tr ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\" style=\"cursor: pointer\"> <td>{{match.label}}</td> <td ng-repeat=\"field in lookupFields\">{{getField(match.model, field)}}</td> </tr> </tbody> </table> </div>"
+    "<div class=\"slds-lookup__menu\" role=\"listbox\"> <table class=\"slds-table slds-table--bordered\" role=\"listbox\"> <thead> <tr> <th colspan=\"{{dropdownFields.length}}\"> <span li-icon type=\"utility\" icon=\"search\" size=\"small\" color=\"default\"></span> &quot;{{currentVal}}&quot; in {{theObject}} </th> </tr> <tr ng-if=\"matches.length > 0\"> <th class=\"slds-text-heading--small\">Name</th> <th class=\"slds-text-heading--small\" ng-repeat=\"field in dropdownFields\">{{field.Label}}</th> </tr> </thead> <tbody> <tr ng-repeat=\"match in matches track by $index\" ng-click=\"selectMatch($index)\" style=\"cursor: pointer\"> <td>{{match.label}}</td> <td ng-repeat=\"field in dropdownFields\">{{getField(match.model, field.Name)}}</td> </tr> </tbody> </table> </div>"
   );
 
 
