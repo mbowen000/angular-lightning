@@ -68,9 +68,15 @@ angular.module('angular-lightning.tooltip', [])
 						return true;
 					}
 					return scope.$eval(enabledExpression);
-				}
+				};
 
-				$(element).hover(showTooltip, removeTooltip);
+				$(element).mouseover(function(e) {
+					e.stopPropagation();
+					showTooltip();
+				}).mouseout(function(e) {
+					e.stopPropagation();
+					removeTooltip();
+				});
 
 			}
 		};		
