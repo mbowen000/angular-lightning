@@ -749,7 +749,7 @@ angular.module('angular-lightning.tooltip', [])
 				scope.templateUrl = attrs.template || null;
 				var enabledExpression = attrs.tooltipEnabled || 'always';
 
-				var template = '<div class="slds-tooltip slds-nubbin--left" role="tooltip">' + 
+				var template = '<div class="slds-tooltip" role="tooltip">' + 
 					'<div class="slds-tooltip__content">' + 
 				    	'<div class="slds-tooltip__body">' + 
 				    		tooltipContent + 
@@ -758,7 +758,7 @@ angular.module('angular-lightning.tooltip', [])
 				'</div>';
 
 				if(scope.templateUrl ) {
-					template = '<div class="slds-tooltip slds-nubbin--left" role="tooltip">' + 
+					template = '<div class="slds-tooltip" role="tooltip">' + 
 						'<div class="slds-tooltip__content">' + 
 					    	'<div class="slds-tooltip__body" ng-include="getTemplateUrl()">' +  
 					    	'</div>' +
@@ -785,13 +785,25 @@ angular.module('angular-lightning.tooltip', [])
 					$(tooltipElement).hide();
 
 					var top = pos.top - ($(tooltipElement).height() / 2) + 5;
-					var left = pos.left + $(element).outerWidth() + 20;
-
 					$(tooltipElement).css({
 						position: 'absolute',
 						top: top + 'px',
-						left: left + 'px'
 					});
+
+					var width = $(element).outerWidth();
+					var left = pos.left + width + 20;
+					var right = pos.left - $(tooltipElement).outerWidth() - 20;
+
+					//Check if element is inside viewport, if not, show on left side
+					if ((left + width) <= (window.pageXOffset + window.innerWidth)) {
+						$(tooltipElement).css({left: left + 'px'});
+						$(tooltipElement).addClass('slds-nubbin--left');
+					}
+					else {
+						$(tooltipElement).css({left: right + 'px'});
+						$(tooltipElement).addClass('slds-nubbin--right');
+					}
+
 					$(tooltipElement).show();
 					
 				};	
