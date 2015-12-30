@@ -548,10 +548,12 @@ angular.module('angular-lightning.wysiwyg', [])
 	this.init = function(_scope, _element, _attrs, controllers) {
 		var attrs = _attrs;
 		modelCtrl = controllers[1];
-		console.log(attrs);
+		
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
 				_scope.content = modelCtrl.$modelValue;
+				var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
+				elem.editor.loadHTML(modelCtrl.$modelValue);
 			}
 		};
 
@@ -560,7 +562,8 @@ angular.module('angular-lightning.wysiwyg', [])
 
 	$(document).bind("trix-change", function(event) {
 		if ($(event.target).is($('trix-editor[input="'+$scope.wysiwygId+'"'))) {
-			modelCtrl.$setViewValue($('#'+$scope.wysiwygId).val());
+			var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
+			modelCtrl.$setViewValue(elem.editor.getDocument().toString());
 		}
 	});
 }])
