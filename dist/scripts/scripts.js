@@ -5,6 +5,7 @@ angular.module('angular-lightning', [
 	'angular-lightning.icon',
 	'angular-lightning.modal',
 	'angular-lightning.lookup',
+	'angular-lightning.wysiwyg',
 	'angular-lightning.tooltip',
 	'angular-lightning.tabs'
 ]);
@@ -337,7 +338,7 @@ angular.module('angular-lightning.picklist', [])
 			selected: '='
 		},
 		controller: 'liPicklistController',
-		templateUrl: 'views/field-picklist.html',
+		templateUrl: 'views/fields/field-picklist.html',
 		require: ['liPicklist', 'ngModel'],
 		link: function(scope, element, attrs, controllers) {
 			var picklistController;
@@ -377,7 +378,7 @@ angular.module('angular-lightning.lookup', [])
 
 .controller('liLookupController', ['$compile', '$parse', '$q', '$timeout', 'liLookupParser', function($compile, $parse, $q, $timeout, lookupParser) {
 	'use strict';
-	this.init = function(_scope, _element, _attrs, controllers) { 
+	this.init = function(_scope, _element, _attrs, controllers) {
 		var scope, element, attrs, modelCtrl;
 		element = _element;
 		scope = _scope.$new();
@@ -533,6 +534,46 @@ angular.module('angular-lightning.lookup', [])
 					return obj[field];
 				}
 			};
+		}
+	};
+}]);
+angular.module('angular-lightning.wysiwyg', [])
+
+.controller('liWysiwygController', ['$scope', function($scope) {
+	'use strict';
+	var modelCtrl;
+	$scope.wysiwygId = 'uniqueId';
+	$scope.content = 'Demo Content';
+
+	this.init = function(_scope, _element, _attrs, controllers) {
+		var attrs = _attrs;
+		modelCtrl = controllers[1];
+		console.log(attrs);
+		modelCtrl.$render = function() {
+			if (modelCtrl.$modelValue) {
+				_scope.content = modelCtrl.$modelValue;
+			}
+		};
+
+		_scope.wysiwygId = attrs.wysiwygId;
+	};
+
+	$(document).bind("trix-change", function(event) {
+		if ($(event.target).is($('trix-editor[input="'+$scope.wysiwygId+'"'))) {
+			modelCtrl.$setViewValue($('#'+$scope.wysiwygId).val());
+		}
+	});
+}])
+
+.directive('liWysiwyg', [function() {
+	'use strict';
+	return {
+		templateUrl: 'views/fields/field-wysiwyg.html',
+		require: ['liWysiwyg', 'ngModel'],
+		controller: 'liWysiwygController',
+		link: function(scope, element, attrs, controllers) {
+			var wysiwygController = controllers[0];
+			wysiwygController.init(scope, element, attrs, controllers);
 		}
 	};
 }]);
@@ -1009,7 +1050,26 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('views/field-picklist.html',
+  $templateCache.put('views/fields/date/field-date-dropdown.html',
+    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
+  );
+
+
+  $templateCache.put('views/fields/date/field-date-yearpicker.html',
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
+    "\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
+    "\n" +
+    "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
+  );
+
+
+  $templateCache.put('views/fields/field-dropdown.html',
+    "<div class=\"slds-form-element__control\"> <select id=\"selectSample1\" class=\"slds-select\" ng-options=\"picklistval for picklistval in field.picklistvals\" ng-model=\"field.value\" ng-disabled=\"field.disabled || $parent.$parent.section.state.status === 'pending'\"> </select> </div>"
+  );
+
+
+  $templateCache.put('views/fields/field-picklist.html',
     "<style>.picklist-label {\r" +
     "\n" +
     "  margin: auto;\r" +
@@ -1036,25 +1096,6 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
   );
 
 
-  $templateCache.put('views/fields/date/field-date-dropdown.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
-  );
-
-
-  $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
-    "\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
-    "\n" +
-    "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
-  );
-
-
-  $templateCache.put('views/fields/field-dropdown.html',
-    "<div class=\"slds-form-element__control\"> <select id=\"selectSample1\" class=\"slds-select\" ng-options=\"picklistval for picklistval in field.picklistvals\" ng-model=\"field.value\" ng-disabled=\"field.disabled || $parent.$parent.section.state.status === 'pending'\"> </select> </div>"
-  );
-
-
   $templateCache.put('views/fields/field-text.html',
     "<div class=\"slds-form-element__control\"> <input class=\"slds-input\" type=\"text\" placeholder=\"\" ng-model=\"field.value\" name=\"{{field.name}}\" ng-required=\"field.required\" ng-disabled=\"field.disabled || $parent.$parent.section.state.status === 'pending'\"> </div>"
   );
@@ -1066,7 +1107,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/field-wysiwyg.html',
-    "<trix-editor></trix-editor>"
+    "<input id=\"{{wysiwygId}}\" ng-value=\"content\" type=\"hidden\"> <trix-editor input=\"{{wysiwygId}}\" class=\"slds-textarea\"></trix-editor>"
   );
 
 

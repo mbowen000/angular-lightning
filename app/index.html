@@ -6,6 +6,7 @@
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/angular-inform/dist/angular-inform.css" />
         <link rel="stylesheet" href="bower_components/angular-block-ui/dist/angular-block-ui.css" />
+        <link rel="stylesheet" href="bower_components/trix/dist/trix.css" />
         <!-- endbower -->
         <link rel="stylesheet" href="bower_components/salesforce-lightning-design-system/assets/styles/salesforce-lightning-design-system.css"/>
         <!-- endbuild -->
@@ -146,7 +147,6 @@
         </section>
 
         <section>
-
             <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
                 <span id="base" class="site-jump-anchor" ></span>
                 <span>Tabs</span>
@@ -157,9 +157,18 @@
                 <li-tab heading="Tab 1">First Tab!</li-tab>
                 <li-tab heading="Tab 2">The Second Tab!</li-tab>
             </li-tabset>
-
         </section>
 
+        <section>
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Rich Text Editor</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+            
+            <div li-wysiwyg ng-model="dc.textfield" wysiwyg-id="someUniqueId"></div>
+            Model Value: {{dc.textfield}}
+        </section>
     </div>
 
     </body>
@@ -173,6 +182,7 @@
     <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/angular-inform/dist/angular-inform.js"></script>
     <script src="bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
+    <script src="bower_components/trix/dist/trix.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -181,6 +191,7 @@
     <script src="scripts/fields/field-datepicker.js"></script>
     <script src="scripts/fields/field-picklist.js"></script>
     <script src="scripts/fields/field-lookup.js"></script>
+    <script src="scripts/fields/field-wysiwyg.js"></script>
     <script src="scripts/utils/icon.js"></script>
     <script src="scripts/utils/modal.js"></script>
     <script src="scripts/utils/tooltip.js"></script>

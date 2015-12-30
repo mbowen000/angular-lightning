@@ -23,7 +23,7 @@ angular.module('angular-lightning.lookup', [])
 
 .controller('liLookupController', ['$compile', '$parse', '$q', '$timeout', 'liLookupParser', function($compile, $parse, $q, $timeout, lookupParser) {
 	'use strict';
-	this.init = function(_scope, _element, _attrs, controllers) { 
+	this.init = function(_scope, _element, _attrs, controllers) {
 		var scope, element, attrs, modelCtrl;
 		element = _element;
 		scope = _scope.$new();

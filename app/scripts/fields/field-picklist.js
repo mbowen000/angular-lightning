@@ -78,7 +78,7 @@ angular.module('angular-lightning.picklist', [])
 			selected: '='
 		},
 		controller: 'liPicklistController',
-		templateUrl: 'views/field-picklist.html',
+		templateUrl: 'views/fields/field-picklist.html',
 		require: ['liPicklist', 'ngModel'],
 		link: function(scope, element, attrs, controllers) {
 			var picklistController;
