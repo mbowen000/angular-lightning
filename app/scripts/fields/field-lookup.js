@@ -36,7 +36,7 @@ angular.module('angular-lightning.lookup', [])
 		scope.isFocused = false;
 		scope.dropdownFields = [];
 
-		if (JSON.parse(attrs.dropdownFields).length > 0) {
+		if (attrs.dropdownFields && JSON.parse(attrs.dropdownFields).length > 0) {
 			scope.dropdownFields = JSON.parse(attrs.dropdownFields);
 		}
 
@@ -99,7 +99,7 @@ angular.module('angular-lightning.lookup', [])
 		// compile the ui element
 		var dropdownDomElem = $compile(dropdownElem)(scope);
 
-		element.bind('focus', function(event) {
+		element.bind('focus', function() {
 			// insert it into the dom
 			scope.currentVal = modelCtrl.$viewValue;
 			scope.$digest();
@@ -107,10 +107,10 @@ angular.module('angular-lightning.lookup', [])
 			$(element).parents('.slds-lookup').append(dropdownDomElem);
 		});
 
-		element.bind('blur', function () {
-			$timeout(function() {
+		$(document).on('click', function (event) {
+			if (!dropdownDomElem[0].contains(event.target) && !$(event.target).is($(element))) {
 				$(dropdownDomElem).hide();
-			}, 300);
+			}
 		});
 
 		scope.select = function(idx) {

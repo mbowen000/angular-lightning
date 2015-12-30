@@ -20,7 +20,7 @@ angular.module('angular-lightning.tooltip', [])
 				  	'</div>' + 
 				'</div>';
 
-				if(scope.templateUrl ) {
+				if(scope.templateUrl) {
 					template = '<div class="slds-tooltip" role="tooltip">' + 
 						'<div class="slds-tooltip__content">' + 
 					    	'<div class="slds-tooltip__body" ng-include="getTemplateUrl()">' +  
@@ -28,11 +28,12 @@ angular.module('angular-lightning.tooltip', [])
 					  	'</div>' + 
 					'</div>';
 				}
+
 				scope.getTemplateUrl = function() {
 					if(scope.templateUrl) {
 						return scope.templateUrl;
 					}
-				} 
+				};
 
 				var tooltipElement = $compile(template)(scope);
 
