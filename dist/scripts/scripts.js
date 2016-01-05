@@ -553,7 +553,9 @@ angular.module('angular-lightning.wysiwyg', [])
 			if (modelCtrl.$modelValue) {
 				_scope.content = modelCtrl.$modelValue;
 				var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
-				elem.editor.loadHTML(modelCtrl.$modelValue);
+				if (elem) {
+					elem.editor.loadHTML(modelCtrl.$modelValue);
+				}
 			}
 		};
 
@@ -973,6 +975,10 @@ angular.module('angular-lightning.tabs', [])
 				scope.$parent.$watch($parse(attrs.disable), function(value) {
 				    scope.disabled = !! value;
 				});
+			}
+
+			if (attrs.activeFirst) {
+				scope.active = true;
 			}
 
 			scope.select = function() {

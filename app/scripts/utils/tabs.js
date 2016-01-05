@@ -98,6 +98,10 @@ angular.module('angular-lightning.tabs', [])
 				});
 			}
 
+			if (attrs.activeFirst) {
+				scope.active = true;
+			}
+
 			scope.select = function() {
 				if (!scope.disabled) {
 				    scope.active = true;
