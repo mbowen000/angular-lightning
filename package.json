@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "autoprefixer": "^6.1.2",
     "browserslist": "^1.0.1",
     "caniuse-db": "^1.0.30000372",
@@ -53,7 +53,5 @@
   "scripts": {
     "test": "grunt test",
     "start": "grunt serve"
-  },
-  "dependencies": {
   }
 }
