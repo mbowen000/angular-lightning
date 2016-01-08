@@ -1,6 +1,6 @@
-angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightning-demo.modal'])
+angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightning-demo.modal', 'inform'])
 
-.controller("DemoController", ['PicklistService', '$http', 'limitToFilter', function(PicklistService, $http, limitToFilter) {
+.controller("DemoController", ['PicklistService', '$http', 'limitToFilter', 'inform', function(PicklistService, $http, limitToFilter, inform) {
 	'use strict';
 	return _.extend(this, {
 		datefield: '12/01/2015',
@@ -20,6 +20,18 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 		    }).then(function(response){
 		      return limitToFilter(response.data.results, 15);
 		    });
+		},
+		sendInform: function(val, type) {
+			if (!val) {
+				val = 'Demo';
+			}
+
+			if (type === 'danger') {
+				inform.add(val, {type: 'danger'});
+			}
+			else {
+				inform.add(val);
+			}
 		}
 	});
 }]);
