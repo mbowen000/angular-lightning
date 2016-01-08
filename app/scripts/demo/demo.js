@@ -21,8 +21,17 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 		      return limitToFilter(response.data.results, 15);
 		    });
 		},
-		sendInform: function(val) {
-			inform.add(val);
+		sendInform: function(val, type) {
+			if (!val) {
+				val = 'Demo';
+			}
+
+			if (type === 'danger') {
+				inform.add(val, {type: 'danger'});
+			}
+			else {
+				inform.add(val);
+			}
 		}
 	});
 }]);
