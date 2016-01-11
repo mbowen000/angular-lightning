@@ -4,11 +4,18 @@
 
 ## Current Status
 
-Right now this is rough - I wouldn't recommend using for a few weeks.
+We have working components for many of the Lightning Design Components. The dependencies are not very lightweight and the build process is not very clean yet but that should be around the corner.
+
+For now you can view demo's of the available lightning components here:
+
+https://angular-lightning.herokuapp.com/
 
 ## Coming Soon
 
-- Full tested suite of Angular Directives, Filters, etc that work with the Lightning Design System
+- More code coverage
+- Cleaner Build Process
+- Cleaned up build dependencies and dev dependencies
+- CI Server
 
 ## Questions
 

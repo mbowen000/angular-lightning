@@ -20,6 +20,7 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 		    }).then(function(response){
 		      return limitToFilter(response.data.results, 15);
 		    });
-		}
+		},
+		progressValue: 50
 	});
 }]);

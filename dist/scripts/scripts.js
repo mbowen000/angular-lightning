@@ -7,7 +7,8 @@ angular.module('angular-lightning', [
 	'angular-lightning.lookup',
 	'angular-lightning.wysiwyg',
 	'angular-lightning.tooltip',
-	'angular-lightning.tabs'
+	'angular-lightning.tabs',
+	'angular-lightning.progress'
 ]);
 angular.module('angular-lightning.datepicker', [])
 
@@ -1046,6 +1047,28 @@ angular.module('angular-lightning.tabs', [])
 		);
 	}
 });
+angular.module('angular-lightning.progress', [])
+
+	.directive('liProgressbar', [function() {
+		'use strict';
+		return {
+			templateUrl: 'views/util/progressbar.html',
+			scope: {
+				value: '=',
+				nobadge: '@'
+			},
+			link: function(scope, element, attrs) {
+				if(_.has(attrs, 'minimal')) {
+					scope.minimal = true;
+				}
+
+				scope.getValue = function() {
+					var val = scope.value || 0;
+					return Math.round(val / 100 * 100);
+				}
+			}
+		};		
+	}]);
 angular.module('angular-lightning').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -1060,15 +1083,13 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-dropdown.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span smb-icon type=\"utility\" icon=\"left\" size=\"x-small\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span smb-icon type=\"utility\" icon=\"right\" size=\"x-small\"></span> </button> </div> </div> <div class=\"slds-picklist datepicker__filter--year slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span smb-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
+    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> </div> </div> <div class=\"slds-picklist slds-picklist--fluid slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
   );
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
-    "\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
-    "\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu li-datepicker-year-dropdown\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -1079,28 +1100,17 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/field-picklist.html',
-    "<style>.picklist-label {\r" +
-    "\n" +
-    "  margin: auto;\r" +
-    "\n" +
-    "  padding: 0px 50px;\r" +
-    "\n" +
-    "  display: block;\r" +
-    "\n" +
-    "  text-align: center;\r" +
-    "\n" +
-    "  font-weight: bold;\r" +
-    "\n" +
-    "  cursor: default;\r" +
-    "\n" +
-    "  font-size: 10px;\r" +
-    "\n" +
-    "}\r" +
-    "\n" +
-    ".slds-picklist__options {\r" +
-    "\n" +
-    "  width: initial;\r" +
-    "\n" +
+    "<style>.picklist-label {\n" +
+    "  margin: auto;\n" +
+    "  padding: 0px 50px;\n" +
+    "  display: block;\n" +
+    "  text-align: center;\n" +
+    "  font-weight: bold;\n" +
+    "  cursor: default;\n" +
+    "  font-size: 10px;\n" +
+    "}\n" +
+    ".slds-picklist__options {\n" +
+    "  width: initial;\n" +
     "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\" style=\"width:45px\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> </div>"
   );
 
@@ -1141,7 +1151,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/util/progressbar.html',
-    "<div class=\"progress-container slds-grid\" ng-if=\"!minimal\"> <span class=\"slds-pill progress-status slds-col\"> <span class=\"slds-pill__label\">{{value}}% Complete</span> </span> <div class=\"progressbar slds-col\" title=\"{{value}}%\" ng-class=\"{'success': value === 100}\"> <div class=\"progress\" ng-style=\"{'width': value + '%'}\"></div> </div> </div> <div class=\"progressbar slds-col progressbar-minimal\" title=\"{{value}}%\" ng-if=\"minimal\" ng-class=\"{'success': value === 100}\"> <div class=\"progress\" ng-style=\"{'width': value + '%'}\"></div> </div>"
+    "<div class=\"progress-container slds-grid\"> <span class=\"slds-badge\" ng-if=\"!nobadge\">{{getValue()}}% Complete</span> <div class=\"progressbar slds-col\" title=\"{{value}}%\" ng-class=\"{'success': getValue() === 100}\"> <div class=\"progress\" ng-style=\"{'width': getValue() + '%'}\"></div> </div> </div>"
   );
 
 

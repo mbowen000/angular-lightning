@@ -7,5 +7,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.lookup',
 	'angular-lightning.wysiwyg',
 	'angular-lightning.tooltip',
-	'angular-lightning.tabs'
+	'angular-lightning.tabs',
+	'angular-lightning.progress'
 ]);

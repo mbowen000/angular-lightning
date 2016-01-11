@@ -24,3 +24,32 @@ body {
 .slds-icon {
 	fill: currentColor;
 }
+
+.li-datepicker-year-dropdown {
+    width:5rem !important;
+}
+
+/* Progress Indication */
+.progress-container {
+    margin:10px 0px;
+}
+.progress-container .slds-badge {
+    margin-right:10px;
+}
+.progressbar {
+    background-color:#E0E5EE;
+    height:1px;
+    width:100%;
+    margin:10px 0px;
+}
+.progressbar .progress {
+    background-color:#0572D2;
+    height:1px;
+    -webkit-transition:all ease 0.5s;
+    transition:all ease 0.5s;
+}
+table.slds-table td.progresswrapper {
+    margin:0px;
+    padding:0px;
+}
+/* End Progress Indication */

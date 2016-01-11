@@ -1,12 +1,8 @@
-<div class="progress-container slds-grid" ng-if="!minimal">
-	<span class="slds-pill progress-status slds-col">
-	  <span class="slds-pill__label">{{value}}% Complete</span>
-	</span>
-	<div class="progressbar slds-col" title="{{value}}%" ng-class="{'success': value === 100}">
-		<div class="progress" ng-style="{'width': value + '%'}"></div>
+<div class="progress-container slds-grid">
+	
+	<span class="slds-badge" ng-if="!nobadge">{{getValue()}}% Complete</span>
+	
+	<div class="progressbar slds-col" title="{{value}}%" ng-class="{'success': getValue() === 100}">
+		<div class="progress" ng-style="{'width': getValue() + '%'}"></div>
 	</div>
-</div>
-
-<div class="progressbar slds-col progressbar-minimal" title="{{value}}%" ng-if="minimal" ng-class="{'success': value === 100}">
-	<div class="progress" ng-style="{'width': value + '%'}"></div>
 </div>

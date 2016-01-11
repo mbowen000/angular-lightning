@@ -1,4 +1,4 @@
-<apex:page controller="POSSystemController" applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false">
+<html lang="en">
         
     <head>
 
@@ -49,7 +49,7 @@
         
             <div class="slds-form-element__control">
                 <div class="slds-input-has-icon slds-input-has-icon--right">
-                    <!-- <span smb-icon type="utility" icon="event" size="x-small"></span> -->
+                    <span li-icon type="utility" icon="event" size="x-small" add-classes="slds-input__icon"></span>
                     <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datefield' ng-required='dc.datefield.required' li-datepicker ng-disabled="dc.datefield.disabled || $parent.$parent.section.state.status === 'pending'"/>
                 </div>
             </div>
@@ -169,6 +169,25 @@
             <div li-wysiwyg ng-model="dc.textfield" wysiwyg-id="someUniqueId"></div>
             Model Value: <input type="text" ng-model="dc.textfield">
         </section>
+
+        <section>
+            <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                <span id="base" class="site-jump-anchor" ></span>
+                <span>Progress Bar</span>
+                <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+            </h2>
+            
+            <h2 class="site-text-heading--small site-text-heading--callout">With Badge (Default)</h2>
+
+            <div li-progressbar value="dc.progressValue"></div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label">Progressbar Value:</label>
+                <input type="number" class="slds-input" ng-model="dc.progressValue"/>
+            </div>
+
+            <h2 class="site-text-heading--small site-text-heading--callout">No Badge</h2>
+            <div li-progressbar value="dc.progressValue" nobadge="true"></div>
+        </section>
     </div>
 
     </body>
@@ -196,10 +215,11 @@
     <script src="scripts/utils/modal.js"></script>
     <script src="scripts/utils/tooltip.js"></script>
     <script src="scripts/utils/tabs.js"></script>
+    <script src="scripts/utils/progress.js"></script>
     <!-- endbuild -->
 
     <!-- include the demo script outside of the usemin block (we dont want it included in the dist code) -->
     <script src="scripts/demo/demo.js"></script>
     <script src="scripts/demo/modal-demo.js"></script>
 
-</apex:page>
+</html>

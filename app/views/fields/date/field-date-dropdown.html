@@ -3,21 +3,20 @@
       <div class="slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4">
         <div class="slds-align-middle">
           <button class="slds-button slds-button--icon-container" ng-click="previousMonth()">
-            <span smb-icon type="utility" icon="left" size="x-small"></span>
+            <span li-icon type="utility" icon="left" size="x-small" color="default"></span>
           </button>
         </div>
         <h2 id="month" class="slds-align-middle" aria-live="assertive" aria-atomic="true">{{month.label}}</h2>
         <div class="slds-align-middle">
           <button class="slds-button slds-button--icon-container" ng-click="nextMonth()">
-            <span smb-icon type="utility" icon="right" size="x-small"></span>
+            <span li-icon type="utility" icon="right" size="x-small" color="default"></span>
           </button>
         </div>
       </div>
-      <div class="slds-picklist datepicker__filter--year slds-shrink-none">
+      <div class="slds-picklist slds-picklist--fluid slds-shrink-none">
         <button id="year" class="slds-button slds-button--neutral slds-picklist__label" aria-haspopup="true" ng-click="yearPickerOpen = !yearPickerOpen">{{month.year}}
-          <span smb-icon type="utility" icon="down" size="x-small"></span>
+          <span li-icon type="utility" icon="down" size="x-small"></span>
         </button>
-
       </div>
     </div>
     <table class="datepicker__month" role="grid" aria-labelledby="month">
