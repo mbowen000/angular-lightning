@@ -179,6 +179,10 @@ angular.module('angular-lightning.datepicker', [])
 		return ngModelCtrl.$modelValue;
 	};
 
+	$scope.getCurrentDateAsMoment = function() {
+		return moment(ngModelCtrl.$modelValue);
+	}
+
 	$scope.nextMonth = function() {
 		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
 		$scope.month = DateService.buildMonth(currentStart.add('1', 'month'));

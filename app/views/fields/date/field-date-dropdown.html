@@ -47,7 +47,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="week in month.weeks">
-          <td class="datepicker-day" ng-class="{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDate().isSame(day.moment) }" role="gridcell" ng-repeat="day in week.days" ng-attr-aria-disabled="{{!day.inCurrentMonth}}" ng-click="selectDay(day)">
+          <td class="datepicker-day" ng-class="{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDateAsMoment().isSame(day.moment) }" role="gridcell" ng-repeat="day in week.days" ng-attr-aria-disabled="{{!day.inCurrentMonth}}" ng-click="selectDay(day)">
             <span class="slds-day">{{day.label}}</span>
           </td>
         </tr>
