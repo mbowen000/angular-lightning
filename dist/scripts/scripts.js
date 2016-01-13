@@ -558,10 +558,10 @@ angular.module('angular-lightning.wysiwyg', [])
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
 				_scope.content = modelCtrl.$modelValue;
-				var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
-				if (elem) {
-					elem.editor.loadHTML(modelCtrl.$modelValue);
-				}
+				// var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
+				// if (elem) {
+				// 	elem.editor.loadHTML(modelCtrl.$modelValue);
+				// }
 			}
 		};
 
@@ -571,7 +571,7 @@ angular.module('angular-lightning.wysiwyg', [])
 	$(document).bind("trix-change", function(event) {
 		if ($(event.target).is($('trix-editor[input="'+$scope.wysiwygId+'"'))) {
 			var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
-			modelCtrl.$setViewValue(elem.editor.getDocument().toString());
+			modelCtrl.$setViewValue($(elem).val());
 		}
 	});
 }])
@@ -1177,8 +1177,10 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-yearpicker.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu li-datepicker-year-dropdown\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\n" +
-    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\n" +
+    "<div class=\"slds-dropdown slds-dropdown--left slds-dropdown--menu li-datepicker-year-dropdown\" ng-if=\"yearPickerOpen\"> <ul class=\"slds-dropdown__list\" role=\"menu\"> <!-- <li id=\"menu-0-0\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item One</a></li>\r" +
+    "\n" +
+    "\t\t<li id=\"menu-1-1\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Two</a></li>\r" +
+    "\n" +
     "\t\t<li id=\"menu-2-2\" href=\"#\" class=\"slds-dropdown__item\"><a href=\"#\" class=\"slds-truncate\" role=\"menuitem\">Menu Item Three</a></li> --> <li class=\"slds-dropdown__item\"> <a role=\"menuitem\" ng-click=\"yearPrevPage()\">Earlier</a> </li> <li ng-repeat=\"year in years\" class=\"slds-dropdown__item\" ng-class=\"{ 'slds-has-divider' : $first }\"> <a class=\"slds-truncate\" role=\"menuitem\" ng-click=\"selectYear(year.moment)\">{{year.label}}</a> </li> <li class=\"slds-dropdown__item slds-has-divider\"> <a role=\"menuitem\" ng-click=\"yearNextPage()\">Later</a> </li> </ul> </div>"
   );
 
@@ -1189,17 +1191,28 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/field-picklist.html',
-    "<style>.picklist-label {\n" +
-    "  margin: auto;\n" +
-    "  padding: 0px 50px;\n" +
-    "  display: block;\n" +
-    "  text-align: center;\n" +
-    "  font-weight: bold;\n" +
-    "  cursor: default;\n" +
-    "  font-size: 10px;\n" +
-    "}\n" +
-    ".slds-picklist__options {\n" +
-    "  width: initial;\n" +
+    "<style>.picklist-label {\r" +
+    "\n" +
+    "  margin: auto;\r" +
+    "\n" +
+    "  padding: 0px 50px;\r" +
+    "\n" +
+    "  display: block;\r" +
+    "\n" +
+    "  text-align: center;\r" +
+    "\n" +
+    "  font-weight: bold;\r" +
+    "\n" +
+    "  cursor: default;\r" +
+    "\n" +
+    "  font-size: 10px;\r" +
+    "\n" +
+    "}\r" +
+    "\n" +
+    ".slds-picklist__options {\r" +
+    "\n" +
+    "  width: initial;\r" +
+    "\n" +
     "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\" style=\"width:45px\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> </div>"
   );
 
