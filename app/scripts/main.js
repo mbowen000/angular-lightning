@@ -8,5 +8,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.wysiwyg',
 	'angular-lightning.tooltip',
 	'angular-lightning.tabs',
-	'angular-lightning.progress'
+	'angular-lightning.progress',
+	'angular-lightning.sticky'
 ]);

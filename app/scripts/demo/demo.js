@@ -1,6 +1,6 @@
 angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightning-demo.modal'])
 
-.controller("DemoController", ['PicklistService', '$http', 'limitToFilter', function(PicklistService, $http, limitToFilter) {
+.controller("DemoController", ['PicklistService', '$http', 'limitToFilter', '$anchorScroll', function(PicklistService, $http, limitToFilter, $anchorScroll) {
 	'use strict';
 	return _.extend(this, {
 		datefield: '12/01/2015',
@@ -32,6 +32,9 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 			else {
 				inform.add(val);
 			}
+		},
+		scrollTo: function(anchor) {
+			$anchorScroll(anchor);
 		},
 		progressValue: 50
 	});
