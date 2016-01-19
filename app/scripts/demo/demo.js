@@ -5,6 +5,7 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 	return _.extend(this, {
 		datefield: '12/01/2015',
 		textfield: "test value",
+		richtext: "<div><strong>Bold!</strong><br><em>Italics!</em></div>",
 		picklistfield: {
 			picklistvals: [
 				'option 1', 'option 2', 'option 3'

@@ -13,10 +13,10 @@ angular.module('angular-lightning.wysiwyg', [])
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
 				_scope.content = modelCtrl.$modelValue;
-				var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
-				if (elem) {
-					elem.editor.loadHTML(modelCtrl.$modelValue);
-				}
+				// var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
+				// if (elem) {
+				// 	elem.editor.loadHTML(modelCtrl.$modelValue);
+				// }
 			}
 		};
 
@@ -26,7 +26,7 @@ angular.module('angular-lightning.wysiwyg', [])
 	$(document).bind("trix-change", function(event) {
 		if ($(event.target).is($('trix-editor[input="'+$scope.wysiwygId+'"'))) {
 			var elem = $('trix-editor[input="'+$scope.wysiwygId+'"')[0];
-			modelCtrl.$setViewValue(elem.editor.getDocument().toString());
+			modelCtrl.$setViewValue($(elem).val());
 		}
 	});
 }])
