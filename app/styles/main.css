@@ -53,3 +53,25 @@ table.slds-table td.progresswrapper {
     padding:0px;
 }
 /* End Progress Indication */
+
+/*
+menus
+*/
+.menu {
+    background-color: #005568;
+    padding: 0 16px;
+}
+
+.menu a:link {
+    display: block;
+    padding: 8px;
+}
+
+.menu a:hover {
+    background-color: rgb(0, 55, 67);
+}
+
+.menu a:link,
+.menu a:visited {
+    color: #eee;
+}
