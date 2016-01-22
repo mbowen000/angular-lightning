@@ -66,7 +66,9 @@ angular.module('angular-lightning.picklist', [])
 	};
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
-		modelCtrl.$setViewValue(newVals.join(';'));
+		if(newVals) {
+			modelCtrl.$setViewValue(newVals.join(';'));
+		}
 	});
 }])
 
@@ -74,8 +76,7 @@ angular.module('angular-lightning.picklist', [])
 	'use strict';
 	return {
 		scope: {
-			options: '=',
-			selected: '='
+			options: '='
 		},
 		controller: 'liPicklistController',
 		templateUrl: 'views/fields/field-picklist.html',
