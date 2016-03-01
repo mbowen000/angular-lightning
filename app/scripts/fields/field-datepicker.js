@@ -94,6 +94,9 @@ angular.module('angular-lightning.datepicker', [])
 			if(value && moment.isMoment(value)) {
 				return value.format(DateConfig.dateFormat);
 			}
+			else if (value) {
+				return moment(value).format(DateConfig.dateFormat);
+			}
 		});
 
 		var unwatch = $scope.$watch(function() {
