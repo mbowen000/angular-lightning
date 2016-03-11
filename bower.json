@@ -1,19 +1,19 @@
 {
   "name": "angular-lightning",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "main": [
     "./dist/scripts/scripts.js",
     "./dist/styles/main.css"
   ],
   "dependencies": {
-    "angular": "1.4.8",
+    "angular": "1.5.0",
     "underscore": "1.8.3",
     "angular-safeapply": "1.0.4",
     "jquery": "2.1.4",
     "moment": "2.10.6",
     "angular-inform": "0.0.18",
     "angular-block-ui": "0.2.0",
-    "salesforce-lightning-design-system": "0.12.1",
+    "salesforce-lightning-design-system": "1.0.0",
     "trix": "0.9.4"
   },
   "overrides": {},
@@ -24,6 +24,6 @@
   "appPath": "app",
   "moduleName": "testapp",
   "resolutions": {
-    "angular": "1.4.8"
+    "angular": "1.5.0"
   }
 }
