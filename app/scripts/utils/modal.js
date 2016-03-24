@@ -57,7 +57,7 @@ angular.module('angular-lightning.modal', [])
 			return tAttrs.templateUrl || 'views/util/modal.html';
 		},
 		link: function(scope, elem, attrs) {
-			console.log('linked');
+			
 		}
 	}
 }])
