@@ -2,8 +2,10 @@ angular.module('angular-lightning.datepicker', [])
 
 .constant('DateConfig', {
 	numWeeksShown: 5,
-	dateFormat: 'MM/DD/YYYY', 
-	dateTimeFormat: 'MM/DD/YYYY hh:mm A'
+	dateFormat: 'MM/DD/YYYY',
+	dateModel: 'YYYY-MM-DD',
+	dateTimeFormat: 'MM/DD/YYYY hh:mm A',
+	datetimeModel: 'YYYY-MM-DD HH:mm:ss'
 })
 
 .service('DateService', ['DateConfig', function(DateConfig) {
@@ -87,6 +89,7 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.showTime = false;
 		if (attrs.datepickerType === 'datetime') {
 			DateConfig.dateFormat = DateConfig.dateTimeFormat;
+			DateConfig.dateModel = DateConfig.datetimeModel;
 			$scope.showTime = true;
 		}
 
@@ -111,9 +114,7 @@ angular.module('angular-lightning.datepicker', [])
 		});
 
 		ngModelCtrl.$formatters.push(function(value) {
-			if (value) {
-				value = moment(value);
-
+			if (value && moment.isMoment(value)) {
 				$scope.hour = value.hour();
 				if (value.format('A') === 'PM') {
 					$scope.hour -= 12;
@@ -122,9 +123,6 @@ angular.module('angular-lightning.datepicker', [])
 				$scope.ampm = value.format('A');
 
 				return value.format(DateConfig.dateFormat);
-			}
-			else {
-				return null;
 			}
 		});
 
