@@ -1,14 +1,12 @@
 angular.module('angular-lightning.sticky', [])
 
 .directive('liSticky', ['$compile', function($compile) {
-	'ust strict';
+	'use strict';
 	return {
 		scope: {
 			liAbove: '@'
 		},
 		link: function(scope, element, attrs) {
-			console.log('linked sticky');
-
 			var originalWidth = $(element).width();
 
 			// put a "ghost" element to retain width tracking of the parent
