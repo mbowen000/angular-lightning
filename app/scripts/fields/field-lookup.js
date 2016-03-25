@@ -86,6 +86,13 @@ angular.module('angular-lightning.lookup', [])
 	        return candidateViewValue !== emptyViewValue ? candidateViewValue : modelValue;
 		});
 
+		//Make sure model is always an object
+		modelCtrl.$parsers.push(function(value) {
+			if (typeof value !== 'object') {
+				return null;
+			}
+		});
+
 		// create ui elements for the dropdown
 		var dropdownElem = angular.element('<div li-lookup-dropdown></div>');
 		dropdownElem.attr({
