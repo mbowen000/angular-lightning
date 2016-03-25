@@ -15,7 +15,8 @@ angular.module('angular-lightning.datepicker', [])
 
 .constant('DateConfig', {
 	numWeeksShown: 5,
-	dateFormat: 'MM/DD/YYYY'
+	dateFormat: 'MM/DD/YYYY', 
+	dateTimeFormat: 'MM/DD/YYYY hh:mm A'
 })
 
 .service('DateService', ['DateConfig', function(DateConfig) {
@@ -92,30 +93,52 @@ angular.module('angular-lightning.datepicker', [])
 
 	$scope = _originalScope;
 
-	this.init = function(element, controllers) {
+	this.init = function(element, controllers, attrs) {
 		this.controllers = controllers;
 		this.element = inputEl = element;
+
+		$scope.showTime = false;
+		if (attrs.datepickerType === 'datetime') {
+			DateConfig.dateFormat = DateConfig.dateTimeFormat;
+			$scope.showTime = true;
+		}
+
 		ngModelCtrl = controllers[1];
 
 		ngModelCtrl.$parsers.push(function(value) {
-			if(value) {
-				return moment(value);
+			value = moment(value);
+			
+			$scope.hour = value.hour();
+			if (value.format('A') === 'PM') {
+				$scope.hour -= 12;
 			}
+			$scope.minute = value.minute();
+			$scope.ampm = value.format('A');
+			
+			return value;
 		});
 
 		ngModelCtrl.$formatters.push(function(value) {
-			if(value && moment.isMoment(value)) {
-				return value.format(DateConfig.dateFormat);
+			if (value) {
+				value = moment(value);
 			}
-			else if (value) {
-				return moment(value).format(DateConfig.dateFormat);
+
+			$scope.hour = value.hour();
+			if (value.format('A') === 'PM') {
+				$scope.hour -= 12;
 			}
+			$scope.minute = value.minute();
+			$scope.ampm = value.format('A');
+
+			return value.format(DateConfig.dateFormat);
 		});
 
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
 		}, function(val) {
-			ngModelCtrl.$setViewValue(DateService.getDate(val).format(DateConfig.dateFormat));
+			var theDate = DateService.getDate(val);
+			theDate.second(0);
+			ngModelCtrl.$setViewValue(theDate.format(DateConfig.dateFormat));
 			ngModelCtrl.$render();
 			unwatch();
 			_buildCalendar();
@@ -197,7 +220,7 @@ angular.module('angular-lightning.datepicker', [])
 
 	$scope.getCurrentDateAsMoment = function() {
 		return moment(ngModelCtrl.$modelValue);
-	}
+	};
 
 	$scope.nextMonth = function() {
 		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
@@ -217,6 +240,36 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 	};
 
+	$scope.changeHour = function(val) {
+		val = Number(val);
+		if (ngModelCtrl.$modelValue.format('A') === 'PM') {
+			val += 12;
+		}
+		ngModelCtrl.$modelValue.hour(val);
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+
+		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+	};
+	$scope.changeMinute = function(val) {
+		ngModelCtrl.$modelValue.minute(val);
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+	};
+	$scope.changeAMPM = function() {
+		if (ngModelCtrl.$modelValue.format('A') === 'AM') {
+			ngModelCtrl.$modelValue.add(12, 'hours');
+		}
+		else {
+			ngModelCtrl.$modelValue.subtract(12, 'hours');
+		}
+
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+
+		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+	};
+
 	return this;	
 }])
 
@@ -227,7 +280,7 @@ angular.module('angular-lightning.datepicker', [])
 		controller: 'DateDropdownController',
 		scope: true,
 		link: function(scope, element, attrs, controllers) {
-			controllers[0].init(element, controllers);
+			controllers[0].init(element, controllers, attrs);
 			return this;
 		}
 	};
@@ -266,7 +319,9 @@ angular.module('angular-lightning.datepicker', [])
 			};
 		}
 	};
-}]);
+}])
+
+;
 angular.module('angular-lightning.picklist', [])
 
 .service('PicklistService', [function() {
@@ -763,7 +818,7 @@ angular.module('angular-lightning.modal', [])
 			return tAttrs.templateUrl || 'views/util/modal.html';
 		},
 		link: function(scope, elem, attrs) {
-			console.log('linked');
+			
 		}
 	}
 }])
@@ -1191,7 +1246,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
 
 
   $templateCache.put('views/fields/date/field-date-dropdown.html',
-    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> </div> </div> <div class=\"slds-picklist slds-picklist--fluid slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDateAsMoment().isSame(day.moment) }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> </div>"
+    "<div class=\"slds-dropdown slds-dropdown--left slds-datepicker\" aria-hidden=\"false\" data-selection=\"single\"> <div class=\"slds-datepicker__filter slds-grid\"> <div class=\"slds-datepicker__filter--month slds-grid slds-grid--align-spread slds-size--3-of-4\"> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"previousMonth()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <h2 id=\"month\" class=\"slds-align-middle\" aria-live=\"assertive\" aria-atomic=\"true\">{{month.label}}</h2> <div class=\"slds-align-middle\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"nextMonth()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> </div> </div> <div class=\"slds-picklist slds-picklist--fluid slds-shrink-none\"> <button id=\"year\" class=\"slds-button slds-button--neutral slds-picklist__label\" aria-haspopup=\"true\" ng-click=\"yearPickerOpen = !yearPickerOpen\">{{month.year}} <span li-icon type=\"utility\" icon=\"down\" size=\"x-small\"></span> </button> </div> </div> <table class=\"datepicker__month\" role=\"grid\" aria-labelledby=\"month\"> <thead> <tr id=\"weekdays\"> <th id=\"Sunday\"> <abbr title=\"Sunday\">S</abbr> </th> <th id=\"Monday\"> <abbr title=\"Monday\">M</abbr> </th> <th id=\"Tuesday\"> <abbr title=\"Tuesday\">T</abbr> </th> <th id=\"Wednesday\"> <abbr title=\"Wednesday\">W</abbr> </th> <th id=\"Thursday\"> <abbr title=\"Thursday\">T</abbr> </th> <th id=\"Friday\"> <abbr title=\"Friday\">F</abbr> </th> <th id=\"Saturday\"> <abbr title=\"Saturday\">S</abbr> </th> </tr> </thead> <tbody> <tr ng-repeat=\"week in month.weeks\"> <td class=\"datepicker-day\" ng-class=\"{ 'slds-disabled-text': !day.inCurrentMonth, 'slds-is-selected': getCurrentDateAsMoment().isSame(day.moment, 'day') }\" role=\"gridcell\" ng-repeat=\"day in week.days\" ng-attr-aria-disabled=\"{{!day.inCurrentMonth}}\" ng-click=\"selectDay(day)\"> <span class=\"slds-day\">{{day.label}}</span> </td> </tr> </tbody> </table> <div class=\"slds-grid\" ng-if=\"showTime\"> <div class=\"slds-col\"> <input type=\"text\" class=\"slds-input\" ng-model=\"hour\" ng-change=\"changeHour(hour)\"> </div> <div class=\"slds-col\"> <input type=\"text\" class=\"slds-input\" ng-model=\"minute\" ng-change=\"changeMinute(minute)\"> </div> <div class=\"slds-col\"> <input type=\"button\" class=\"slds-button slds-button--neutral\" value=\"{{ampm}}\" ng-click=\"changeAMPM()\"> </div> </div> </div>"
   );
 
 

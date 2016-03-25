@@ -2,7 +2,8 @@ angular.module('angular-lightning.datepicker', [])
 
 .constant('DateConfig', {
 	numWeeksShown: 5,
-	dateFormat: 'MM/DD/YYYY'
+	dateFormat: 'MM/DD/YYYY', 
+	dateTimeFormat: 'MM/DD/YYYY hh:mm A'
 })
 
 .service('DateService', ['DateConfig', function(DateConfig) {
@@ -79,30 +80,52 @@ angular.module('angular-lightning.datepicker', [])
 
 	$scope = _originalScope;
 
-	this.init = function(element, controllers) {
+	this.init = function(element, controllers, attrs) {
 		this.controllers = controllers;
 		this.element = inputEl = element;
+
+		$scope.showTime = false;
+		if (attrs.datepickerType === 'datetime') {
+			DateConfig.dateFormat = DateConfig.dateTimeFormat;
+			$scope.showTime = true;
+		}
+
 		ngModelCtrl = controllers[1];
 
 		ngModelCtrl.$parsers.push(function(value) {
-			if(value) {
-				return moment(value);
+			value = moment(value);
+			
+			$scope.hour = value.hour();
+			if (value.format('A') === 'PM') {
+				$scope.hour -= 12;
 			}
+			$scope.minute = value.minute();
+			$scope.ampm = value.format('A');
+			
+			return value;
 		});
 
 		ngModelCtrl.$formatters.push(function(value) {
-			if(value && moment.isMoment(value)) {
-				return value.format(DateConfig.dateFormat);
+			if (value) {
+				value = moment(value);
 			}
-			else if (value) {
-				return moment(value).format(DateConfig.dateFormat);
+
+			$scope.hour = value.hour();
+			if (value.format('A') === 'PM') {
+				$scope.hour -= 12;
 			}
+			$scope.minute = value.minute();
+			$scope.ampm = value.format('A');
+
+			return value.format(DateConfig.dateFormat);
 		});
 
 		var unwatch = $scope.$watch(function() {
 			return ngModelCtrl.$modelValue;
 		}, function(val) {
-			ngModelCtrl.$setViewValue(DateService.getDate(val).format(DateConfig.dateFormat));
+			var theDate = DateService.getDate(val);
+			theDate.second(0);
+			ngModelCtrl.$setViewValue(theDate.format(DateConfig.dateFormat));
 			ngModelCtrl.$render();
 			unwatch();
 			_buildCalendar();
@@ -184,7 +207,7 @@ angular.module('angular-lightning.datepicker', [])
 
 	$scope.getCurrentDateAsMoment = function() {
 		return moment(ngModelCtrl.$modelValue);
-	}
+	};
 
 	$scope.nextMonth = function() {
 		var currentStart = moment($scope.month.currentDate).clone().startOf('month');
@@ -204,6 +227,36 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 	};
 
+	$scope.changeHour = function(val) {
+		val = Number(val);
+		if (ngModelCtrl.$modelValue.format('A') === 'PM') {
+			val += 12;
+		}
+		ngModelCtrl.$modelValue.hour(val);
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+
+		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+	};
+	$scope.changeMinute = function(val) {
+		ngModelCtrl.$modelValue.minute(val);
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+	};
+	$scope.changeAMPM = function() {
+		if (ngModelCtrl.$modelValue.format('A') === 'AM') {
+			ngModelCtrl.$modelValue.add(12, 'hours');
+		}
+		else {
+			ngModelCtrl.$modelValue.subtract(12, 'hours');
+		}
+
+		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$render();
+
+		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+	};
+
 	return this;	
 }])
 
@@ -214,7 +267,7 @@ angular.module('angular-lightning.datepicker', [])
 		controller: 'DateDropdownController',
 		scope: true,
 		link: function(scope, element, attrs, controllers) {
-			controllers[0].init(element, controllers);
+			controllers[0].init(element, controllers, attrs);
 			return this;
 		}
 	};
@@ -253,4 +306,6 @@ angular.module('angular-lightning.datepicker', [])
 			};
 		}
 	};
-}]);
+}])
+
+;
