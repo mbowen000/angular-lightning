@@ -80,6 +80,9 @@ angular.module('angular-lightning.datepicker', [])
 	var self = this;
 	var ngModelCtrl, inputEl, $popup, $yearPicker, $scope;
 
+	var dateFormat = DateConfig.dateFormat;
+	var dateModel = DateConfig.dateModel;
+
 	$scope = _originalScope;
 
 	this.init = function(element, controllers, attrs) {
@@ -87,9 +90,9 @@ angular.module('angular-lightning.datepicker', [])
 		this.element = inputEl = element;
 
 		$scope.showTime = false;
-		if (attrs.datepickerType === 'datetime') {
-			DateConfig.dateFormat = DateConfig.dateTimeFormat;
-			DateConfig.dateModel = DateConfig.datetimeModel;
+		if (attrs.datepickerType && attrs.datepickerType === 'datetime') {
+			dateFormat = DateConfig.dateTimeFormat;
+			dateModel = DateConfig.datetimeModel;
 			$scope.showTime = true;
 		}
 
@@ -106,7 +109,7 @@ angular.module('angular-lightning.datepicker', [])
 				$scope.minute = value.minute();
 				$scope.ampm = value.format('A');
 				
-				return value;
+				return value.format(dateModel);
 			}
 			else {
 				return null;
@@ -122,17 +125,17 @@ angular.module('angular-lightning.datepicker', [])
 				$scope.minute = value.minute();
 				$scope.ampm = value.format('A');
 
-				return value.format(DateConfig.dateFormat);
+				return value.format(dateFormat);
 			}
 		});
 
 		var unwatch = $scope.$watch(function() {
-			return ngModelCtrl.$modelValue;
+			return moment(ngModelCtrl.$modelValue);
 		}, function(val) {
 			var theDate = DateService.getDate(val);
 			if (theDate) {
 				theDate.second(0);
-				ngModelCtrl.$setViewValue(theDate.format(DateConfig.dateFormat));
+				ngModelCtrl.$setViewValue(theDate.format(dateFormat));
 				ngModelCtrl.$render();
 			}
 			unwatch();
@@ -175,7 +178,7 @@ angular.module('angular-lightning.datepicker', [])
 	$scope.month = {};
 	
 	var _buildCalendar = function() {
-		if(ngModelCtrl.$modelValue) {
+		if(moment(ngModelCtrl.$modelValue)) {
 			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 		}
 		else { 
@@ -210,7 +213,7 @@ angular.module('angular-lightning.datepicker', [])
 	});
 
 	$scope.getCurrentDate = function() { 
-		return ngModelCtrl.$modelValue;
+		return moment(ngModelCtrl.$modelValue);
 	};
 
 	$scope.getCurrentDateAsMoment = function() {
@@ -226,43 +229,49 @@ angular.module('angular-lightning.datepicker', [])
 		$scope.month = DateService.buildMonth(currentStart.subtract('1', 'month'));
 	};
 	$scope.selectDay = function(day) {
-		ngModelCtrl.$setViewValue(day.moment.format(DateConfig.dateFormat));
+		ngModelCtrl.$setViewValue(day.moment.format(dateFormat));
 		ngModelCtrl.$render();
 	};
 	$scope.selectYear = function(year) {
-		ngModelCtrl.$setViewValue(year.format(DateConfig.dateFormat));
+		ngModelCtrl.$setViewValue(year.format(dateFormat));
 		ngModelCtrl.$render();
 		$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 	};
 
 	$scope.changeHour = function(val) {
 		val = Number(val);
-		if (ngModelCtrl.$modelValue.format('A') === 'PM') {
+		var momentModel = DateService.getDate(ngModelCtrl.$modelValue);
+
+		if (momentModel.format('A') === 'PM') {
 			val += 12;
 		}
-		ngModelCtrl.$modelValue.hour(val);
-		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		momentModel.hour(val);
+		ngModelCtrl.$setViewValue(momentModel.format(dateFormat));
 		ngModelCtrl.$render();
 
-		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+		$scope.ampm = momentModel.format('A');
 	};
 	$scope.changeMinute = function(val) {
-		ngModelCtrl.$modelValue.minute(val);
-		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		var momentModel = DateService.getDate(ngModelCtrl.$modelValue);
+
+		momentModel.minute(val);
+		ngModelCtrl.$setViewValue(momentModel.format(dateFormat));
 		ngModelCtrl.$render();
 	};
 	$scope.changeAMPM = function() {
-		if (ngModelCtrl.$modelValue.format('A') === 'AM') {
-			ngModelCtrl.$modelValue.add(12, 'hours');
+		var momentModel = DateService.getDate(ngModelCtrl.$modelValue);
+		
+		if (momentModel.format('A') === 'AM') {
+			momentModel.add(12, 'hours');
 		}
 		else {
-			ngModelCtrl.$modelValue.subtract(12, 'hours');
+			momentModel.subtract(12, 'hours');
 		}
 
-		ngModelCtrl.$setViewValue(ngModelCtrl.$modelValue.format(DateConfig.dateFormat));
+		ngModelCtrl.$setViewValue(momentModel.format(dateFormat));
 		ngModelCtrl.$render();
 
-		$scope.ampm = ngModelCtrl.$modelValue.format('A');
+		$scope.ampm = momentModel.format('A');
 	};
 
 	return this;	

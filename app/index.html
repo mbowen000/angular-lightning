@@ -69,7 +69,6 @@
         </div>
 
         <div class="slds-col slds-col--padded slds-size--10-of-12">
-
             <section id="datepicker">
                 <h2 class="site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
                     <span id="base" class="site-jump-anchor" ></span>
@@ -80,14 +79,28 @@
                 <div class="slds-form-element__control">
                     <div class="slds-input-has-icon slds-input-has-icon--right">
                         <span li-icon type="utility" icon="event" size="x-small" add-classes="slds-input__icon"></span>
-                        <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datefield' ng-required='dc.datefield.required' li-datepicker datepicker-type="datetime" ng-disabled="dc.datefield.disabled" />
+                        <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datefield' ng-required='dc.datefield.required' li-datepicker ng-disabled="dc.datefield.disabled" />
                     </div>
                 </div>
 
                 <p><h3>Date Picker Example Code</h3></p>
 
                 <script src="https://gist.github.com/mbowen000/d6508ea04228901dc557.js"></script>
+            </section>
 
+            <section id="datetimepicker">
+                <h2 class="site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                    <span id="base" class="site-jump-anchor" ></span>
+                    <span>Date/Time Picker</span>
+                    <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+                </h2>
+                
+                <div class="slds-form-element__control">
+                    <div class="slds-input-has-icon slds-input-has-icon--right">
+                        <span li-icon type="utility" icon="event" size="x-small" add-classes="slds-input__icon"></span>
+                        <input class="slds-input" type="text" placeholder="Pick a Date" label="Date Picker Label" ng-model='dc.datetimefield' ng-required='dc.datetimefield.required' li-datepicker datepicker-type="datetime" ng-disabled="dc.datetimefield.disabled" />
+                    </div>
+                </div>
             </section>
 
             <section id="picklist">

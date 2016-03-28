@@ -3,7 +3,8 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 .controller("DemoController", ['PicklistService', '$http', 'limitToFilter', '$anchorScroll', function(PicklistService, $http, limitToFilter, $anchorScroll) {
 	'use strict';
 	return _.extend(this, {
-		datefield: moment(),
+		datefield: '1986-12-27',
+		datetimefield: '2010-11-12 12:27',
 		textfield: "test value",
 		richtext: "<div><strong>Bold!</strong><br><em>Italics!</em></div>",
 		picklistfield: {
