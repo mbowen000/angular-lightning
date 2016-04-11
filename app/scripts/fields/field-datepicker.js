@@ -130,14 +130,17 @@ angular.module('angular-lightning.datepicker', [])
 		});
 
 		var unwatch = $scope.$watch(function() {
-			return moment(ngModelCtrl.$modelValue);
+			if (ngModelCtrl.$modelValue) {
+				return moment(ngModelCtrl.$modelValue);
+			}
 		}, function(val) {
-			var theDate = DateService.getDate(val);
-			if (theDate) {
+			if (val) {
+				var theDate = DateService.getDate(val);
 				theDate.second(0);
 				ngModelCtrl.$setViewValue(theDate.format(dateFormat));
 				ngModelCtrl.$render();
 			}
+			
 			unwatch();
 			_buildCalendar();
 		});
