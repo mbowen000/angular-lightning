@@ -11,6 +11,7 @@ angular.module('angular-lightning.tooltip', [])
 				var tooltipContent = attrs.liTooltip;
 				scope.templateUrl = attrs.template || null;
 				var enabledExpression = attrs.tooltipEnabled || 'always';
+				var position = attrs.tooltipPosition || 'right';
 
 				var template = '<div class="slds-tooltip" role="tooltip">' + 
 					'<div class="slds-tooltip__content">' + 
@@ -59,7 +60,7 @@ angular.module('angular-lightning.tooltip', [])
 					var right = pos.left - $(tooltipElement).outerWidth() - 20;
 
 					//Check if element is inside viewport, if not, show on left side
-					if ((left + width) <= (window.pageXOffset + window.innerWidth)) {
+					if (position === 'right' && (left + width) <= (window.pageXOffset + window.innerWidth)) {
 						$(tooltipElement).css({left: left + 'px'});
 						$(tooltipElement).addClass('slds-nubbin--left');
 					}
