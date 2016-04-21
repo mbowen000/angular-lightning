@@ -25,6 +25,7 @@ angular.module('angular-lightning.modal', [])
 		modalScope.close = function() {
 			modal.remove();
 			modalBackdrop.remove();
+			modalScope.$destroy();
 		};
 
 		modalEl.attr({
@@ -45,6 +46,7 @@ angular.module('angular-lightning.modal', [])
 	$modalService.close = function() {
 		modal.remove();
 		modalBackdrop.remove();
+		modalScope.$destroy();
 	};
 
 	return $modalService;
