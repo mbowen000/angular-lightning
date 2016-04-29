@@ -85,6 +85,20 @@ angular.module('angular-lightning.datepicker', [])
 
 	$scope = _originalScope;
 
+	var _buildCalendar = function() {
+		if(ngModelCtrl.$modelValue && moment.isMoment(ngModelCtrl.$modelValue)) {
+			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
+		}
+		else { 
+			$scope.month = DateService.buildMonth(moment());
+		}
+
+		var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
+
+		$popup = $compile(popupEl)($scope);
+		$(inputEl).after($popup);
+	};
+
 	this.init = function(element, controllers, attrs) {
 		this.controllers = controllers;
 		this.element = inputEl = element;
@@ -180,22 +194,6 @@ angular.module('angular-lightning.datepicker', [])
 	//build the calendar around the current date
 	$scope.month = {};
 	
-	var _buildCalendar = function() {
-		if(moment(ngModelCtrl.$modelValue)) {
-			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
-		}
-		else { 
-			$scope.month = DateService.buildMonth(moment());
-		}
-
-		var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
-
-		$popup = $compile(popupEl)($scope);
-		$(inputEl).after($popup);
-
-
-	};
-
 	$scope.$watch('yearPickerOpen', function(val) {
 		if(val) {
 
