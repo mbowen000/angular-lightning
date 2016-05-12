@@ -21,6 +21,11 @@ angular.module('angular-lightning.modal', [])
 		
 		modalScope = (options.scope || $rootScope).$new();
 
+		// allow extension of the modal scope with a resolve option
+		if(options.resolve) {
+			_.extend(modalScope, options.resolve);
+		}
+
 		// add a standard close function
 		modalScope.close = function() {
 			modal.remove();
