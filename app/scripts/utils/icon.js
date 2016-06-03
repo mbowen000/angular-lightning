@@ -97,10 +97,13 @@ angular.module('angular-lightning.icon', [])
 			
 			// push size
 			//classes.push('slds-icon--small');
-			if(options.size === 'small') {
+			if(options.size === 'large') {
+				classes.push('slds-icon--large');
+			}
+			else if(options.size === 'small') {
 				classes.push('slds-icon--small');
 			}
-			if(options.size === 'x-small') {
+			else if(options.size === 'x-small') {
 				classes.push('slds-icon--x-small');
 			}
 
