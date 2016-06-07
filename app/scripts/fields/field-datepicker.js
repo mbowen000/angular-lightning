@@ -161,6 +161,7 @@ angular.module('angular-lightning.datepicker', [])
 
 		inputEl.bind('focus', function() {
 			$scope.isOpen = true;
+			$scope.yearPickerOpen = false;
 			$scope.$digest();
 		});
 
@@ -310,7 +311,15 @@ angular.module('angular-lightning.datepicker', [])
 		templateUrl: 'views/fields/date/field-date-yearpicker.html',
 		link: function(scope, element, attrs, controllers) {
 			var currentIndex = 0;
-			var currentYear = moment(scope.getCurrentDate()).clone();
+			var currentYear;
+
+			if (moment.isMoment(scope.getCurrentDate()) && scope.getCurrentDate().isValid()) {
+				currentYear = moment(scope.getCurrentDate()).clone();
+			}
+			else {
+				currentYear = moment();
+			}
+
 			scope.years = DateService.buildYearsAroundCurrent(currentYear);
 
 			scope.yearNextPage = function() {
