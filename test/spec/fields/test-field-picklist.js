@@ -24,7 +24,7 @@ describe('Picklist Directive...', function() {
 			picklistvals: [
 				'option 1', 'option 2', 'option 3'
 			],
-			value: PicklistService.getArrayFromDelimted('option 2;option 3')
+			value: 'option 1;option 2'
 		};
 
 		// shoudl set up the markup for the control
@@ -36,16 +36,45 @@ describe('Picklist Directive...', function() {
 	});
 
 	it('is initialized with the right options', function() {
-		// if scope.option is mike; ashar then the available options li length should be 2
-		expect(field.find('ul').find('li').length).toBe(4);
+		// we have 2 of the 3 values selected, options should now be size 1
+		expect(field.find('ul').eq(0).find('li').length).toBe(1);
 	});
 
 	it('is initialized with any previously selected values from the server', function() {
-		// if whatever scope variable that is bound to the ng-model has a couple selected options, make sure that the
-
+		expect(field.find('ul').eq(1).find('li').length).toBe(2);
 	});
 
+	it('toggles the state of a value as highlighted when clicked', function() {
+		var option = field.find('ul').eq(0).find('li').eq(0);
+		expect(angular.element(option).scope().option.selected).toBe(false);
+		
+		// click it
+		option.triggerHandler('click');
+		expect(angular.element(option).scope().option.selected).toBe(true);
+
+		// click it again, make sure its not selected
+		option.triggerHandler('click');
+		expect(angular.element(option).scope().option.selected).toBe(false);
+	});
+
+
 	it('moves an option to the selected list when the right arrow is pressed after selecting a value', function() {
+		
+		// get the first element
+		var option = field.find('ul').eq(0).find('li').eq(0);
+
+		// click it
+		option.triggerHandler('click');
+		
+		// move it
+		var button = field.find('button').eq(0).triggerHandler('click');
+
+		// make sure the list length is now 3 on the right and 0 on the left
+		expect(field.find('ul').eq(0).find('li').length).toBe(0);
+		expect(field.find('ul').eq(1).find('li').length).toBe(3);
+	});
+
+	it('moves multiple values to the right when multiple values are selected', function() {
 
 	});
 

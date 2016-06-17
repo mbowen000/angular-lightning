@@ -18,7 +18,7 @@ angular.module('angular-lightning.picklist', [])
 
 	var ModelObj = function(val) {
 		this.value = val;
-		this.highlighted = false;
+		this.selected = false;
 		this.uid = _.uniqueId('p_');
 		return this;
 	}

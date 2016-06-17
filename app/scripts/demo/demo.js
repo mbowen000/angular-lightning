@@ -9,9 +9,9 @@ angular.module('angular-lightning-demo', ['angular-lightning', 'angular-lightnin
 		richtext: "<div><strong>Bold!</strong><br><em>Italics!</em></div>",
 		picklistfield: {
 			picklistvals: [
-				'option 1', 'option 2', 'option 3', 'option 3'
+				'option 1', 'option 2', 'option 3'
 			],
-			value: 'option 2;option 3'
+			value: 'option 2; option 3'
 		},
 		lookupTest: function(val) {
 			return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
