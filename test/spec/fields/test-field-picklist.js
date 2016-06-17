@@ -37,11 +37,11 @@ describe('Picklist Directive...', function() {
 
 	it('is initialized with the right options', function() {
 		// if scope.option is mike; ashar then the available options li length should be 2
-		expect(field.find('ul').find('li').length).toBe(3);
+		expect(field.find('ul').find('li').length).toBe(4);
 	});
 
 	it('is initialized with any previously selected values from the server', function() {
-		// if whatever scope variable that is bound to the ng-model has a couple selected options, make sure that the 
+		// if whatever scope variable that is bound to the ng-model has a couple selected options, make sure that the
 
 	});
 

@@ -37,7 +37,7 @@ module.exports = function(config) {
       "test/mock/**/*.js",
       "test/spec/**/*.js",
       "app/views/**/*.html"
-      
+
     ],
 
     // list of files / patterns to exclude
@@ -76,10 +76,10 @@ module.exports = function(config) {
     },
 
     ngHtml2JsPreprocessor: {
-    
+
       stripPrefix: 'app/',
       moduleName: 'templates'
-      
+
     },
 
     // Continuous Integration mode
