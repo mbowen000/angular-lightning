@@ -86,17 +86,22 @@ angular.module('angular-lightning.datepicker', [])
 	$scope = _originalScope;
 
 	var _buildCalendar = function() {
-		if(ngModelCtrl.$modelValue && moment.isMoment(ngModelCtrl.$modelValue)) {
+		if(ngModelCtrl.$modelValue) {
 			$scope.month = DateService.buildMonth(moment(ngModelCtrl.$modelValue));
 		}
 		else { 
 			$scope.month = DateService.buildMonth(moment());
 		}
 
-		var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
+		// only render if its not rendered already
+		if(!$popup) {
+			var popupEl = angular.element('<div li-date-dropdown ng-show="isOpen" ng-click="isOpen = true"></div>');
 
-		$popup = $compile(popupEl)($scope);
-		$(inputEl).after($popup);
+			$popup = $compile(popupEl)($scope);
+			
+			$(inputEl).after($popup);
+		}
+
 	};
 
 	this.init = function(element, controllers, attrs) {
@@ -122,7 +127,7 @@ angular.module('angular-lightning.datepicker', [])
 				}
 				$scope.minute = value.minute();
 				$scope.ampm = value.format('A');
-				
+			
 				return value.format(dateModel);
 			}
 			else {
@@ -138,9 +143,10 @@ angular.module('angular-lightning.datepicker', [])
 				}
 				$scope.minute = value.minute();
 				$scope.ampm = value.format('A');
-
+				_buildCalendar();
 				return value.format(dateFormat);
 			}
+			_buildCalendar();
 		});
 
 		var unwatch = $scope.$watch(function() {
@@ -163,6 +169,10 @@ angular.module('angular-lightning.datepicker', [])
 			$scope.isOpen = true;
 			$scope.$digest();
 		});
+
+		// ngModelCtrl.$render = function() {
+		// 	console.log(ngModelCtrl);
+		// }
 
 	};
 
@@ -214,7 +224,12 @@ angular.module('angular-lightning.datepicker', [])
 	});
 
 	$scope.getCurrentDate = function() { 
-		return moment(ngModelCtrl.$modelValue);
+		if(ngModelCtrl.$modelValue) {
+			return moment(ngModelCtrl.$modelValue);	
+		}
+		else {
+			return moment();
+		}
 	};
 
 	$scope.getCurrentDateAsMoment = function() {

@@ -6,7 +6,7 @@
     "./dist/styles/main.css"
   ],
   "dependencies": {
-    "angular": "1.5.0",
+    "angular": "~1.5.0",
     "underscore": "1.8.3",
     "angular-safeapply": "1.0.4",
     "jquery": "2.1.4",

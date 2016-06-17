@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Date Directive...', function() {
+describe('Picklist Directive...', function() {
 
 	var $scope, $rootScope, $compile, field, $controller, $document, PicklistService;
 
