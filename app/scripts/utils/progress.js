@@ -15,8 +15,8 @@ angular.module('angular-lightning.progress', [])
 
 				scope.getValue = function() {
 					var val = scope.value || 0;
-					return Math.round(val / 100 * 100);
+					return (val < 100) ? Math.round(val / 100 * 100) : 100;
 				}
 			}
-		};		
+		};
 	}]);
