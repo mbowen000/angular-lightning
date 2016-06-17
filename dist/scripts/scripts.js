@@ -367,16 +367,37 @@ angular.module('angular-lightning.picklist', [])
 	'use strict';
 	var element, modelCtrl;
 
+	var ModelObj = function(val) {
+		this.value = val;
+		this.highlighted = false;
+		this.uid = _.uniqueId('p_');
+		return this;
+	}
+
 	$scope.selected = [];
 
-	this.init = function(_scope, _element, _attrs, controllers) { 
+	this.init = function(_scope, _element, _attrs, controllers) {
 		element = _element;
 		modelCtrl = controllers[1];
+
+		$scope.options = _.map($scope.options, function(val, key) {
+				return new ModelObj(val);
+		});
 
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
 				if (modelCtrl.$modelValue.indexOf(';') > -1) {
-				    $scope.selected = modelCtrl.$modelValue.split(';');
+				    //$scope.selected = modelCtrl.$modelValue.split(';');
+						var temp = _.map(modelCtrl.$modelValue.split(';'), function(val, key) {
+								return new ModelObj(val);
+						});
+
+						var toMove = _.filter($scope.options, function(o) {
+								return _.findWhere(temp, {value: o.value}) !== undefined;
+						});
+
+						$scope.selected = $scope.selected.concat(toMove);
+
 				}
 				else {
 					$scope.selected = [];
@@ -388,37 +409,59 @@ angular.module('angular-lightning.picklist', [])
 	};
 
 	$scope.highlightOption = function(option) {
-		$scope.highlighted = option;
+		var index = _.indexOf($scope.highlightedToAdd, option);
+
+		if (index === -1) {
+			$scope.highlightedToAdd.push(option);
+		} else {
+			$scope.highlightedToAdd.splice(index, 1);
+		}
+	}
+
+	$scope.areOptionsHighlighted = function() {
+		return _.where($scope.options, {selected: true}).length > 0;
+	}
+
+	$scope.areSelectedHighlighted = function() {
+		return _.where($scope.selected, {selected: true}).length > 0;
 	}
 
 	$scope.selectHighlighted = function() {
-		if ($scope.highlighted != null && _.indexOf($scope.options, $scope.highlighted) > -1) {
-			$scope.selected.push($scope.highlighted);
+			//$scope.selected = $scope.highlightedToAdd.concat($scope.selected);
+			var toMove = _.where($scope.options, {selected: true});
+			$scope.selected = $scope.selected.concat(toMove);
 			reconcileValues();
-		}
+			//$scope.highlightedToAdd = [];
 	}
 
 	$scope.removeHighlighted = function() {
-		if ($scope.highlighted != null && _.indexOf($scope.selected, $scope.highlighted) > -1) {
-			$scope.selected.splice($scope.selected.indexOf($scope.highlighted), 1);
-			$scope.options.push($scope.highlighted);
-			reconcileValues();
-		}
+		//var thingsToKeep = _.difference($scope.selected, $scope.highlightedToRemove);
+		var toMove = _.where($scope.selected, {selected: true});
+		//$scope.selected = _.without($scope.selected, toMove);
+		$scope.selected = _.filter($scope.selected, function(opt) {
+				return _.find(toMove, opt) === undefined;
+		});
+		$scope.options = $scope.options.concat(toMove);
+
+		reconcileValues();
 	}
 
 	var reconcileValues = function() {
 		// get the diff
-		var diff = _.difference($scope.options, $scope.selected);
+		//var diff = _.difference($scope.options, $scope.selected);
+		var diff = _.filter($scope.options, function(opt) {
+				return _.find($scope.selected, opt) === undefined;
+		});
 		$scope.options = [];
 		_.each(diff, function(d) {
 			$scope.options.push(d);
 		});
-		$scope.highlighted = null;
+		$scope.highlighted = [];
 	};
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
 		if(newVals) {
-			modelCtrl.$setViewValue(newVals.join(';'));
+			modelCtrl.$setViewValue(_.pluck(newVals, 'value').join(';'));
 		}
 	});
 }])
@@ -442,9 +485,10 @@ angular.module('angular-lightning.picklist', [])
 			if(picklistController) {
 				picklistController.init(scope, element, attrs, controllers);
 			}
-		}	
+		}
 	};
 }]);
+
 angular.module('angular-lightning.lookup', [])
 
 .factory('liLookupParser', ['$parse', function($parse) {
@@ -1168,11 +1212,12 @@ angular.module('angular-lightning.progress', [])
 
 				scope.getValue = function() {
 					var val = scope.value || 0;
-					return Math.round(val / 100 * 100);
+					return (val < 100) ? Math.round(val / 100 * 100) : 100;
 				}
 			}
-		};		
+		};
 	}]);
+
 angular.module('angular-lightning.sticky', [])
 
 .directive('liSticky', ['$compile', function($compile) {
@@ -1325,7 +1370,7 @@ angular.module('angular-lightning').run(['$templateCache', function($templateCac
     "\n" +
     "  width: initial;\r" +
     "\n" +
-    "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\" style=\"width:45px\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"highlightOption(option)\" aria-selected=\"{{option==highlighted}}\"> <span class=\"slds-truncate\"> <span>{{option}}</span> </span> </li> </ul> </div> </div> </div>"
+    "}</style> <div class=\"slds-picklist--draggable slds-grid\" style=\"display: flex; flex-flow: row wrap\"> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-1\">Available</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in options track by $index\" ng-click=\"option.selected = !option.selected\" aria-selected=\"{{option.selected}}\"> <span class=\"slds-truncate\"> <span>{{option.value}}</span> </span> </li> </ul> </div> </div> <div class=\"slds-grid slds-grid--vertical\" style=\"width:45px\"> <button class=\"slds-button slds-button--icon-container\" ng-click=\"selectHighlighted()\" ng-disabled=\"!areOptionsHighlighted()\"> <span li-icon type=\"utility\" icon=\"right\" size=\"x-small\" color=\"default\"></span> </button> <button class=\"slds-button slds-button--icon-container\" ng-click=\"removeHighlighted()\" ng-disabled=\"!areSelectedHighlighted()\"> <span li-icon type=\"utility\" icon=\"left\" size=\"x-small\" color=\"default\"></span> </button> </div> <div class=\"slds-form-element\" style=\"flex: 0.5 1 0%\"> <div class=\"slds-picklist slds-picklist--multi\"> <ul class=\"slds-picklist__options slds-picklist__options--multi shown\"> <span class=\"picklist-label\" aria-label=\"select-2\">Selected</span> <li draggable=\"true\" id=\"po-0-0\" class=\"slds-picklist__item slds-has-icon slds-has-icon--left\" tabindex=\"0\" role=\"option\" ng-repeat=\"option in selected track by $index\" ng-click=\"option.selected = !option.selected\" aria-selected=\"{{option.selected}}\"> <span class=\"slds-truncate\"> <span>{{option.value}}</span> </span> </li> </ul> </div> </div> </div>"
   );
 
 
