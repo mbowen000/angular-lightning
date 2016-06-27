@@ -213,6 +213,29 @@
 
             </section>
 
+            <section id="popovers">
+
+                <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
+                    <span id="base" class="site-jump-anchor" ></span>
+                    <span>Popovers</span>
+                    <span class="slds-badge slds-m-left--medium slds-shrink-none slds-align-middle">Beta</span>
+                </h2>
+                
+                <div class="slds-grid">
+                    <div class="slds-col">
+                        <button class="slds-button slds-button--brand" li-popover>Popover (Top)</button>
+                    </div> 
+                    <div class="slds-col">
+                        <button class="slds-button slds-button--brand" li-popover position="left">Popover (Left)</button>
+                    </div> 
+                    <div class="slds-col">
+                        <button class="slds-button slds-button--brand" li-popover>Popover (Right)</button>
+                    </div> 
+                    <div class="slds-col">
+                        <button class="slds-button slds-button--brand" li-popover>Popover (Bottom)</button>
+                    </div> 
+            </section>
+
             <section id="tabs">
                 <h2 class="slds-p-top--xx-large site-text-heading--large site-text-heading--callout site-jump-anchor__container" type="h2">
                     <span id="base" class="site-jump-anchor" ></span>
@@ -287,6 +310,7 @@
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/main.js"></script>
+    <script src="scripts/common/position.js"></script>
     <script src="scripts/fields/field-datepicker.js"></script>
     <script src="scripts/fields/field-picklist.js"></script>
     <script src="scripts/fields/field-lookup.js"></script>
@@ -297,6 +321,7 @@
     <script src="scripts/utils/tabs.js"></script>
     <script src="scripts/utils/progress.js"></script>
     <script src="scripts/utils/sticky.js"></script>
+    <script src="scripts/utils/popover.js"></script>
     <!-- endbuild -->
 
     <!-- include the demo script outside of the usemin block (we dont want it included in the dist code) -->

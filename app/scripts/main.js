@@ -9,5 +9,6 @@ angular.module('angular-lightning', [
 	'angular-lightning.tooltip',
 	'angular-lightning.tabs',
 	'angular-lightning.progress',
-	'angular-lightning.sticky'
+	'angular-lightning.sticky',
+	'angular-lightning.popover'
 ]);

@@ -18,12 +18,14 @@ angular.module('angular-lightning.icon', [])
 				icon: attrs.icon,
 				size: attrs.size,
 				color: attrs.color,
-				classes: attrs.addClasses
+				classes: attrs.addClasses,
+				noDefaultIcon: attrs.noDefaultIcon
 			}, {
 				type: 'action',
 				icon: 'opportunity',
 				size: '',
-				classes: ''
+				classes: '',
+				noDefaultIcon: false
 			});
 
 			scope.options = options;
@@ -86,8 +88,10 @@ angular.module('angular-lightning.icon', [])
 			}
 
 			// always add 
-			classes.push('slds-icon');
-
+			if(!options.noDefaultIcon) {
+				classes.push('slds-icon');	
+			}
+			
 			// if(options.inputIcon) {
 			// 	classes.push('slds-input__icon');
 			// }
