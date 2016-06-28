@@ -35,7 +35,7 @@ angular.module('angular-lightning.picklist', [])
 
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
-				if (modelCtrl.$modelValue.indexOf(';') > -1) {
+				
 				    //$scope.selected = modelCtrl.$modelValue.split(';');
 						var temp = _.map(modelCtrl.$modelValue.split(';'), function(val, key) {
 								return new ModelObj(val);
@@ -47,13 +47,13 @@ angular.module('angular-lightning.picklist', [])
 
 						$scope.selected = $scope.selected.concat(toMove);
 
-				}
-				else {
-					$scope.selected = [];
-					$scope.selected.push(modelCtrl.$modelValue);
-				}
-				reconcileValues();
 			}
+			else {
+				$scope.selected = [];
+				//$scope.selected.push(modelCtrl.$modelValue);
+			}
+			reconcileValues();
+	
 		};
 	};
 
@@ -110,7 +110,8 @@ angular.module('angular-lightning.picklist', [])
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
 		if(newVals) {
-			modelCtrl.$setViewValue(_.pluck(newVals, 'value').join(';'));
+			var viewValue = newVals.length > 1 ? _.pluck(newVals, 'value').join(';') : _.pluck(newVals, 'value')[0];
+			modelCtrl.$setViewValue(ViewValue);
 		}
 	});
 }])
