@@ -110,8 +110,7 @@ angular.module('angular-lightning.picklist', [])
 
 	$scope.$watchCollection('selected', function(newVals, oldVals) {
 		if(newVals) {
-			var viewValue = newVals.length > 1 ? _.pluck(newVals, 'value').join(';') : _.pluck(newVals, 'value')[0];
-			modelCtrl.$setViewValue(ViewValue);
+			modelCtrl.$setViewValue(_.pluck(newVals, 'value').join(';'));
 		}
 	});
 }])
