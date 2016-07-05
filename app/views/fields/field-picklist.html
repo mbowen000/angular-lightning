@@ -11,6 +11,19 @@
 .slds-picklist__options {
   width: initial;
 }
+
+.slds-picklist__item > span:active {
+  background-color: #bac7da;
+   }
+
+.slds-picklist__item[aria-selected="true"] {
+ background-color: #bac7da; 
+ }
+
+ .slds-picklist__item > span:hover {
+  background-color: #bac7da;
+  cursor: pointer; 
+  } 
 </style>
 <div class="slds-picklist--draggable slds-grid" style="display: flex; flex-flow: row wrap;">
   <div class="slds-form-element" style="flex: 0.5 1 0%;">

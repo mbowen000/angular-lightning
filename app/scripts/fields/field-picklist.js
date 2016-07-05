@@ -80,6 +80,11 @@ angular.module('angular-lightning.picklist', [])
 			var toMove = _.where($scope.options, {selected: true});
 			$scope.selected = $scope.selected.concat(toMove);
 			reconcileValues();
+			$scope.selected = _.map($scope.selected, function(obj){
+				obj.selected = false;
+				return obj; 
+			});
+
 			//$scope.highlightedToAdd = [];
 	}
 
@@ -91,8 +96,13 @@ angular.module('angular-lightning.picklist', [])
 				return _.find(toMove, opt) === undefined;
 		});
 		$scope.options = $scope.options.concat(toMove);
-
 		reconcileValues();
+		$scope.options = _.map($scope.options, function(obj) {
+			obj.selected = false;
+			return obj;
+		});
+
+
 	}
 
 	var reconcileValues = function() {
