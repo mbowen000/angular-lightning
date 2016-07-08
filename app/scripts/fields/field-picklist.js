@@ -21,7 +21,7 @@ angular.module('angular-lightning.picklist', [])
 		this.selected = false;
 		this.uid = _.uniqueId('p_');
 		return this;
-	}
+	};
 
 	$scope.selected = [];
 
@@ -30,31 +30,44 @@ angular.module('angular-lightning.picklist', [])
 		modelCtrl = controllers[1];
 
 		$scope.options = _.map($scope.options, function(val, key) {
-				return new ModelObj(val);
+			return new ModelObj(val);
 		});
 
 		modelCtrl.$render = function() {
 			if (modelCtrl.$modelValue) {
+				var temp = _.map(modelCtrl.$modelValue.split(';'), function(val, key) {
+					return new ModelObj(val);
+				});
 
-				    //$scope.selected = modelCtrl.$modelValue.split(';');
-						var temp = _.map(modelCtrl.$modelValue.split(';'), function(val, key) {
-								return new ModelObj(val);
-						});
+				var toMove = _.filter($scope.options, function(o) {
+					return _.findWhere(temp, {value: o.value}) !== undefined;
+				});
 
-						var toMove = _.filter($scope.options, function(o) {
-								return _.findWhere(temp, {value: o.value}) !== undefined;
-						});
-
-						$scope.selected = $scope.selected.concat(toMove);
-
+				$scope.selected = $scope.selected.concat(toMove);
 			}
 			else {
 				$scope.selected = [];
-				//$scope.selected.push(modelCtrl.$modelValue);
 			}
-			reconcileValues();
 
+			reconcileValues();
 		};
+	};
+
+	$scope.$watch(function() {
+		return element.attr('disabled');
+	}, function(newValue) {
+		if (newValue) {
+			$scope.disabled = true;
+		}
+		else {
+			$scope.disabled = false;
+		}
+	});
+
+	$scope.toggleSelected = function(option) {
+		if (!$scope.disabled) {
+			option.selected = !option.selected;
+		}
 	};
 
 	$scope.highlightOption = function(option) {
@@ -65,56 +78,55 @@ angular.module('angular-lightning.picklist', [])
 		} else {
 			$scope.highlightedToAdd.splice(index, 1);
 		}
-	}
+	};
 
 	$scope.areOptionsHighlighted = function() {
 		return _.where($scope.options, {selected: true}).length > 0;
-	}
+	};
 
 	$scope.areSelectedHighlighted = function() {
 		return _.where($scope.selected, {selected: true}).length > 0;
-	}
+	};
 
 	$scope.selectHighlighted = function() {
-			//$scope.selected = $scope.highlightedToAdd.concat($scope.selected);
-			var toMove = _.where($scope.options, {selected: true});
-			$scope.selected = $scope.selected.concat(toMove);
-			reconcileValues();
-			$scope.selected = _.map($scope.selected, function(obj){
-				obj.selected = false;
-				return obj; 
-			});
-
-			//$scope.highlightedToAdd = [];
-	}
+		var toMove = _.where($scope.options, {selected: true});
+		$scope.selected = $scope.selected.concat(toMove);
+		reconcileValues();
+		$scope.selected = _.map($scope.selected, function(obj){
+			obj.selected = false;
+			return obj; 
+		});
+	};
 
 	$scope.removeHighlighted = function() {
-		//var thingsToKeep = _.difference($scope.selected, $scope.highlightedToRemove);
 		var toMove = _.where($scope.selected, {selected: true});
-		//$scope.selected = _.without($scope.selected, toMove);
+		
 		$scope.selected = _.filter($scope.selected, function(opt) {
 				return _.find(toMove, opt) === undefined;
 		});
+
 		$scope.options = $scope.options.concat(toMove);
+
 		reconcileValues();
+
 		$scope.options = _.map($scope.options, function(obj) {
 			obj.selected = false;
 			return obj;
 		});
-
-
-	}
+	};
 
 	var reconcileValues = function() {
 		// get the diff
-		//var diff = _.difference($scope.options, $scope.selected);
 		var diff = _.filter($scope.options, function(opt) {
 				return _.find($scope.selected, opt) === undefined;
 		});
+
 		$scope.options = [];
+
 		_.each(diff, function(d) {
 			$scope.options.push(d);
 		});
+
 		$scope.highlighted = [];
 	};
 

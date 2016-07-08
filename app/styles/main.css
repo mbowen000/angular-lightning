@@ -75,3 +75,28 @@ menus
 .menu a:visited {
     color: #eee;
 }
+
+/*
+picklist
+*/
+.picklist-label {
+  margin: auto;
+  padding: 0px 50px;
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  cursor: default;
+  font-size: 10px;
+}
+.slds-picklist__options {
+  width: initial;
+}
+div.slds-picklist--draggable[disabled] .slds-picklist__item > span:hover {
+  background-color: #e0e5ee;
+  cursor: not-allowed; 
+}
+div.slds-picklist--draggable[disabled] .slds-picklist__options {
+  background-color: #e0e5ee;
+  border-color: #a8b7c7;
+  cursor: not-allowed;
+}

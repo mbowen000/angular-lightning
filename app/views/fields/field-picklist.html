@@ -1,36 +1,9 @@
-<style>
-.picklist-label {
-  margin: auto;
-  padding: 0px 50px;
-  display: block;
-  text-align: center;
-  font-weight: bold;
-  cursor: default;
-  font-size: 10px;
-}
-.slds-picklist__options {
-  width: initial;
-}
-
-.slds-picklist__item > span:active {
-  background-color: #bac7da;
-   }
-
-.slds-picklist__item[aria-selected="true"] {
- background-color: #bac7da; 
- }
-
- .slds-picklist__item > span:hover {
-  background-color: #bac7da;
-  cursor: pointer; 
-  } 
-</style>
-<div class="slds-picklist--draggable slds-grid" style="display: flex; flex-flow: row wrap;">
+<div class="slds-picklist--draggable slds-grid" style="display: flex; flex-flow: row wrap;" ng-disabled="disabled">
   <div class="slds-form-element" style="flex: 0.5 1 0%;">
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
         <span class="picklist-label" aria-label="select-1">Available</span>
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="option.selected = !option.selected" aria-selected="{{option.selected}}">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in options track by $index" ng-click="toggleSelected(option)" aria-selected="{{option.selected}}">
           <span class="slds-truncate">
             <span>{{option.value}}</span>
           </span>
@@ -50,7 +23,7 @@
     <div class="slds-picklist slds-picklist--multi">
       <ul class="slds-picklist__options slds-picklist__options--multi shown">
         <span class="picklist-label" aria-label="select-2">Selected</span>
-        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="option.selected = !option.selected" aria-selected="{{option.selected}}">
+        <li draggable="true" id="po-0-0" class="slds-picklist__item slds-has-icon slds-has-icon--left" tabindex="0" role="option" ng-repeat="option in selected track by $index" ng-click="toggleSelected(option)" aria-selected="{{option.selected}}">
           <span class="slds-truncate">
             <span>{{option.value}}</span>
           </span>
