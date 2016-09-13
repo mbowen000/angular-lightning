@@ -115,7 +115,7 @@ angular.module('angular-lightning.lookup', [])
 		});
 
 		$(document).on('click', function (event) {
-			if (!dropdownDomElem[0].contains(event.target) && !$(event.target).is($(element))) {
+			if (!$.contains($(element).closest('.slds-lookup')[0], event.target) && !$(event.target).is($(element))) {
 				$(dropdownDomElem).hide();
 			}
 		});
