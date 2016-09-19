@@ -13,7 +13,7 @@
     "moment": "2.10.6",
     "angular-inform": "0.0.18",
     "angular-block-ui": "0.2.0",
-    "salesforce-lightning-design-system": "2.0.2",
+    "salesforce-lightning-design-system": "2.1.2",
     "trix": "0.9.7"
   },
   "overrides": {},
