@@ -6,5 +6,4 @@
 /dist-sf
 /coverage
 /app/templateCache
-/dist
 *.sublime*
