@@ -35,7 +35,7 @@ angular.module('angular-lightning.sticky', [])
 				if(adj) {
 					headerHeight = headerHeight - adj;
 				}
-	   			$(element).css({height: $(window).height()-headerHeight});
+	   			$(element).css({height: $(window).height()-headerHeight-50});
 			};
 
 			// bind the window resize event to recalculate the height
@@ -52,7 +52,7 @@ angular.module('angular-lightning.sticky', [])
 				}
 				else {
 					$(element).css({marginTop: 0-gap});
-					$(element).css({height: $(window).height()});
+					$(element).css({height: $(window).height()-50});
 
 				}
 			};
