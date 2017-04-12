@@ -30,7 +30,12 @@ angular.module('angular-lightning.picklist', [])
 		modelCtrl = controllers[1];
 
 		$scope.options = _.map($scope.options, function(val, key) {
-			return new ModelObj(val);
+			if (typeof val !== "object") {
+				return new ModelObj(val);
+			}
+			else {
+				return val;
+			}
 		});
 
 		modelCtrl.$render = function() {
@@ -39,11 +44,7 @@ angular.module('angular-lightning.picklist', [])
 					return new ModelObj(val);
 				});
 
-				var toMove = _.filter($scope.options, function(o) {
-					return _.findWhere(temp, {value: o.value}) !== undefined;
-				});
-
-				$scope.selected = $scope.selected.concat(toMove);
+				$scope.selected = $scope.selected.concat(temp);
 			}
 			else {
 				$scope.selected = [];
@@ -118,7 +119,7 @@ angular.module('angular-lightning.picklist', [])
 	var reconcileValues = function() {
 		// get the diff
 		var diff = _.filter($scope.options, function(opt) {
-				return _.find($scope.selected, opt) === undefined;
+				return _.findWhere($scope.selected, {value: opt.value}) === undefined;
 		});
 
 		$scope.options = [];
